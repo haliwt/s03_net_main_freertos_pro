@@ -134,8 +134,8 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
 *******************************************************************************/
 void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
 {
-    outputBuf[0]=0xA5; //head : displayBoard = 0xA5
-	outputBuf[1]=0x01; //device No: 01
+    outputBuf[0]=0x5A; //mainboard head : displayBoard = 0xA5
+	outputBuf[1]=0x10; //mainboard device No: 01
 	outputBuf[2]=0x1C; //command : is data of hours and minutes and seconds.
 	outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
 	outputBuf[4]= 0x03; //data of length: 0x01 - 3 byte.
@@ -165,8 +165,8 @@ void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
 *******************************************************************************/
 void SendWifiData_To_WifiSetTemp(uint8_t dat1)
 {
-        outputBuf[0]=0xA5; //head : displayBoard = 0xA5
-        outputBuf[1]=0x01; //device No: 01
+        outputBuf[0]=0x5A; //head : displayBoard = 0xA5
+        outputBuf[1]=0x10; //main board device No: 01
         outputBuf[2]=0x1A; //command type: temperature value
         outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
         outputBuf[4]= 0x01; //data of length: 0x01 - 1 byte.
@@ -199,8 +199,8 @@ void SendWifiData_To_WifiSetTemp(uint8_t dat1)
 void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
 {
    
-	    outputBuf[0]=0xA5; //head : displayBoard = 0xA5
-        outputBuf[1]=0x01; //device No: 01
+	    outputBuf[0]=0x5A; //head : displayBoard = 0xA5
+        outputBuf[1]=0x10; //device No: 01
         outputBuf[2]=0x1E; //command type: fan speed of value 
         outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
         outputBuf[4]= 0x01; //data of length: 0x01 - 2 byte.
@@ -230,8 +230,8 @@ void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
 *******************************************************************************/
 void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
 {
-        outputBuf[0]=0xA5; //head : displayBoard = 0xA5
-        outputBuf[1]=0x01; //device No: 01
+        outputBuf[0]=0x5A; //head : displayBoard = 0xA5
+        outputBuf[1]=0x10; //device No: 01
         outputBuf[2]=cmd; //command type: fan speed of value 
         outputBuf[3]=data; // 0x0F : is data ,don't command data.
         outputBuf[4]= 0x0; // don't data 

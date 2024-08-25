@@ -49,13 +49,13 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 *******************************************************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-
-    static uint8_t tm0;
+    static uint16_t tm0;
+    static uint8_t tm1;
     if(htim->Instance==TIM17){
 		
 	   tm0 ++ ;
-       gctl_t.gTimer_senddata_panel++;
-	 if(tm0 > 99){//100ms *10 = 1000ms =1s
+      // gctl_t.gTimer_senddata_panel++;
+	 if(tm0 > 999){//1ms *1000 = 1000ms =1s
         tm0 =0;
 	
         wifi_t.gTimer_get_beijing_time++;

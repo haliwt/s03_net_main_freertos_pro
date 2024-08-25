@@ -1,6 +1,8 @@
 #ifndef __BSP_H
 #define  __BSP_H
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "bsp_fan.h"
 
@@ -35,8 +37,17 @@
 #include "gpio.h"
 #include "usart.h"
 #include "adc.h"
+#include "dma.h"
+
+
+
+
+
+#define WIFI_RX_NUMBERS         1
+
 
 #define  USE_FreeRTOS      1
+
 
 #if USE_FreeRTOS == 1
 	#include "FreeRTOS.h"
@@ -49,6 +60,10 @@
 	#define ENABLE_INT()	__set_PRIMASK(0)	/* ʹ��ȫ���ж� */
 	#define DISABLE_INT()	__set_PRIMASK(1)	/* ��ֹȫ���ж� */
 #endif
+
+
+extern uint8_t wifi_rx_inputBuf[WIFI_RX_NUMBERS];
+
 
 
 typedef enum _power_state{
