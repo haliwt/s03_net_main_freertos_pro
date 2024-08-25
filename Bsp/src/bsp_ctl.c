@@ -6,7 +6,7 @@ _run_t gctl_t;
 
 
 static void Single_Command_ReceiveCmd(uint8_t cmd); 
-uint8_t tencent_cloud_fl/**********************************************************************
+/**********************************************************************
 	*
 	*Functin Name: void Single_ReceiveCmd(uint8_t cmd)
 	*Function : resolver is by usart port receive data  from display panle  
@@ -175,9 +175,11 @@ void power_on_handler(void)
 		 
 
         gctl_t.fan_continuce=0;
+        if(wifi_link_net_state() ==1){
+            Subscriber_Data_FromCloud_Handler();
+    		osDelay(100);//HAL_Delay(350);
 
-        Subscriber_Data_FromCloud_Handler();
-		osDelay(100);//HAL_Delay(350);
+         }
 	    run_flag= UPDATE_TO_PANEL_DATA;
 
         
@@ -357,13 +359,7 @@ void power_off_handler(void)
 
        }
 
-       if(gctl_t.app_timer_power_off_flag==1){ 
-         	gctl_t.app_timer_power_off_flag=0;
-		      for(i=0;i<36;i++){
-		      TCMQTTRCVPUB[i]=0;
-		     }
-
-		}
+       
 
 	   
 		  if(gctl_t.gFan_counter < 60 && gctl_t.fan_continuce==1){
@@ -380,8 +376,6 @@ void power_off_handler(void)
 				  
 	         }
 	  
-         }
-	}
 }
 /**********************************************************************
 	*
@@ -412,7 +406,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			wifi_t.runCommand_order_lable= wifi_tencent_subscription_data;//04
 	
 
-			SendWifiData_To_Cmd(0x01) ;
+			SendWifiData_To_Cmd(0x20,0x01) ;
             HAL_Delay(5);
 			
 
@@ -428,7 +422,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		    //gctl_t.RunCommand_Label=POWER_OFF;
 		    gctl_t.rx_command_tag= POWER_OFF;
 			//wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data
-			SendWifiData_To_Cmd(0x01) ;
+			SendWifiData_To_Cmd(0x20,0x01) ;
 			HAL_Delay(50);
                
            }

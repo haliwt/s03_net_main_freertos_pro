@@ -95,11 +95,11 @@ static void vTaskMsgPro(void *pvParameters)
      
 
 
-     if( gpro_t.gpower_on == power_on;){
+     if( gpro_t.gpower_on == power_on){
 
        if(gctl_t.buzzer_sound_flag == 1){
 	 	gctl_t.buzzer_sound_flag = 0;
-	    buzzer_sound()
+	    buzzer_sound();
 
 	    }
         
@@ -279,10 +279,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	
 	      if(esp8266data.linking_tencent_cloud_doing ==1){
 
-			gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = gpro_t.wifi_rx_inputBuf[0];
+			gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] =wifi_rx_inputBuf[0];
 			gpro_t.wifi_counter++;
 
-			if(*gpro_t.wifi_rx_inputBuf==0X0A) // 0x0A = "\n"
+			if(*wifi_rx_inputBuf==0X0A) // 0x0A = "\n"
 			{
 				gpro_t.wifi_rx_data_done_flag = 1;
 				Wifi_Rx_InputInfo_Handler();
@@ -293,7 +293,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		  else{
 
 		         if(wifi_t.get_rx_beijing_time_enable==1){
-					gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = gpro_t.wifi_rx_inputBuf[0];
+					gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = wifi_rx_inputBuf[0];
 					gpro_t.wifi_counter++;
 					
 				}
@@ -301,7 +301,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				Subscribe_Rx_Interrupt_Handler();
 	      }
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
-      HAL_UART_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
+      HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}
 
 	
@@ -323,56 +323,39 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
              ptMsg = &g_tMsg;
 		  
 	         ptMsg->usData[rx_data_counter] =  inputBuf[0];
-             rx_wifi_data ++;
-
+              rx_data_counter++;
 
               }
 
-              if(inputBuf[rx_data_counter]==0x0A && rx_end_flag == 0){
+              if(inputBuf[rx_data_counter]==0xFE && rx_end_flag == 0 &&  rx_data_counter > 5){
                      
                           rx_end_flag = 1 ;
-                          rx_end_counter = rx_data_counter;
+                        
                           
                 }
                 else if(rx_end_flag == 1){
-
-                      rx_end_counter_compare = rx_data_counter - rx_end_counter;
-                      if(rx_end_counter_compare == 1){
-                   
-                          if(inputBuf[rx_data_counter]==0x0D){
-
-                              rx_end_counter_compare ++ ;
-                              gpro_t.disp_rx_cmd_done_flag = 1;
+                      rx_end_flag ++;
+                    //  rx_data_counter =0;
+                      gpro_t.disp_rx_cmd_done_flag = 1;
+                 }
+                          
 
 
-                          }
-                          else{
-                            rx_end_flag = 0;
-
-                          }
-
-                        }
-                        else{
-                           rx_end_flag = 0;
-                         
-
-
-                        }
-
-
-              }
+              
                     
                    
 
-                if(gpro_t.disp_rx_cmd_done_flag == 1){
+                if(gpro_t.disp_rx_cmd_done_flag == 1 && rx_end_flag==2){
 
-                      rx_end_counter_compare=0;
+              
                       rx_end_flag=0;
-                      rx_data_counter=0;
+                     
                    /* 鍚戞秷鎭槦鍒楀彂鏁版嵁 */
                      /* 鍒濆鍖栫粨鏋勪綋鎸囬拡 */
                      ptMsg = &g_tMsg;
                      ptMsg->ucMessageID=rx_data_counter;
+                    
+                      rx_data_counter=0;
                 
                      /* 向消息队列发数据 */
                 	xQueueSendFromISR(xQueue2,

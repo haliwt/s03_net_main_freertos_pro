@@ -9,14 +9,14 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
              __HAL_UART_CLEAR_OREFLAG(&huart2);
 		
-			UART_Start_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
+			UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 
 		}
 		__HAL_UNLOCK(&huart2);
 		   
        
           temp = USART2->RDR;
-		UART_Start_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
+		UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 
 
 	}

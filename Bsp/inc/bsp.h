@@ -65,14 +65,13 @@ typedef struct PROCESS_T{
 
    uint8_t gpower_on;
    uint8_t disp_rx_cmd_done_flag;
-   uint8_t wifi_rx_data_array;
+   uint8_t wifi_rx_data_array[150];
    uint8_t wifi_counter;
-   uint8_t wifi_rx_inputBuf;
    uint8_t wifi_rx_data_done_flag;
 
 
 
-}porcess_t;
+}process_t;
 
 extern process_t gpro_t;
 

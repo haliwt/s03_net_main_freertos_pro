@@ -164,7 +164,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
         if(pdata[2] == 0x0F){ //数据
 
-           rx_data_from_main_flag = 1;
+        
 
         }
       break;

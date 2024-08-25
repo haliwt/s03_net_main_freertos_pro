@@ -91,7 +91,7 @@ void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 
           temp = USART2->RDR;
 
-		   UART_Start_Receive_IT(&huart2,(uint8_t *)gpro_t.wifi_rx_inputBuf,1);
+		   UART_Start_Receive_IT(&huart2,(uint8_t *)wifi_rx_inputBuf,1);
 		
 		
          	}
@@ -121,13 +121,12 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
 	outputBuf[5] =hum;
     outputBuf[6] =temp;
 
-    outputBuf[7] = bcc_check(outputBuf,7);
-    outputBuf[8] = 0x0A;
-    outputBuf[9] = 0x0D;
+    outputBuf[7] = 0xFE;
+    outputBuf[8] = bcc_check(outputBuf,8);
 	
 	//for(i=3;i<6;i++) crc ^= outputBuf[i];
 	//outputBuf[i]=crc;
-	transferSize=10;
+	transferSize=9;
 	if(transferSize)
 	{
 		while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
@@ -157,11 +156,10 @@ void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
 	outputBuf[6]= minutes; //	
 	outputBuf[7]= seconds; //	
 
-    outputBuf[8] = bcc_check(outputBuf,8);
-    outputBuf[9] = 0x0A;
-    outputBuf[10] = 0x0D;
+    outputBuf[8] = 0xFE;
+    outputBuf[9] = bcc_check(outputBuf,9);
 
-	transferSize=11;
+	transferSize=10;
 	if(transferSize)
 	{
 	while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
@@ -188,11 +186,10 @@ void SendWifiData_To_WifiSetTemp(uint8_t dat1)
         outputBuf[5] =dat1;
     
     
-        outputBuf[6] = bcc_check(outputBuf,6);
-        outputBuf[7] = 0x0A;
-        outputBuf[8] = 0x0D;
+         outputBuf[6] = 0xFE;
+         outputBuf[7] = bcc_check(outputBuf,7);
         
-        transferSize=9;
+        transferSize=8;
         if(transferSize)
         {
             while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
@@ -223,11 +220,10 @@ void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
         outputBuf[5] =dat1;
     
     
-        outputBuf[6] = bcc_check(outputBuf,6);
-        outputBuf[7] = 0x0A;
-        outputBuf[8] = 0x0D;
+        outputBuf[6] = 0xFE;
+        outputBuf[7] = bcc_check(outputBuf,7);
         
-        transferSize=9;
+        transferSize=8;
         if(transferSize)
         {
             while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
@@ -253,11 +249,10 @@ void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
         outputBuf[3]=data; // 0x0F : is data ,don't command data.
         outputBuf[4]= 0x0; // don't data 
         
-        outputBuf[5] = bcc_check(outputBuf,5);
-        outputBuf[6] = 0x0A;
-        outputBuf[7] = 0x0D;
+        outputBuf[5] = 0xFE;
+        outputBuf[6] = bcc_check(outputBuf,6);
         
-        transferSize=8;
+        transferSize=7;
         if(transferSize)
         {
             while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.

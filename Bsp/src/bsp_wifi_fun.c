@@ -107,7 +107,7 @@ void RunWifi_Command_Handler(void)
 	     
 	      if(esp8266data.esp8266_login_cloud_success==1){
 			
-				 SendWifiData_To_Cmd(0x01) ;	//WT.EDIT 2023.03.02
+				 SendWifiData_To_Cmd(0x20,0x01) ;	//WT.EDIT 2023.03.02
 				gctl_t.first_link_tencent_cloud_flag =1;
 				wifi_t.get_rx_beijing_time_enable=0;
 			    wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
@@ -157,7 +157,7 @@ void RunWifi_Command_Handler(void)
            
 		
 				 
-				 SendWifiData_To_Cmd(0x01) ;	//WT.EDIT 2023.03.02
+				 SendWifiData_To_Cmd(0x01,0x01) ;	//WT.EDIT 2023.03.02
 				 HAL_Delay(2);
 		
 		
@@ -341,7 +341,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 
 		det_no_wifi_net++;
 		gctl_t.auto_link_cloud_flag=0;
-		SendWifiData_To_Cmd(0x0) ;
+		SendWifiData_To_Cmd(0x20,0x00) ;
 
 
 		esp8266data.esp8266_login_cloud_success=0;
@@ -362,7 +362,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 			gctl_t.auto_link_cloud_flag=0xff;
 			esp8266data.linking_tencent_cloud_doing =0;
 
-			SendWifiData_To_Cmd(0x01) ;
+			SendWifiData_To_Cmd(0x20,0x01) ;
 			HAL_Delay(30);
 
 

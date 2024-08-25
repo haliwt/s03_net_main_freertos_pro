@@ -56,6 +56,7 @@ void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -104,7 +105,7 @@ int main(void)
     bsp_init();
    HAL_TIM_Base_Start_IT(&htim17);
    UART_Start_Receive_IT(&huart1,inputBuf,1);
-   UART_Start_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
+   UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 
   freeRTOS_Handler();
 
