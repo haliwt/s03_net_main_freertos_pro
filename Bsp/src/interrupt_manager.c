@@ -9,14 +9,14 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
              __HAL_UART_CLEAR_OREFLAG(&huart2);
 		
-			UART_Start_Receive_IT(&huart2,wifi_usart_data.wifi_inputBuf,1);
+			UART_Start_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
 
 		}
 		__HAL_UNLOCK(&huart2);
 		   
        
           temp = USART2->RDR;
-		UART_Start_Receive_IT(&huart2,wifi_usart_data.wifi_inputBuf,1);
+		UART_Start_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
 
 
 	}
@@ -54,33 +54,33 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if(htim->Instance==TIM17){
 		
 	   tm0 ++ ;
-       run_t.gTimer_senddata_panel++;
+       gctl_t.gTimer_senddata_panel++;
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
 	
         wifi_t.gTimer_get_beijing_time++;
 
-	    run_t.gTimer_publish_dht11++;
-	    run_t.gTimer_app_power_on++;
-	    run_t.gTimer_read_beijing_time++;
-	   run_t.gTimer_auto_detected_net_link_state++;
+	    gctl_t.gTimer_publish_dht11++;
+	    gctl_t.gTimer_app_power_on++;
+	    gctl_t.gTimer_read_beijing_time++;
+	   gctl_t.gTimer_auto_detected_net_link_state++;
 
-	   run_t.gTimer_usart_error++;
+	   gctl_t.gTimer_usart_error++;
 	   wifi_t.gTimer_reconnect_wifi++;
 	   
 
-	   run_t.gTimer_to_publish_updata++;
-	   run_t.gTimer_send_dit++;
+	   gctl_t.gTimer_to_publish_updata++;
+	   gctl_t.gTImer_send_data_to_disp++;
 	   wifi_t.gTimer_reconnect_wifi_order++;
 	   wifi_t.gTimer_power_off++;
 	   wifi_t.gTimer_subscriber_send ++;
-	   run_t.gTimer_continuce_works_time++;
-	   run_t.gTimer_fan_adc_times++;
-	   run_t.gTimer_ptc_adc_times++;
+	   gctl_t.gTimer_continuce_works_time++;
+	   gctl_t.gTimer_fan_adc_times++;
+	   gctl_t.gTimer_ptc_adc_times++;
 
-	  run_t.gTimer_usart2_error++;
-	  run_t.gTimer_linking_tencen_counter++;
-	  run_t.gFan_counter++;
+	  gctl_t.gTimer_usart2_error++;
+	  gctl_t.gTimer_linking_tencen_counter++;
+	  gctl_t.gFan_counter++;
 	  }
  	}
  }

@@ -3,6 +3,9 @@
 #include "main.h"
 
 
+void Get_Fan_ADC_Fun(uint8_t  channel,uint8_t times);
+
+void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times);
 
 
 

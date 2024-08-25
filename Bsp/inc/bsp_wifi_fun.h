@@ -67,8 +67,11 @@ extern void (*Ai_Fun)(uint8_t sig);
 extern void (*SetTimes)(void);
 extern void (*SetTemperature)(void);
 
+
 void PowerOn_Host(void (*poweronHandler)(void));
 void PowerOff_Host(void (*poweroffHandler)(void));
+
+
 
 
 

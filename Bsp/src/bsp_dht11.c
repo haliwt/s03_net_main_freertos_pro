@@ -182,9 +182,9 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 	read_flag =DHT11_Read_TempAndHumidity(pdth11);
     if(read_flag == 0){
 		   
-		   run_t.gDht11_humidity = (pdth11->humi_high8bit);
+		   gctl_t.gDht11_humidity = (pdth11->humi_high8bit);
 		   
-		   run_t.gDht11_temperature = (pdth11->temp_high8bit);
+		   gctl_t.gDht11_temperature = (pdth11->temp_high8bit);
 	   
 	 }
 
@@ -197,7 +197,7 @@ void Update_DHT11_Value(void)
    Dht11_Read_TempHumidity_Handler(&DHT11);
 	
 
-	sendData_Real_TimeHum(run_t.gDht11_humidity ,run_t.gDht11_temperature);
+   sendData_Real_TimeHum(gctl_t.gDht11_humidity ,gctl_t.gDht11_temperature);
 	
     
 }
@@ -208,7 +208,7 @@ void Update_Dht11_Totencent_Value(void)
 
 	Dht11_Read_TempHumidity_Handler(&DHT11);
 
-	MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity);
+	MqttData_Publis_ReadTempHum(gctl_t.gDht11_temperature,gctl_t.gDht11_humidity);
 
 }
 

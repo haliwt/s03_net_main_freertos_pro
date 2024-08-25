@@ -79,7 +79,7 @@ typedef struct _RUN_T{
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
 	uint8_t interval_time_stop_run ;
-
+    uint8_t fan_continuce;
     
 
 	uint8_t RunCommand_Label;
@@ -152,7 +152,7 @@ typedef struct _RUN_T{
 	  uint8_t auto_link_cloud_flag;
 	  uint8_t reconnect_tencent_cloud_flag;
 	  uint8_t gTimer_to_publish_updata;
-	  uint8_t  gTimer_send_dit;
+	  uint8_t  gTImer_send_data_to_disp;
       
   
 	  uint8_t  wind_speed_decade;
@@ -191,19 +191,21 @@ typedef struct _RUN_T{
 	
 
 	
-}RUN_T;
+}_run_t;
 
 //#define CProcessInit(me_) ((me_)->cmdCtr__ =0,(me_)->state__ = IDLE)
 extern uint8_t ReceiveBuffer[1];
-extern RUN_T run_t; 
+extern _run_t gctl_t; 
 
 
 
-void RunCommand_MainBoard_Fun(void);
+void power_on_handler(void);
+
+
+void power_off_handler(void);
 
 
 
-void Decode_RunCmd(void);
 
 
 

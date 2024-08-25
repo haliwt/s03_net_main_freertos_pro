@@ -6,30 +6,27 @@ void (*Single_Usart_ReceiveData)(uint8_t cmd);
 void SetPowerOn_ForDoing(void)
 {
     
-    run_t.gPower_flag = POWER_ON;
-    run_t.gFan_continueRun =0;
-    run_t.gPower_On=POWER_ON;
-	run_t.gmt_time_flag=0;
-	run_t.wifi_gPower_On = 1;
-
-
-	switch(run_t.app_timer_power_on_flag){
+  switch(gctl_t.app_timer_power_on_flag){
 		case 0:
-        run_t.gModel=1;
-	    run_t.gFan = 1;
-		run_t.gDry = 1;
-		run_t.gPlasma =1;       //"杀菌"
-		run_t.gUlransonic = 1; // "驱虫"
-	    run_t.gFan_counter=0;
+        gctl_t.gModel=1;
+	    gctl_t.gFan = 1;
+		gctl_t.gDry = 1;
+		gctl_t.gPlasma =1;       //"杀菌"
+		gctl_t.gUlransonic = 1; // "驱虫"
+	    gctl_t.gFan_counter=0;
+
+         if(wifi_link_net_state() ==1){
     
 		   MqttData_Publish_SetOpen(1);  
 			HAL_Delay(200);
 		     Update_DHT11_Value();
 			 HAL_Delay(200);
-	         run_t.set_wind_speed_value =100;
-			run_t.wifi_gPower_On=1;
+	         gctl_t.set_wind_speed_value =100;
+			gctl_t.wifi_gPower_On=1;
 			MqttData_Publish_Update_Data();
 			 HAL_Delay(200);
+
+         }
        	
 			
 	    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
@@ -40,45 +37,45 @@ void SetPowerOn_ForDoing(void)
 	break;
 
 	case 1: //app timer timing power of 
-	       run_t.gModel =1;
+	       gctl_t.gModel =1;
 		  
 
 	       Parse_Json_Statement();
 
 	  
-		    if( run_t.gPlasma==1){ //Anion
-				run_t.gPlasma=1;
+		    if( gctl_t.gPlasma==1){ //Anion
+				gctl_t.gPlasma=1;
 
 				SendWifiCmd_To_Order(WIFI_KILL_ON);
 				HAL_Delay(2);
 			}
 			else{
-				run_t.gPlasma =0;
+				gctl_t.gPlasma =0;
 				SendWifiCmd_To_Order(WIFI_KILL_OFF);
 				HAL_Delay(2);
 			}
 
 
-			if(run_t.gUlransonic==1){
+			if(gctl_t.gUlransonic==1){
 
 					SendWifiCmd_To_Order(WIFI_SONIC_ON);
 					HAL_Delay(2);
 			}
 			else {
-					run_t.gUlransonic=0;
+					gctl_t.gUlransonic=0;
 					SendWifiCmd_To_Order(WIFI_SONIC_OFF);
 					HAL_Delay(2);
 			}
 
 
 
-			if(run_t.gDry==1){
+			if(gctl_t.gDry==1){
 
 				SendWifiCmd_To_Order(WIFI_PTC_ON);
 				HAL_Delay(2);
 			}
 			else{
-					run_t.gDry=0;
+					gctl_t.gDry=0;
 					SendWifiCmd_To_Order(WIFI_PTC_OFF);
 					HAL_Delay(2);
 
@@ -86,8 +83,8 @@ void SetPowerOn_ForDoing(void)
 		 
 			 HAL_Delay(100);
 
-		     run_t.set_wind_speed_value =100;
-			 run_t.wifi_gPower_On=1;
+		     gctl_t.set_wind_speed_value =100;
+			 gctl_t.wifi_gPower_On=1;
 		     MqttData_Publish_Update_Data();
 		     HAL_Delay(200);
 
@@ -104,17 +101,17 @@ void SetPowerOn_ForDoing(void)
 void SetPowerOff_ForDoing(void)
 {
    
-	run_t.gPower_flag = 0; //bool 
-	run_t.gFan_continueRun =1; //the fan still run 60s
-	run_t.gPower_On = POWER_OFF;
-	run_t.wifi_gPower_On = 0;
-    run_t.set_wind_speed_value =10;
+	gctl_t.gPower_flag = 0; //bool 
+	gctl_t.gFan_continueRun =1; //the fan still run 60s
+	gctl_t.gPower_On = POWER_OFF;
+	gctl_t.wifi_gPower_On = 0;
+    gctl_t.set_wind_speed_value =10;
  
-    run_t.gFan = 0;
-    run_t.gDry = 0;
-	run_t.gPlasma =0;       //"杀菌"
-	run_t.gUlransonic = 0; // "驱虫"
-	run_t.gModel =1;
+    gctl_t.gFan = 0;
+    gctl_t.gDry = 0;
+	gctl_t.gPlasma =0;       //"杀菌"
+	gctl_t.gUlransonic = 0; // "驱虫"
+	gctl_t.gModel =1;
 
 
     
@@ -137,10 +134,10 @@ void ActionEvent_Handler(void)
 {
      
 
-if(run_t.works_break_power_on==0) { 
+if(gctl_t.works_break_power_on==0) { 
 
     
-	if(run_t.gDry == 1 && run_t.ptc_warning ==0){
+	if(gctl_t.gDry == 1 && gctl_t.ptc_warning ==0){
 
 	   PTC_SetHigh();
 
@@ -151,7 +148,7 @@ if(run_t.works_break_power_on==0) {
 		   
 	}
 	//kill
-	if(run_t.gPlasma == 1){
+	if(gctl_t.gPlasma == 1){
 		
 	     PLASMA_SetHigh();
 	}
@@ -160,7 +157,7 @@ if(run_t.works_break_power_on==0) {
 		PLASMA_SetLow();
 	}
 	//driver bug
-	if(run_t.gUlransonic ==1){
+	if(gctl_t.gUlransonic ==1){
 	
 	 
 		HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
@@ -170,10 +167,10 @@ if(run_t.works_break_power_on==0) {
 
 	}
 
-	if(run_t.gPlasma ==0 && run_t.gDry==0){
+	if(gctl_t.gPlasma ==0 && gctl_t.gDry==0){
 
-        run_t.gFan_counter=0;
-		run_t.gFan_continueRun=1;        
+        gctl_t.gFan_counter=0;
+		gctl_t.gFan_continueRun=1;        
 
 	}
 

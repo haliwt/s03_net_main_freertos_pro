@@ -101,17 +101,20 @@ int main(void)
   MX_TIM3_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
+    bsp_init();
+   HAL_TIM_Base_Start_IT(&htim17);
+   UART_Start_Receive_IT(&huart1,inputBuf,1);
+   UART_Start_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
 
   freeRTOS_Handler();
 
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
+ // MX_FREERTOS_Init();
 
   /* Start scheduler */
-  osKernelStart();
+ // osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 

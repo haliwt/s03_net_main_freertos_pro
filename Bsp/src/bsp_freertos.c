@@ -38,8 +38,8 @@ static QueueHandle_t xQueue2 = NULL;
 typedef struct Msg
 {
 	uint8_t  ucMessageID;
-	uint8_t usData[1];
-	uint8_t ulData[1];
+	uint8_t usData[20];
+	//uint8_t ulData[1];
 }MSG_T;
 
 MSG_T   g_tMsg; /* 定义丢�个结构体用于消息队列 */
@@ -48,7 +48,9 @@ uint8_t decoder_flag;
 
 uint8_t ulid,uldata,usdata;
 
-//uint8_t test_counter;
+uint8_t rx_data_counter,rx_end_counter_compare,rx_end_flag;
+
+uint8_t  rx_end_counter,uid;
 
 /**********************************************************************************************************
 *
@@ -87,35 +89,35 @@ static void vTaskMsgPro(void *pvParameters)
       
     if(power_on_sound_flag == 0){
         power_on_sound_flag ++;
-
-       //Buzzer_KeySound(void);
-        run_t.power_off_flag = 0xff;
         buzzer_sound();
 
     }
      
 
 
-     if(run_t.RunCommand_Label== POWER_ON){
+     if( gpro_t.gpower_on == power_on;){
+
+       if(gctl_t.buzzer_sound_flag == 1){
+	 	gctl_t.buzzer_sound_flag = 0;
+	    buzzer_sound()
+
+	    }
         
-             mainboard_run_handler();
-
-             Read_TempSensor_Data();
-
-             works_two_hours_detected_handler();
-
-            // test_counter ++;
+        power_on_handler();
+        send_data_to_disp();
+    	
+        RunWifi_Command_Handler();
 
       }
       else{
 
-             PowerOff_Run_Pro();
-
+           power_off_handler();
       }
 
-    
+     
+     MainBoard_Self_Inspection_PowerOn_Fun();
    
-     vTaskDelay(100);
+     vTaskDelay(200);
      
     }
 
@@ -133,7 +135,7 @@ static void vTaskStart(void *pvParameters)
 {
     MSG_T *ptMsg;
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(20); /* 1.测试设定的-设置最大等待时间为50ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(10); /* 1.测试设定的-设置最大等待时间为50ms */
 
 	
     while(1)
@@ -145,24 +147,10 @@ static void vTaskStart(void *pvParameters)
 		
 		if(xResult == pdPASS){
             
-
-          usdata = ptMsg->usData[0];
-
-          uldata = ptMsg->ulData[0];
-          
-
-          if(usdata ==0x90 || usdata ==0x91){
-            
-             if(uldata == 0x43){
-                 // buzzer_sound();//Buzzer_KeySound();
-              }
-           }
-           else{
-              buzzer_sound();//Buzzer_KeySound();
-
-
-           }
-          Decode_RunCmd(uldata,usdata);
+           
+           ulid = ptMsg ->ucMessageID;
+        
+           receive_data_fromm_display(ptMsg->usData,ulid);
        
          /* 成功接收，  并通过串口将数据打印出来 */
 			
@@ -291,29 +279,29 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	
 	      if(esp8266data.linking_tencent_cloud_doing ==1){
 
-			wifi_usart_data.UART_Data[wifi_usart_data.UART_Cnt] = wifi_usart_data.wifi_inputBuf[0];
-			wifi_usart_data.UART_Cnt++;
+			gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = gpro_t.wifi_rx_inputBuf[0];
+			gpro_t.wifi_counter++;
 
-			if(*wifi_usart_data.wifi_inputBuf==0X0A) // 0x0A = "\n"
+			if(*gpro_t.wifi_rx_inputBuf==0X0A) // 0x0A = "\n"
 			{
-				wifi_usart_data.UART_Flag = 1;
+				gpro_t.wifi_rx_data_done_flag = 1;
 				Wifi_Rx_InputInfo_Handler();
-				wifi_usart_data.UART_Cnt=0;
+				gpro_t.wifi_counter=0;
 			}
 
 	      } 
 		  else{
 
 		         if(wifi_t.get_rx_beijing_time_enable==1){
-					wifi_usart_data.UART_Data[wifi_usart_data.UART_Cnt] = wifi_usart_data.wifi_inputBuf[0];
-					wifi_usart_data.UART_Cnt++;
-					//Subscribe_Rx_Interrupt_Handler();
+					gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = gpro_t.wifi_rx_inputBuf[0];
+					gpro_t.wifi_counter++;
+					
 				}
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
-      HAL_UART_Receive_IT(&huart2,wifi_usart_data.wifi_inputBuf,1);
+      HAL_UART_Receive_IT(&huart2,gpro_t.wifi_rx_inputBuf,1);
 	}
 
 	
@@ -323,60 +311,80 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		switch(state)
 		{
 		case 0:  //#0
-			if(inputBuf[0] == 'T')  //hex :54 - "T" -fixed
+			if(inputBuf[0] == 0xA5)  // 0xA5 --didplay command head
 				state=1; //=1
             else
                 state=0;
 		break;
 		case 1: //#1
-             if(inputBuf[0] == 'K'){//hex :4B - "K" -fixed
-               
-				state=2; //=1
 
-             }
-			else{
-			   state =0;
-			}
-			break;
-            
-        case 2:
-			 if(inputBuf[0] == 'P' || inputBuf[0] == 'C' ||inputBuf[0] == 'Z' || inputBuf[0]=='T'){
-			    inputCmd[0]= inputBuf[0];
-               
-                // ptMsg->ulData[0] = inputBuf[0];
-				 state =3;
-
-			 }
-			 else
-                 state =0;
-        
-        break;
-        
-        case 3:
-
+            if(gpro_t.disp_rx_cmd_done_flag ==0){
               /* 初始化结构体指针 */
-              ptMsg = &g_tMsg;
+             ptMsg = &g_tMsg;
 		  
-	        inputCmd[1]= inputBuf[0];
+	         ptMsg->usData[rx_data_counter] =  inputBuf[0];
+             rx_wifi_data ++;
 
-            ptMsg->ulData[0] = inputCmd[0];
-            ptMsg ->usData[0] =  inputCmd[1];
-           
-           
 
-             /* 向消息队列发数据 */
-        	xQueueSendFromISR(xQueue2,
-        				      (void *)&ptMsg,
-        				      &xHigherPriorityTaskWoken);
+              }
 
-        	/* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
-        	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	       
-		 
-			 
-	         state = 0;
-        
-        break;
+              if(inputBuf[rx_data_counter]==0x0A && rx_end_flag == 0){
+                     
+                          rx_end_flag = 1 ;
+                          rx_end_counter = rx_data_counter;
+                          
+                }
+                else if(rx_end_flag == 1){
+
+                      rx_end_counter_compare = rx_data_counter - rx_end_counter;
+                      if(rx_end_counter_compare == 1){
+                   
+                          if(inputBuf[rx_data_counter]==0x0D){
+
+                              rx_end_counter_compare ++ ;
+                              gpro_t.disp_rx_cmd_done_flag = 1;
+
+
+                          }
+                          else{
+                            rx_end_flag = 0;
+
+                          }
+
+                        }
+                        else{
+                           rx_end_flag = 0;
+                         
+
+
+                        }
+
+
+              }
+                    
+                   
+
+                if(gpro_t.disp_rx_cmd_done_flag == 1){
+
+                      rx_end_counter_compare=0;
+                      rx_end_flag=0;
+                      rx_data_counter=0;
+                   /* 鍚戞秷鎭槦鍒楀彂鏁版嵁 */
+                     /* 鍒濆鍖栫粨鏋勪綋鎸囬拡 */
+                     ptMsg = &g_tMsg;
+                     ptMsg->ucMessageID=rx_data_counter;
+                
+                     /* 向消息队列发数据 */
+                	xQueueSendFromISR(xQueue2,
+                				      (void *)&ptMsg,
+                				      &xHigherPriorityTaskWoken);
+
+                	/* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
+                	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+               }
+
+         break;
 
 	
 			

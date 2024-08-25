@@ -44,8 +44,8 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 void InitWifiModule(void)
 {
 	
-	if(run_t.wifi_config_net_lable==0){
-		 run_t.wifi_config_net_lable++;
+	if(gctl_t.wifi_config_net_lable==0){
+		 gctl_t.wifi_config_net_lable++;
 			
 			WIFI_IC_ENABLE();
 	
@@ -100,14 +100,14 @@ void Wifi_SoftAP_Config_Handler(void)
     device_massage = (uint8_t *)malloc(128);
 
 
-   switch (run_t.wifi_config_net_lable)
+   switch (gctl_t.wifi_config_net_lable)
   {
 
     case wifi_set_restor:
            //InitWifiModule();
            ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware();
 		   HAL_Delay(1000);
-           run_t.wifi_config_net_lable =wifi_set_cwmode;
+           gctl_t.wifi_config_net_lable =wifi_set_cwmode;
 	break;
 
 
@@ -119,8 +119,8 @@ void Wifi_SoftAP_Config_Handler(void)
 			HAL_Delay(1000);
             Decode_Function();
 			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
-			run_t.wifi_config_net_lable =wifi_set_softap;
-			run_t.randomName[0]=HAL_GetUIDw0();
+			gctl_t.wifi_config_net_lable =wifi_set_softap;
+			gctl_t.randomName[0]=HAL_GetUIDw0();
 		
 
 	 break;
@@ -128,7 +128,7 @@ void Wifi_SoftAP_Config_Handler(void)
 	  case wifi_set_softap:
             WIFI_IC_ENABLE();
 			
-            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,run_t.randomName[0]);
+            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,gctl_t.randomName[0]);
 			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 	  		HAL_Delay(1000);
             Decode_Function();
@@ -137,7 +137,7 @@ void Wifi_SoftAP_Config_Handler(void)
 			HAL_Delay(1000);
             Decode_Function();
 	        
-			run_t.wifi_config_net_lable=wifi_set_tcdevreg;
+			gctl_t.wifi_config_net_lable=wifi_set_tcdevreg;
 		
 	
 
@@ -154,7 +154,7 @@ void Wifi_SoftAP_Config_Handler(void)
         Decode_Function();
 
 	  
-	     run_t.wifi_config_net_lable=wifi_set_tcsap;
+	     gctl_t.wifi_config_net_lable=wifi_set_tcsap;
 
 	 break;
 
@@ -171,7 +171,7 @@ void Wifi_SoftAP_Config_Handler(void)
             Decode_Function();
             esp8266data.linking_tencent_cloud_doing =1;
             wifi_t.soft_ap_config_flag =1; //WE.EIDT 
-	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",run_t.randomName[0]);
+	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",gctl_t.randomName[0]);
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 			 HAL_Delay(1000);
              Decode_Function();
@@ -179,8 +179,8 @@ void Wifi_SoftAP_Config_Handler(void)
              Decode_Function();
 			
 			  //enable usart2 receive wifi  data
-			 wifi_usart_data.UART_Cnt=0;
-			 run_t.wifi_config_net_lable=0xff;
+			 gpro_t.wifi_counter=0;
+			 gctl_t.wifi_config_net_lable=0xff;
 			
 	 break;
 
@@ -271,7 +271,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 		  //HAL_Delay(1000);
 			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
 		//	auto_link_cloud_flag =wifi_set_softap;
-			run_t.randomName[0]=HAL_GetUIDw0();
+			gctl_t.randomName[0]=HAL_GetUIDw0();
 		
 
 	 break;
@@ -287,7 +287,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 void SmartPhone_TryToLink_TencentCloud(void)
 {
     esp8266data.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
-    wifi_usart_data.UART_Cnt=0;
+    gpro_t.wifi_counter=0;
 	wifi_t.soft_ap_config_flag =0;
     HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 	//Decode_Function();
@@ -334,7 +334,7 @@ void AutoRepeate_Link_Tencent_Cloud(void)
 			wifi_t.gTimer_reconnect_wifi_order=0;
 
 	        esp8266data.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
-	        wifi_usart_data.UART_Cnt=0;
+	        gpro_t.wifi_counter=0;
 		    wifi_t.soft_ap_config_flag =0;
 	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 		    HAL_Delay(1000);

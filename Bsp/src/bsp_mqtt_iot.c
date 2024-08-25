@@ -58,47 +58,47 @@ static serviceInfo    sg_info;
 //static char *sg_property_name[] = {"opne", "sonic", "find", "nowtemperature","state","ptc","Anion","temperature","Humidity"};
 void Mqtt_Value_Init(void)
 {
-    run_t.set_wind_speed_value=100;
-    run_t.set_temperature_value=40 ;
+    gctl_t.set_wind_speed_value=100;
+    gctl_t.set_temperature_value=40 ;
    	sg_info.open=1;
     sg_info.state=1;
     sg_info.ptc=1; 
     sg_info.anion=1;  //灭菌
 	sg_info.sonic =1;  //驱虫
-    sg_info.find=run_t.set_wind_speed_value;
-	//if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
-	//else if(run_t.set_temperature_value > 40 )run_t.set_temperature_value = 40;
-	sg_info.set_temperature =  run_t.set_temperature_value ;
+    sg_info.find=gctl_t.set_wind_speed_value;
+	//if(gctl_t.set_temperature_value <20)gctl_t.set_temperature_value = 20;
+	//else if(gctl_t.set_temperature_value > 40 )gctl_t.set_temperature_value = 40;
+	sg_info.set_temperature =  gctl_t.set_temperature_value ;
 	
 }
 static void Mqtt_Value_update_data(void)
 {
     
     sg_info.open = 1;
-	if(run_t.gModel==0)run_t.gModel =1;
-	sg_info.state = run_t.gModel;
-	sg_info.ptc  = run_t.gDry;
-	sg_info.anion = run_t.gPlasma;
-	sg_info.sonic = run_t.gUlransonic ;
-    sg_info.find = run_t.set_wind_speed_value;
-    if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
-	else if(run_t.set_temperature_value > 40)run_t.set_temperature_value = 40;
-	sg_info.set_temperature = run_t.set_temperature_value;
+	if(gctl_t.gModel==0)gctl_t.gModel =1;
+	sg_info.state = gctl_t.gModel;
+	sg_info.ptc  = gctl_t.gDry;
+	sg_info.anion = gctl_t.gPlasma;
+	sg_info.sonic = gctl_t.gUlransonic ;
+    sg_info.find = gctl_t.set_wind_speed_value;
+    if(gctl_t.set_temperature_value <20)gctl_t.set_temperature_value = 20;
+	else if(gctl_t.set_temperature_value > 40)gctl_t.set_temperature_value = 40;
+	sg_info.set_temperature = gctl_t.set_temperature_value;
 
 }
 
 static void Mqtt_power_off_Value(void)
 {
-    run_t.set_wind_speed_value=10;
+    gctl_t.set_wind_speed_value=10;
    	sg_info.open=0;
     sg_info.state=1;
     sg_info.ptc=0; 
     sg_info.anion=0;  //灭菌
 	sg_info.sonic =0;  //驱虫
-    sg_info.find=run_t.set_wind_speed_value;
-	if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
-	else if(run_t.set_temperature_value > 40 )run_t.set_temperature_value = 40;
-	sg_info.set_temperature =  run_t.set_temperature_value ;
+    sg_info.find=gctl_t.set_wind_speed_value;
+	if(gctl_t.set_temperature_value <20)gctl_t.set_temperature_value = 20;
+	else if(gctl_t.set_temperature_value > 40 )gctl_t.set_temperature_value = 40;
+	sg_info.set_temperature =  gctl_t.set_temperature_value ;
 	
 }
 
@@ -117,8 +117,8 @@ void property_topic_publish(void)
     char topic[128] = {0};
     int  size;
 
-    run_t.randomName[0]=HAL_GetUIDw0();
-    size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/UYIJIA01-%d\",0,", PRODUCT_ID,run_t.randomName[0]);
+    gctl_t.randomName[0]=HAL_GetUIDw0();
+    size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/UYIJIA01-%d\",0,", PRODUCT_ID,gctl_t.randomName[0]);
     at_send_data((uint8_t *)topic, size);
  
    
