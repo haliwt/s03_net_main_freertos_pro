@@ -27,7 +27,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
          gctl_t.gDry = 1;
 	      gctl_t.gFan_continueRun =0;
 	   if(gctl_t.noBuzzer_sound_dry_flag !=1){
-		     Buzzer_KeySound();
+		     buzzer_sound();
 		 }
 		if(esp8266data.esp8266_login_cloud_success==1)
 		 MqttData_Publish_SetPtc(0x01);
@@ -42,7 +42,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	  case DRY_OFF:
  			gctl_t.gDry = 0;
 			if( no_buzzer_sound_dry_off !=1)
-			    Buzzer_KeySound();
+			     buzzer_sound();
 			 if(gctl_t.gPlasma ==0){ //plasma turn off flag
 			  gctl_t.gFan_counter =0;
 			   gctl_t.gFan_continueRun =1;
@@ -57,7 +57,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case PLASMA_ON:
        		gctl_t.gPlasma=1;
        		gctl_t.gUlransonic =1;
-	    Buzzer_KeySound();
+	         buzzer_sound();
 	   if(esp8266data.esp8266_login_cloud_success==1){
 	        MqttData_Publish_SetPlasma(1) ;//杀菌
 	        HAL_Delay(200);
@@ -70,7 +70,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case PLASMA_OFF:
            gctl_t.gPlasma=0;
            gctl_t.gUlransonic =0;
-	    Buzzer_KeySound();
+	       buzzer_sound();
 	   if(esp8266data.esp8266_login_cloud_success==1){
 	       MqttData_Publish_SetPlasma(0) ;//杀菌
 	        HAL_Delay(200);
@@ -136,7 +136,7 @@ void SystemReset(void)
 
 /**********************************************************************
 	*
-	*Functin Name: void  RunCommand_MainBoard_Fun(void)
+	*Functin Name: 
 	*Function : be check key of value 
 	*Input Ref:  key of value
 	*Return Ref: NO
@@ -393,8 +393,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
 	
-        Buzzer_KeySound();
-
+        buzzer_sound();
     
 		InitWifiModule_Hardware();//InitWifiModule();
 		HAL_Delay(1000);
@@ -462,7 +461,7 @@ void RunCommand_Connect_Handler(void)
 		 gctl_t.gTimer_fan_adc_times=0;
 		 gctl_t.ptc_first_detected_times=0;
       
-       // RunCommand_MainBoard_Fun();
+ 
 
          // gctl_t.rx_command_tag=RUN_COMMAND ;//KEY_NULL;
 		
@@ -499,12 +498,12 @@ void RunCommand_Connect_Handler(void)
 		 gctl_t.gModel =1;
 	
         // gctl_t.rx_command_tag= RUN_COMMAND;
-       // RunCommand_MainBoard_Fun();
+
 	   break;
 
 	   case RUN_COMMAND:
            if( gctl_t.decodeFlag ==0)
-	     	 RunCommand_MainBoard_Fun();
+	     	
 
 
 	   break;

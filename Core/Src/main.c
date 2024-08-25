@@ -32,6 +32,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+uint8_t wifi_rx_inputBuf[1];
 
 /* USER CODE END PTD */
 

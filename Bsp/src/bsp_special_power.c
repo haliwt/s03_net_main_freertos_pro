@@ -46,24 +46,24 @@ void SetPowerOn_ForDoing(void)
 		    if( gctl_t.gPlasma==1){ //Anion
 				gctl_t.gPlasma=1;
 
-				SendWifiCmd_To_Order(WIFI_KILL_ON);
+				SendWifiData_To_Cmd(0x03,0x01);
 				HAL_Delay(2);
 			}
 			else{
 				gctl_t.gPlasma =0;
-				SendWifiCmd_To_Order(WIFI_KILL_OFF);
+				SendWifiData_To_Cmd(0x03,0x0);
 				HAL_Delay(2);
 			}
 
 
 			if(gctl_t.gUlransonic==1){
 
-					SendWifiCmd_To_Order(WIFI_SONIC_ON);
+					SendWifiData_To_Cmd(0x04,0x01);
 					HAL_Delay(2);
 			}
 			else {
 					gctl_t.gUlransonic=0;
-					SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+					SendWifiData_To_Cmd(0x04,0x0);
 					HAL_Delay(2);
 			}
 
@@ -71,12 +71,12 @@ void SetPowerOn_ForDoing(void)
 
 			if(gctl_t.gDry==1){
 
-				SendWifiCmd_To_Order(WIFI_PTC_ON);
+				SendWifiData_To_Cmd(0x02,0x01);
 				HAL_Delay(2);
 			}
 			else{
 					gctl_t.gDry=0;
-					SendWifiCmd_To_Order(WIFI_PTC_OFF);
+					SendWifiData_To_Cmd(0x02,0x0);
 					HAL_Delay(2);
 
 			}

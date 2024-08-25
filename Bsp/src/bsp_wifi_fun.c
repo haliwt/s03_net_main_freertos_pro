@@ -192,11 +192,12 @@ void RunWifi_Command_Handler(void)
 
 				if(wifi_t.real_hours < 25 && wifi_t.real_minutes < 61){
 
-				SendData_Real_GMT(wifi_t.real_hours);
-				HAL_Delay(10);
-				SendData_Real_GMT_Minute(wifi_t.real_minutes);
-				HAL_Delay(10);
-				SendData_Real_GMT_Second(wifi_t.real_seconds);
+				//SendData_Real_GMT(wifi_t.real_hours);
+				//HAL_Delay(10);
+				//SendData_Real_GMT_Minute(wifi_t.real_minutes);
+				///HAL_Delay(10);
+				//SendData_Real_GMT_Second(wifi_t.real_seconds);
+				SendWifiData_To_PanelTime(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
 				HAL_Delay(10);
 				}
 

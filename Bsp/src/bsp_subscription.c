@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "bsp.h"
 
 
@@ -558,7 +559,7 @@ void Json_Parse_Command_Fun(void)
 
 			gctl_t.rx_command_tag= POWER_OFF;//RUN_COMMAND;
 	       // gctl_t.RunCommand_Label=POWER_OFF;
-            SendWifiCmd_To_Order(WIFI_POWER_OFF);
+            SendWifiData_To_Cmd(0x01,0x0);
 			HAL_Delay(5);
             gctl_t.wifi_power_on_flag=0;
 			buzzer_temp_on=0;
@@ -579,7 +580,7 @@ void Json_Parse_Command_Fun(void)
 		gctl_t.fan_warning =0;
 		gctl_t.ptc_remove_warning_send_data =0;
 		gctl_t.rx_command_tag= POWER_ON;
-	    SendWifiCmd_To_Order(WIFI_POWER_ON);
+	    SendWifiData_To_Cmd(0x01,0x01);
 		HAL_Delay(5);
         gctl_t.wifi_power_on_flag =1;
 		buzzer_temp_on=0;
@@ -594,7 +595,7 @@ void Json_Parse_Command_Fun(void)
 	  	 HAL_Delay(350);
 	     gctl_t.gDry=1;
 		
-		 SendWifiCmd_To_Order(WIFI_PTC_ON);
+		 SendWifiData_To_Cmd(0x02,0x01);
 		 HAL_Delay(5);
 		
 	     }
@@ -602,7 +603,7 @@ void Json_Parse_Command_Fun(void)
 			gctl_t.gDry=0;
 			MqttData_Publish_SetPtc(0);
 		     HAL_Delay(350);
-			SendWifiCmd_To_Order(WIFI_PTC_OFF);
+			SendWifiData_To_Cmd(0x02,0x0);
             HAL_Delay(5);
 		 }
            gctl_t.wifi_power_on_flag=0;  
@@ -614,12 +615,12 @@ void Json_Parse_Command_Fun(void)
 
 	  case PTC_OFF_ITEM:
 	  	if(gctl_t.gPower_flag ==POWER_ON){
-		//Buzzer_KeySound();
+	
          MqttData_Publish_SetPtc(0);
 		 HAL_Delay(350);
 	     gctl_t.gDry=0;
 		
-		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
+		 SendWifiData_To_Cmd(0x02,0x0);
          HAL_Delay(5);
 	  	 gctl_t.wifi_power_on_flag=0;
 		buzzer_temp_on=0;
@@ -630,12 +631,12 @@ void Json_Parse_Command_Fun(void)
 
 	  case ANION_OFF_ITEM: //"杀菌" //5
 	  	if(gctl_t.gPower_flag ==POWER_ON){
-			// Buzzer_KeySound();
+			
             MqttData_Publish_SetPlasma(0);
 			HAL_Delay(350);
             gctl_t.gPlasma=0;
 			
-			SendWifiCmd_To_Order(WIFI_KILL_OFF);
+			SendWifiData_To_Cmd(0x03,0x0);
 	  	   HAL_Delay(5);
 	  	}
          gctl_t.wifi_power_on_flag=0;
@@ -649,7 +650,7 @@ void Json_Parse_Command_Fun(void)
 			HAL_Delay(350);
             gctl_t.gPlasma=1;
 			
-			SendWifiCmd_To_Order(WIFI_KILL_ON);
+			SendWifiData_To_Cmd(0x03,0x01);
 	  	   HAL_Delay(5);
 	  	}
          gctl_t.wifi_power_on_flag=0;
@@ -664,7 +665,7 @@ void Json_Parse_Command_Fun(void)
 				HAL_Delay(350);
             gctl_t.gUlransonic=0;
 	
-			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+			SendWifiData_To_Cmd(0x04,0x0);
 			HAL_Delay(5);
         }
          gctl_t.wifi_power_on_flag=0;
@@ -679,7 +680,7 @@ void Json_Parse_Command_Fun(void)
 			 	HAL_Delay(350);
             gctl_t.gUlransonic=1;
 		
-			SendWifiCmd_To_Order(WIFI_SONIC_ON);
+			SendWifiData_To_Cmd(0x04,0x0);
 			HAL_Delay(5);
         }
          gctl_t.wifi_power_on_flag=0;
@@ -693,7 +694,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetState(2);
 			HAL_Delay(350);
         
-			SendWifiCmd_To_Order(WIFI_MODE_2);
+			SendWifiData_To_Cmd(0x07,0x0);
 		   HAL_Delay(5);
         }
         gctl_t.wifi_power_on_flag=0;
@@ -708,7 +709,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetState(1);
 			HAL_Delay(350);
           
-			SendWifiCmd_To_Order(WIFI_MODE_1);
+			SendWifiData_To_Cmd(0x07,0x0);
 		   HAL_Delay(5);
         }
         gctl_t.wifi_power_on_flag=0;
@@ -784,7 +785,7 @@ void Json_Parse_Command_Fun(void)
 			   HAL_Delay(350);
 				gctl_t.rx_command_tag= RUN_COMMAND;
 			   gctl_t.RunCommand_Label=POWER_ON;
-			   SendWifiCmd_To_Order(WIFI_POWER_ON);
+			   SendWifiData_To_Cmd(0x20,0x01);
 			   HAL_Delay(10);
                 gctl_t.wifi_power_on_flag=0;
 			   buzzer_temp_on=0;
@@ -804,7 +805,7 @@ void Json_Parse_Command_Fun(void)
 			gctl_t.rx_command_tag= RUN_COMMAND;
 	         gctl_t.RunCommand_Label=POWER_OFF;
 
-			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			SendWifiData_To_Cmd(0x01,0x0); //turn off power off
 			HAL_Delay(10);
              gctl_t.wifi_power_on_flag=0;
 		      buzzer_temp_on=0;
@@ -823,7 +824,7 @@ void Json_Parse_Command_Fun(void)
         
         if(buzzer_temp_on ==0 &&  gctl_t.wifi_power_on_flag ==0){
 			buzzer_temp_on++;
-   	       Buzzer_KeySound();
+   	        buzzer_sound();
         }
          
 		gctl_t.response_wifi_signal_label=0xf0;

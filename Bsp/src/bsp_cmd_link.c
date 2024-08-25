@@ -33,25 +33,12 @@ void (*EUSART_RxDefaultInterruptHandler)(void);
     
 /********************************************
 	*
-	*Function Name:void Decode_Function(void)
+	*Function Name:
     *Function: receive dsipay panel of order
     *Input Ref:NO
     *Return Ref:NO
 
 *********************************************/ 
-void Decode_Function(void)
-{
-   if(gctl_t.decodeFlag==1){
-
-    
-      // gctl_t.decodeFlag =0;
-	  gctl_t.process_run_guarantee_flag=1;
-      Decode_RunCmd();
-   
-      
-     }
-}
-
 void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 {
 

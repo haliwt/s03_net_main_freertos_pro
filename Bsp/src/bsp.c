@@ -2,7 +2,7 @@
 
 process_t gpro_t;
 
-static uint8_t bcc_check(const unsigned char *data, int len); 
+//static uint8_t bcc_check(const unsigned char *data, int len); 
 
 
 void bsp_init(void)
