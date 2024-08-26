@@ -1,6 +1,6 @@
 #include "bsp.h"
 
-
+#define DECODER_BIT_0        (1<< 0)
 
 /***********************************************************************************************************
 											函数声明
@@ -38,7 +38,7 @@ static QueueHandle_t xQueue2 = NULL;
 typedef struct Msg
 {
 	uint8_t  ucMessageID;
-	uint8_t usData[20];
+	uint8_t usData[12];
 	//uint8_t ulData[1];
 }MSG_T;
 
@@ -65,7 +65,7 @@ void freeRTOS_Handler(void)
 	  AppTaskCreate();
 	  
 	  /* 创建任务通信机制 */
-	   AppObjCreate();
+//	   AppObjCreate();
 	  
 	  /* 启动调度，开始执行任劄1�7 */
 	   vTaskStartScheduler();
@@ -136,21 +136,30 @@ static void vTaskStart(void *pvParameters)
     MSG_T *ptMsg;
 	BaseType_t xResult;
 	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(30); /* 1.测试设定的-设置最大等待时间为50ms */
+    uint32_t ulValue;
 
 	
     while(1)
     {
 		
-       xResult = xQueueReceive(xQueue2,                   /* 消息队列句柄 */
-		                        (void *)&ptMsg,  		   /* 这里获取的是结构体的地址 */
-		                        (TickType_t)xMaxBlockTime);/* 设置阻塞时间 */
-		
-		if(xResult == pdPASS){
-            
+//       xResult = xQueueReceive(xQueue2,                   /* 消息队列句柄 */
+//		                        (void *)&ptMsg,  		   /* 这里获取的是结构体的地址 */
+//		                        (TickType_t)xMaxBlockTime);/* 设置阻塞时间 */
+//		
+//		if(xResult == pdPASS){
+//            
            
-           ulid = ptMsg ->ucMessageID;
-        
-           receive_data_fromm_display(ptMsg->usData,ulid);
+         xResult = xTaskNotifyWait(0x00000000,      
+						           0xFFFFFFFF,      
+						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
+						          xMaxBlockTime);  /* 最大允许延迟时间 */
+
+         if((ulValue & DECODER_BIT_0 ) != 0)
+          {
+           gpro_t.disp_rx_cmd_done_flag = 0;
+           receive_data_fromm_display(gl_tMsg.usData,uid);
+
+         }
        
          /* 成功接收，  并通过串口将数据打印出来 */
 			
@@ -167,11 +176,7 @@ static void vTaskStart(void *pvParameters)
           #endif 
 		
          }
-       
-		
-      }
 }
-
 /*
 *********************************************************************************************************
 *	凄1�7 敄1�7 各1�7: AppTaskCreate
@@ -316,48 +321,51 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             else
                 state=0;
 		break;
+
+       
 		case 1: //#1
 
             if(gpro_t.disp_rx_cmd_done_flag ==0){
               /* 初始化结构体指针 */
-             //ptMsg = &g_tMsg;
-		  
-	         //ptMsg->usData[rx_data_counter] =  inputBuf[0];
-              gl_tMsg.usData[rx_data_counter] = inputBuf[0];
+           
+		     
+	          gl_tMsg.usData[rx_data_counter] = inputBuf[0];
               rx_data_counter++;
+
+              if(rx_end_flag == 1 ){
+
+                   state = 2;
+                   ulid = 0x6;
+                   uid = rx_data_counter;
+                   rx_data_counter =0;
+              
+              }
 
               }
 
-              if(gl_tMsg.usData[rx_data_counter] ==0xFE && rx_end_flag == 0 &&  rx_data_counter > 5){
+              if(gl_tMsg.usData[rx_data_counter] ==0xFE && rx_end_flag == 0 &&  rx_data_counter > 4){
                      
                           rx_end_flag = 1 ;
+                          
                         
-                          
-                }
-                else if(rx_end_flag == 1){
-                      rx_end_flag ++;
-                    //  rx_data_counter =0;
-                      gpro_t.disp_rx_cmd_done_flag = 1;
-                 }
-                          
+               }
+
+        break;
 
 
-              
-                    
-                   
+        case 2:
+               
 
-                if(gpro_t.disp_rx_cmd_done_flag == 1 && rx_end_flag==2){
+            rx_end_flag=0;
 
-              
-                      rx_end_flag=0;
-                      uid = rx_data_counter;
-                     
-                   /* 鍚戞秷鎭槦鍒楀彂鏁版嵁 */
-                     /* 鍒濆鍖栫粨鏋勪綋鎸囬拡 */
-                    // ptMsg = &g_tMsg;
-                    // ptMsg->ucMessageID=rx_data_counter;
-                    
-                      rx_data_counter=0;
+            uid = rx_data_counter;
+
+            gpro_t.disp_rx_cmd_done_flag = 1 ;
+
+            state=0;
+
+            rx_data_counter=0;
+                   #if 0
                 
                      /* 向消息队列发数据 */
                 	xQueueSendFromISR(xQueue2,
@@ -367,7 +375,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 	/* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
                 	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
-               }
+                    #endif 
+
+                xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
+               DECODER_BIT_0,     /* 设置目标任务事件标志位bit0  */
+               eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
+               &xHigherPriorityTaskWoken);
+
+                /* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
+                portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+           
 
          break;
 

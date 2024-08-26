@@ -3,7 +3,7 @@
 process_t gpro_t;
 
 //static uint8_t bcc_check(const unsigned char *data, int len); 
-
+ uint8_t check_code;
 
 void bsp_init(void)
 {
@@ -44,7 +44,7 @@ void send_data_to_disp(void)
 **********************************************************************/
 void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 {
-    uint8_t check_code;
+  
  
   check_code =  bcc_check(pdata, len) ;
 
@@ -147,7 +147,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
      case 0x06: //buzzer sound done
 
         if(pdata[2] == 0x01){  //buzzer sound 
-
+             buzzer_sound();
 
         }
         else if(pdata[2] == 0x0){ // don't buzzer sound .
