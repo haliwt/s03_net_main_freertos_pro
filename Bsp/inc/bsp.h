@@ -95,7 +95,8 @@ void bsp_init(void);
 
 
 
-void receive_data_fromm_display(uint8_t *pdata,uint8_t len);
+void receive_data_fromm_display(uint8_t *pdata);
+
 
 
 uint8_t bcc_check(const unsigned char *data, int len);

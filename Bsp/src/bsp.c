@@ -3,7 +3,9 @@
 process_t gpro_t;
 
 //static uint8_t bcc_check(const unsigned char *data, int len); 
- uint8_t check_code;
+
+
+
 
 void bsp_init(void)
 {
@@ -42,17 +44,12 @@ void send_data_to_disp(void)
     *Return Ref:NO
     *
 **********************************************************************/
-void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
+void receive_data_fromm_display(uint8_t *pdata)
 {
-  
- 
-  check_code =  bcc_check(pdata, len) ;
 
-  if(check_code == pdata[len-1]){
+   if(pdata[1] == 0x01){
 
-   if(pdata[0] == 0x01){
-
-    switch(pdata[1]){
+    switch(pdata[2]){
 
      case 0:
 
@@ -61,13 +58,13 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
      case 0x01: //表示开机指令
 
-        if(pdata[2] == 0x01){ //open
+        if(pdata[3] == 0x01){ //open
            buzzer_sound();
 
            gpro_t.gpower_on = power_on;
 
         }
-        else if(pdata[2] == 0x0){ //close 
+        else if(pdata[3] == 0x0){ //close 
            buzzer_sound();
            gpro_t.gpower_on = power_off;
 
@@ -78,11 +75,11 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
      case 0x02: //PTC打开关闭指令
 
-     if(pdata[2] == 0x01){
+     if(pdata[3] == 0x01){
         
           gctl_t.gDry = 1;
        }
-       else if(pdata[2] == 0x0){
+       else if(pdata[3] == 0x0){
         
          gctl_t.gDry =0;
 
@@ -92,12 +89,12 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
      case 0x03: //PLASMA 打开关闭指令
 
-        if(pdata[2] == 0x01){
+        if(pdata[3] == 0x01){
            
 
            gctl_t.gPlasma = 1;
         }
-        else if(pdata[2] == 0x0){
+        else if(pdata[3] == 0x0){
 
           gctl_t.gPlasma = 0;
 
@@ -109,12 +106,12 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
       case 0x04: //ultrasonic  打开关闭指令
 
-        if(pdata[2] == 0x01){  //open 
+        if(pdata[3] == 0x01){  //open 
           
            gctl_t.gUlransonic =1;
 
         }
-        else if(pdata[2] == 0x0){ //close 
+        else if(pdata[3] == 0x0){ //close 
 
            gctl_t.gUlransonic = 0;
 
@@ -125,7 +122,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
       case 0x05: // link wifi command
 
-        if(pdata[2] == 0x01){  // link wifi 
+        if(pdata[3] == 0x01){  // link wifi 
 
               buzzer_sound();
 		      esp8266data.esp8266_login_cloud_success=0;
@@ -135,7 +132,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 	          wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
 
         }
-        else if(pdata[2] == 0x0){ //don't link wifi 
+        else if(pdata[3] == 0x0){ //don't link wifi 
 
 
 
@@ -146,11 +143,11 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
      case 0x06: //buzzer sound done
 
-        if(pdata[2] == 0x01){  //buzzer sound 
+        if(pdata[3] == 0x01){  //buzzer sound 
              buzzer_sound();
 
         }
-        else if(pdata[2] == 0x0){ // don't buzzer sound .
+        else if(pdata[3] == 0x0){ // don't buzzer sound .
 
 
 
@@ -162,7 +159,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
       case 0x1A: //温度数据
 
-        if(pdata[2] == 0x0F){ //数据
+        if(pdata[3] == 0x0F){ //数据
 
         
 
@@ -171,7 +168,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
       case 0x1B: //湿度数据
 
-        if(pdata[2] == 0x0F){ //数据
+        if(pdata[3] == 0x0F){ //数据
             
 
         }
@@ -179,7 +176,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
       case 0x1C: //表示时间：小时，分，秒
 
-        if(pdata[2] == 0x0F){ //数据
+        if(pdata[3] == 0x0F){ //数据
 
            
 
@@ -189,7 +186,7 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
 
         case 0x1D: //表示日期： 年，月，日
 
-        if(pdata[2] == 0x0F){ //数据
+        if(pdata[3] == 0x0F){ //数据
 
              
             
@@ -200,8 +197,6 @@ void receive_data_fromm_display(uint8_t *pdata,uint8_t len)
      }
 
    }
-
-    }
 
 }
 /**********************************************************************
