@@ -42,7 +42,7 @@ typedef struct Msg
 	//uint8_t ulData[1];
 }MSG_T;
 
-MSG_T   g_tMsg; /* 定义丢�个结构体用于消息队列 */
+MSG_T   gl_tMsg; /* 定义丢�个结构体用于消息队列 */
 
 uint8_t decoder_flag;
 
@@ -320,14 +320,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
             if(gpro_t.disp_rx_cmd_done_flag ==0){
               /* 初始化结构体指针 */
-             ptMsg = &g_tMsg;
+             //ptMsg = &g_tMsg;
 		  
-	         ptMsg->usData[rx_data_counter] =  inputBuf[0];
+	         //ptMsg->usData[rx_data_counter] =  inputBuf[0];
+              gl_tMsg.usData[rx_data_counter] = inputBuf[0];
               rx_data_counter++;
 
               }
 
-              if(inputBuf[rx_data_counter]==0xFE && rx_end_flag == 0 &&  rx_data_counter > 5){
+              if(gl_tMsg.usData[rx_data_counter] ==0xFE && rx_end_flag == 0 &&  rx_data_counter > 5){
                      
                           rx_end_flag = 1 ;
                         
@@ -349,17 +350,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
               
                       rx_end_flag=0;
+                      uid = rx_data_counter;
                      
                    /* 鍚戞秷鎭槦鍒楀彂鏁版嵁 */
                      /* 鍒濆鍖栫粨鏋勪綋鎸囬拡 */
-                     ptMsg = &g_tMsg;
-                     ptMsg->ucMessageID=rx_data_counter;
+                    // ptMsg = &g_tMsg;
+                    // ptMsg->ucMessageID=rx_data_counter;
                     
                       rx_data_counter=0;
                 
                      /* 向消息队列发数据 */
                 	xQueueSendFromISR(xQueue2,
-                				      (void *)&ptMsg,
+                				      (void *)&gl_tMsg.usData,
                 				      &xHigherPriorityTaskWoken);
 
                 	/* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
