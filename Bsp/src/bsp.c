@@ -125,7 +125,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){  // link wifi 
 
-              buzzer_sound();
+              //buzzer_sound();
 		      esp8266data.esp8266_login_cloud_success=0;
 	          gctl_t.wifi_config_net_lable=wifi_set_restor;
 			  gctl_t.gTimer_linking_tencen_counter=0;
