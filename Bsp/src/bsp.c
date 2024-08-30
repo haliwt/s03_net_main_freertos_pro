@@ -28,8 +28,9 @@ void send_data_to_disp(void)
 
     if(gctl_t.gTImer_send_data_to_disp > 5){
 	
-			 gctl_t.gTImer_send_data_to_disp=0;
-			 Update_DHT11_Value();
+	   gctl_t.gTImer_send_data_to_disp=0;
+	   Update_DHT11_Value();
+       buzzer_sound();
 		
 	}
 

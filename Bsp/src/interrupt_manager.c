@@ -54,10 +54,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if(htim->Instance==TIM17){
 		
 	   tm0 ++ ;
-      // gctl_t.gTimer_senddata_panel++;
+     
 	 if(tm0 > 999){//1ms *1000 = 1000ms =1s
         tm0 =0;
-	
+	    gctl_t.gTimer_senddata_panel++;
         wifi_t.gTimer_get_beijing_time++;
 
 	    gctl_t.gTimer_publish_dht11++;

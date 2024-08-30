@@ -100,8 +100,8 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
 {
 
 	//crc=0x55;
-	outputBuf[0]=0xA5; //head : displayBoard = 0xA5
-	outputBuf[1]=0x01; //device No: 01
+	outputBuf[0]=0x5A; //head : displayBoard = 0xA5
+	outputBuf[1]=0x10; //main board device No: 0x10
 	outputBuf[2]=0x1A; //command : temperature of value 
 	outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
 	outputBuf[4]= 0x02; //data of length: 0x01 - 2 byte.

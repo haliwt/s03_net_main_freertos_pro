@@ -94,9 +94,7 @@ static void vTaskMsgPro(void *pvParameters)
 
     }
      
-
-
-     if( gpro_t.gpower_on == power_on){
+    if( gpro_t.gpower_on == power_on){
 
        if(gctl_t.buzzer_sound_flag == 1){
 	 	gctl_t.buzzer_sound_flag = 0;
@@ -106,8 +104,10 @@ static void vTaskMsgPro(void *pvParameters)
         
         power_on_handler();
         send_data_to_disp();
+        main_function_detected_handler();
     	
-      ///  RunWifi_Command_Handler();
+        RunWifi_Command_Handler();
+       
 
       }
       else{
@@ -116,7 +116,7 @@ static void vTaskMsgPro(void *pvParameters)
       }
 
      
-   //  MainBoard_Self_Inspection_PowerOn_Fun();
+     MainBoard_Self_Inspection_PowerOn_Fun();
    
      vTaskDelay(200);
      
@@ -142,13 +142,7 @@ static void vTaskStart(void *pvParameters)
 	
     while(1)
     {
-		
-//       xResult = xQueueReceive(xQueue2,                   /* 消息队列句柄 */
-//		                        (void *)&ptMsg,  		   /* 这里获取的是结构体的地址 */
-//		                        (TickType_t)xMaxBlockTime);/* 设置阻塞时间 */
-//		
-//		if(xResult == pdPASS){
-//            
+
            
          xResult = xTaskNotifyWait(0x00000000,      
 						           0xFFFFFFFF,      
@@ -173,19 +167,7 @@ static void vTaskStart(void *pvParameters)
 
          }
        
-         /* 成功接收，  并通过串口将数据打印出来 */
-			
-		    //printf("ptMsg->ucMessageID = %d\r\n",ptMsg->ucMessageID);
-            ///printf("ptMsg->usData[0] = %d\r\n",ptMsg->usData[0]);
-            //printf("ptMsg->ulData[0] = %d\r\n",ptMsg->ulData[0]);
       
-          #if 0
-          
-            HAL_UART_Transmit(&huart2, &uldata, 1, 0xffff);
-            
-            HAL_UART_Transmit(&huart2, &space_key, 1, 0xffff);
-            HAL_UART_Transmit(&huart2, &usdata, 1, 0xffff);
-          #endif 
 		
          }
 }
@@ -348,7 +330,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	          gl_tMsg.usData[rx_data_counter] = inputBuf[0];
               
 
-              if(rx_end_flag == 1 ){
+              if(rx_end_flag == 1){
 
                 state = 0;
             

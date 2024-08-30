@@ -172,7 +172,7 @@ void power_on_handler(void)
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 		 gctl_t.ptc_first_detected_times=0;
-		 
+		 gctl_t.set_wind_speed_value= 100;
 
         gctl_t.fan_continuce=0;
         if(wifi_link_net_state() ==1){
@@ -194,10 +194,7 @@ void power_on_handler(void)
     switch(gctl_t.interval_time_stop_run){
 
 	 case 0: //works timing 
-	  if(gctl_t.gTimer_senddata_panel >50 ){ //300ms
-	   	    gctl_t.gTimer_senddata_panel=0;
-	        ActionEvent_Handler();
-	    }
+	 
 
 	 if(gctl_t.gTimer_ptc_adc_times > 28 ){ //65s//3 minutes 120s
          gctl_t.gTimer_ptc_adc_times=0;
@@ -430,93 +427,15 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
     
    
 }
-
-
-/**************************************************************
-	*
-	*Function Name: void RunCommand_Connect_Handler(void)
-	*Function: power on and run command
-	*
-	*
-	*
-**************************************************************/
-void RunCommand_Connect_Handler(void)
+void main_function_detected_handler(void)
 {
-     switch(gctl_t.rx_command_tag){
 
-        case POWER_ON:
-		   PTC_SetHigh();
-         gctl_t.rx_command_tag = 0XFF;
-          gctl_t.gPower_flag = POWER_ON;
-		 gctl_t.gPower_On = POWER_ON;
-         gctl_t.RunCommand_Label= POWER_ON;
-		 gctl_t.gModel =1;
-		 gctl_t.set_wind_speed_value=100;
-         gctl_t.wifi_run_set_restart_flag =0;
-
-		 //error detected times 
-		 gctl_t.ptc_warning =0;
-		 gctl_t.fan_warning =0;
-		 gctl_t.gTimer_ptc_adc_times=0;
-		 gctl_t.gTimer_fan_adc_times=0;
-		 gctl_t.ptc_first_detected_times=0;
-      
- 
-
-         // gctl_t.rx_command_tag=RUN_COMMAND ;//KEY_NULL;
-		
-		 if( gctl_t.decodeFlag ==0){
-		 Update_DHT11_Value();
-		 HAL_Delay(10);
-		 if(esp8266data.esp8266_login_cloud_success==1){
-		 	 gctl_t.gUlransonic =1;
-			 gctl_t.gPlasma =1;
-		     gctl_t.gDry =1;
-			 gctl_t.set_wind_speed_value=100;
-             gctl_t.wifi_gPower_On=1;
-	        gctl_t.ptc_remove_warning_send_data =0;
-
-			 MqttData_Publish_SetOpen(1);  
-				HAL_Delay(200);
-			 MqttData_Publish_Update_Data();//MqttData_Publish_SetOpen(1);  //MqttData_Publish_SetOpen(0x01);
-	         HAL_Delay(350);
-	      
-		 }
-        
-		// gctl_t.rx_command_tag=RUN_COMMAND ;//KEY_NULL;
-         }
-	    break;
-
-	   case POWER_OFF:
-		  PTC_SetLow();
-           gctl_t.wifi_run_set_restart_flag =0;
-          gctl_t.ptc_remove_warning_send_data =0;
-	      gctl_t.gPower_On=POWER_OFF;
-        gctl_t.gPower_flag = POWER_OFF;
-        gctl_t.RunCommand_Label = POWER_OFF;
-		 gctl_t.set_wind_speed_value=10;
-		 gctl_t.gModel =1;
-	
-        // gctl_t.rx_command_tag= RUN_COMMAND;
-
-	   break;
-
-	   case RUN_COMMAND:
-           if( gctl_t.decodeFlag ==0)
-	     	
-
-
-	   break;
-
-
-
-	 }
-
+if(gctl_t.gTimer_senddata_panel >0 ){ //300ms
+         gctl_t.gTimer_senddata_panel=0;
+           ActionEvent_Handler();
+     }
 
 
 }
-
-
-
 
     

@@ -133,11 +133,7 @@ void Single_Usart_RxData(void(*rxHandler)(uint8_t dat))
 void ActionEvent_Handler(void)
 {
      
-
-if(gctl_t.works_break_power_on==0) { 
-
-    
-	if(gctl_t.gDry == 1 && gctl_t.ptc_warning ==0){
+  if(gctl_t.gDry == 1 && gctl_t.ptc_warning ==0){
 
 	   PTC_SetHigh();
 
@@ -167,18 +163,8 @@ if(gctl_t.works_break_power_on==0) {
 
 	}
 
-	if(gctl_t.gPlasma ==0 && gctl_t.gDry==0){
-
-        gctl_t.gFan_counter=0;
-		gctl_t.gFan_continueRun=1;        
-
-	}
-
 	Fan_RunSpeed_Fun();
 		
-   }
-
-
-}
+ }
 
 

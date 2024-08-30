@@ -114,7 +114,7 @@ typedef struct _RUN_T{
     uint8_t flash_write_data_error;
 	uint8_t flash_write_data_flag;
     uint8_t flash_read_data;
-	uint8_t works_break_power_on;
+
 	uint8_t beijing_time_flag ;
 	uint8_t set_beijing_time_flag;
 	uint8_t rx_command_tag;
@@ -218,7 +218,10 @@ void SystemReset(void);
 
 void MainBoard_Self_Inspection_PowerOn_Fun(void);
 
-void RunCommand_Connect_Handler(void);
+
+
+void main_function_detected_handler(void);
+
 
 
 #endif 

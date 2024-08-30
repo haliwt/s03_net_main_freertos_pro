@@ -29,7 +29,7 @@ void Fan_One_Power_Off_Speed(void)
 
 
 }
-#if 1
+
 void Fan_One_Speed(void)
 {
 
@@ -41,94 +41,17 @@ void Fan_One_Speed(void)
 void Fan_Two_Speed(void)
 {
 	SetLevel_Fan_PWMA(9);
-	//FAN_CW_SetLow(); //brake
-	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
+
 }
 
  void Fan_Full_Speed(void)
 {
     SetLevel_Fan_PWMA(10);
-   // FAN_CW_SetLow(); //brake
-	///HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
-
-}
-#endif 
-
-#if 0
-void Fan_One_Speed(void)
-{
-    static uint16_t fan_speed;
-	//static uint16_t  fan_dec;
-	fan_speed ++ ;
-	
-	FAN_CW_SetLow();
-
-	if(fan_speed ==1) FAN_CCW_SetLow(); //brake//Run fan//brake/Run fan //Run fan//brake //Run fan //brake //Run fan
-	
-
-    #if 1
-	if(fan_speed % 2 ==0 ){
-	   FAN_CCW_SetHigh(); //Run fan
-    }
-	
-
-	if( fan_speed % 4 ==0 ){
-  
-	  FAN_CCW_SetLow(); //brake
-	  
-	}
-
-	if(fan_speed > 5){ //
-		fan_speed =0;
-
-	    FAN_CCW_SetLow(); //brake
-	   // FAN_CCW_SetHigh(); //Run fan
-	}
-	#endif 
-
-
-
-}
-
-void Fan_Two_Speed(void)
-{
-   static uint16_t fan_speed;
-	//static uint16_t  fan_dec;
-	fan_speed ++ ;
-	
-	FAN_CW_SetLow();
-
-   #if 1
-	if(fan_speed % 2 ==0  && fan_speed % 4 !=0 ){
-	   FAN_CCW_SetHigh(); //Run fan
-    }
-    if( fan_speed % 4 ==0 && fan_speed % 2 !=0){
-  
-	  FAN_CCW_SetLow(); //brake
-	  
-	}
-
-	if(fan_speed > 20000){ //
-		fan_speed =0;
-	    
-	     FAN_CCW_SetLow(); //brake
-	}
-	#endif 
 
 }
 
 
 
-
-
-void Fan_Full_Speed(void)
-{
-   
-    FAN_CW_SetLow(); //brake
-	FAN_CCW_SetHigh(); 
-
-}
-#endif 
 
 void ShutDown_AllFunction(void)
 {
