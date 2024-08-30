@@ -2,13 +2,13 @@
 
 void (*buzzer_sound)(void);
 
-static void buzzer_fun(void);
+static void buzzer_sound_fun(void);
 
 
 void buzzer_init(void)
 {
 
-    buzzer_sound_handler(buzzer_fun);
+    buzzer_sound_handler(buzzer_sound_fun);
 
 }
 
@@ -25,7 +25,7 @@ void buzzer_sound_handler(void(*buzzer_handler)(void))
 
 
 
-static void buzzer_fun(void)
+static void buzzer_sound_fun(void)
 {
    
     HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);

@@ -118,7 +118,7 @@ static void vTaskMsgPro(void *pvParameters)
      
      MainBoard_Self_Inspection_PowerOn_Fun();
    
-     vTaskDelay(200);
+     vTaskDelay(30);
      
     }
 
@@ -136,7 +136,7 @@ static void vTaskStart(void *pvParameters)
 {
     MSG_T *ptMsg;
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(50); /* 1.测试设定的-设置最大等待时间为50ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(20); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
 
 	
@@ -191,9 +191,9 @@ void AppTaskCreate (void)
 	
 	xTaskCreate( vTaskMsgPro,     		/* 任务函数  */
                  "vTaskMsgPro",   		/* 任务各1�7    */
-                 128,             		/* 任务栈大小，单位word，也就是4字节 */
+                 256,             		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
-                 2,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
+                 1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskMsgPro );  /* 任务句柄  */
 	
 	
@@ -201,7 +201,7 @@ void AppTaskCreate (void)
                  "vTaskStart",   		/* 任务各1�7    */
                  128,            		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
-                 1,              		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
+                 2,              		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskStart );   /* 任务句柄  */
 }
 
