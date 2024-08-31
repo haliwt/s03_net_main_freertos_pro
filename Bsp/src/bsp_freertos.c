@@ -103,12 +103,17 @@ static void vTaskMsgPro(void *pvParameters)
 	    }
         
         power_on_handler();
-        send_data_to_disp();
+      
         main_function_detected_handler();
+        if(gpro_t.wifi_led_fast_blink_flag==1){
+            RunWifi_Command_Handler();
 
-        
-    	
-        RunWifi_Command_Handler();
+        }
+        else{
+           send_data_to_disp();
+           adc_detected_hundler();
+
+        }
        
 
       }
@@ -117,8 +122,12 @@ static void vTaskMsgPro(void *pvParameters)
            power_off_handler();
       }
 
+     if(gpro_t.wifi_led_fast_blink_flag==0){
+         wifi_get_beijint_time_handler();
+         wifi_auto_detected_link_state();
+      }
      
-     MainBoard_Self_Inspection_PowerOn_Fun();
+     clear_rx_copy_data();
    
      vTaskDelay(30);
      
@@ -275,27 +284,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART2)
     {
            
-         
-        //  USART2->ISR = 0xf5; 
-	
-	      if(net_t.linking_tencent_cloud_doing ==1){
+     if(net_t.linking_tencent_cloud_doing ==1){
 
-			gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] =wifi_rx_inputBuf[0];
-			gpro_t.wifi_counter++;
+			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
+			gpro_t.wifi_rx_data_counter++;
 
 			if(*wifi_rx_inputBuf==0X0A) // 0x0A = "\n"
 			{
-				gpro_t.wifi_rx_data_done_flag = 1;
+				
 				Wifi_Rx_InputInfo_Handler();
-				gpro_t.wifi_counter=0;
+				gpro_t.wifi_rx_data_counter=0;
 			}
 
 	      } 
 		  else{
 
 		         if(wifi_t.get_rx_beijing_time_enable==1){
-					gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = wifi_rx_inputBuf[0];
-					gpro_t.wifi_counter++;
+					gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] = wifi_rx_inputBuf[0];
+					gpro_t.wifi_rx_data_counter++;
 					
 				}
 				else

@@ -230,8 +230,8 @@ void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
 *******************************************************************************/
 void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
 {
-        outputBuf[0]=0x5A; //head : displayBoard = 0xA5
-        outputBuf[1]=0x10; //device No: 01
+        outputBuf[0]=0x5A; //head : main board 0x5A
+        outputBuf[1]=0x10; //main board device No: 0x10
         outputBuf[2]=cmd; //command type: fan speed of value 
         outputBuf[3]=data; // 0x0F : is data ,don't command data.
         outputBuf[4]= 0x0; // don't data 

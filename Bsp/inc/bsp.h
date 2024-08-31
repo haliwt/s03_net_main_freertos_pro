@@ -3,6 +3,7 @@
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "bsp_fan.h"
 
@@ -81,8 +82,17 @@ typedef struct PROCESS_T{
    uint8_t gpower_on;
    uint8_t disp_rx_cmd_done_flag;
    uint8_t wifi_rx_data_array[150];
-   uint8_t wifi_counter;
-   uint8_t wifi_rx_data_done_flag;
+   uint8_t wifi_rx_data_counter;
+  
+   uint8_t wifi_led_fast_blink_flag;
+   uint8_t get_beijing_time_success;
+   
+   uint8_t disp_works_hours ;    
+   uint8_t disp_works_minutes ;
+   uint8_t disp_works_time_seconds ;
+
+   uint8_t gTimer_power_on_first_link_tencent;
+   uint8_t gTimer_get_data_from_tencent_data;
 
 
 
@@ -102,6 +112,14 @@ void receive_data_fromm_display(uint8_t *pdata);
 uint8_t bcc_check(const unsigned char *data, int len);
 
 void send_data_to_disp(void);
+
+void wifi_get_beijint_time_handler(void);
+
+
+void adc_detected_hundler(void);
+
+
+void wifi_auto_detected_link_state(void);
 
 
 #endif 

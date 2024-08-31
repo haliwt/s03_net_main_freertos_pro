@@ -309,7 +309,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 void SmartPhone_TryToLink_TencentCloud(void)
 {
     net_t.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
-    gpro_t.wifi_counter=0;
+    gpro_t.wifi_rx_data_counter=0;
 	wifi_t.soft_ap_config_flag =0;
     HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//开始连接
 
@@ -328,46 +328,6 @@ void Reconnection_Wifi_Order(void)
   
 }
 
-
-void AutoRepeate_Link_Tencent_Cloud(void)
-{
-    
-	 static uint8_t wifi_en,wifi_det;
-	 if(net_t.esp8266_login_cloud_success==0){
-	     if( wifi_t.gTimer_reconnect_wifi_order  > 15  && wifi_en ==0){
-		   	   wifi_en++;
-			 
-			 wifi_t.gTimer_reconnect_wifi_order=0;
-
-		  // InitWifiModule_Hardware();//InitWifiModule();
-		   ReConnect_Wifi_Net_ATReset_Hardware();
-		   HAL_Delay(1000);
-		   HAL_Delay(1000);
-		    wifi_det=1;
-	  
-	     }
-
-		if(wifi_t.gTimer_reconnect_wifi_order > 5 && wifi_det==1){
-			wifi_det ++;
-			wifi_en=0;
-
-			wifi_t.gTimer_reconnect_wifi_order=0;
-
-	        net_t.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
-	        gpro_t.wifi_counter=0;
-		    wifi_t.soft_ap_config_flag =0;
-	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-		    HAL_Delay(1000);
-			HAL_Delay(1000);
-			HAL_Delay(1000);
-		
-		
-		 }
-	 }
-	
-   
-
-}
 
 
 

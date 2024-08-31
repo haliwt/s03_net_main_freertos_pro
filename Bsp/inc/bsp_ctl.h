@@ -90,7 +90,7 @@ typedef struct _RUN_T{
 	uint8_t process_run_guarantee_flag;
 	uint8_t usart2_error_falg ;
 	uint8_t power_off_fan_state ;
-    uint8_t wifi_run_set_restart_flag ;
+   
 
 	
  
@@ -115,7 +115,7 @@ typedef struct _RUN_T{
 	uint8_t flash_write_data_flag;
     uint8_t flash_read_data;
 
-	uint8_t beijing_time_flag ;
+
 	uint8_t set_beijing_time_flag;
 	uint8_t rx_command_tag;
 
@@ -151,7 +151,7 @@ typedef struct _RUN_T{
 	  uint8_t  set_wind_speed_value;
 	  uint8_t auto_link_cloud_flag;
 	  uint8_t reconnect_tencent_cloud_flag;
-	  uint8_t gTimer_to_publish_updata;
+	
 	  uint8_t  gTImer_send_data_to_disp;
       
   
@@ -165,26 +165,23 @@ typedef struct _RUN_T{
 
 
 	  uint8_t gTimer_app_power_on;
-	  uint8_t gTimer_publish_dht11;
-	  uint8_t gTimer_read_beijing_time;
-	  uint8_t gTimer_auto_detected_net_link_state;
+	
+	  
+
 	  uint8_t gTimer_fan_adc_times;
 	  uint8_t gTimer_ptc_adc_times;
       uint8_t fan_warning;
 	
 
-	  
-	  
-	  
-
-
-	uint8_t gTimer_senddata_panel;
+	 uint8_t gTimer_senddata_panel;
 	
 	 uint16_t ptc_temp_voltage;
-	 uint16_t gTimer_linking_tencen_counter;
+     uint8_t  gTimer_read_beijing_time;
+	 uint8_t gTimer_linking_tencen_total_counter;
 	
-	uint16_t gTimer_usart2_error;
-	uint16_t gTimer_continuce_works_time;
+	uint8_t gTimer_usart2_error;
+	uint8_t gTimer_continuce_works_time;
+    
 	uint32_t randomName[1];
 	
 
@@ -216,7 +213,7 @@ void Single_Mode(void);
 void Single_ReceiveCmd(uint8_t cmd);
 void SystemReset(void);
 
-void MainBoard_Self_Inspection_PowerOn_Fun(void);
+
 
 
 
