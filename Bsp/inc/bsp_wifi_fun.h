@@ -13,7 +13,7 @@ typedef enum{
 
 typedef enum _wifi_state_t{  
 	
-    wifi_link_start =0x01,
+    wifi_has_been_connected =0x01,
 	wifi_link_tencent_cloud, //2
 	wifi_tencent_publish_init_data, //3
 	wifi_tencent_subscription_data, //4
@@ -30,38 +30,30 @@ typedef enum _wifi_state_t{
 typedef struct _WIFI_FUN{
 	
     uint8_t runCommand_order_lable;
-
+	uint8_t has_been_login_flag;
     uint8_t soft_ap_config_flag;
     uint8_t get_rx_beijing_time_enable;
 	
 	
-
+	uint8_t wifi_reconnect_read_flag;
 	
 	uint8_t tencent_cloud_command_power_on;
-    uint8_t once_rx_data_done;
 
 
-    
+    uint8_t real_hours;
+	uint8_t real_minutes;
+	uint8_t real_seconds;
 	uint8_t restart_link_tencent_cloud ;
 	uint8_t received_data_from_tencent_cloud ;
 
   
 
-   
+    uint8_t gTimer_reconnect_wifi_order;
 	uint8_t gTimer_beijing_time;
-
-
-	
-
-    uint8_t gTimer_auto_detected_net_state_times ;
-    uint8_t gTimer_read_beijing_time;
-
-    uint8_t gTimer_auto_link_net_time;
-
-
-    
+	uint8_t gTimer_reconnect_wifi;
+	uint8_t gTimer_power_off;
+	uint8_t gTimer_subscriber_send ;
     uint16_t gTimer_get_beijing_time;
-    
 	
 		
 	

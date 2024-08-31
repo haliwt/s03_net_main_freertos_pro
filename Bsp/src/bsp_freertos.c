@@ -103,17 +103,12 @@ static void vTaskMsgPro(void *pvParameters)
 	    }
         
         power_on_handler();
-      
+        send_data_to_disp();
         main_function_detected_handler();
-        if(gpro_t.wifi_led_fast_blink_flag==1){
-            RunWifi_Command_Handler();
 
-        }
-        else{
-           send_data_to_disp();
-           adc_detected_hundler();
-
-        }
+        
+    	
+        RunWifi_Command_Handler();
        
 
       }
@@ -122,12 +117,8 @@ static void vTaskMsgPro(void *pvParameters)
            power_off_handler();
       }
 
-     if(gpro_t.wifi_led_fast_blink_flag==0){
-         wifi_get_beijint_time_handler();
-         wifi_auto_detected_link_state();
-      }
      
-     clear_rx_copy_data();
+     MainBoard_Self_Inspection_PowerOn_Fun();
    
      vTaskDelay(30);
      
@@ -283,31 +274,33 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
     if(huart->Instance==USART2)
     {
-     DISABLE_INT();
-     if(net_t.linking_tencent_cloud_doing ==1){
+           
+         
+        //  USART2->ISR = 0xf5; 
+	
+	      if(net_t.linking_tencent_cloud_doing ==1){
 
-			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
-			gpro_t.wifi_rx_data_counter++;
+			gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] =wifi_rx_inputBuf[0];
+			gpro_t.wifi_counter++;
 
 			if(*wifi_rx_inputBuf==0X0A) // 0x0A = "\n"
 			{
-				
+				gpro_t.wifi_rx_data_done_flag = 1;
 				Wifi_Rx_InputInfo_Handler();
-				gpro_t.wifi_rx_data_counter=0;
+				gpro_t.wifi_counter=0;
 			}
 
 	      } 
 		  else{
 
 		         if(wifi_t.get_rx_beijing_time_enable==1){
-					gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] = wifi_rx_inputBuf[0];
-					gpro_t.wifi_rx_data_counter++;
+					gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] = wifi_rx_inputBuf[0];
+					gpro_t.wifi_counter++;
 					
 				}
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
-       ENABLE_INT();
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
       HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}
@@ -322,7 +315,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			if(inputBuf[0] == 0xA5){  // 0xA5 --didplay command head
                rx_data_counter=0;
                gl_tMsg.usData[rx_data_counter] = inputBuf[0];
-			   state=1; //=1
+				state=1; //=1
 
              }
             else

@@ -12,7 +12,6 @@ void buzzer_init(void);
 
 void buzzer_sound_handler(void(*buzzer_hanlder)(void));
 
-void buzzer_sound_fun(void);
 
 
 

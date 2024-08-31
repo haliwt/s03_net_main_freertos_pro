@@ -100,7 +100,7 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
 {
 
 	//crc=0x55;
-	outputBuf[0]=0x5A; //head : mainboard Board = 0x5A
+	outputBuf[0]=0x5A; //head : displayBoard = 0xA5
 	outputBuf[1]=0x10; //main board device No: 0x10
 	outputBuf[2]=0x1A; //command : temperature of value 
 	outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
@@ -155,32 +155,39 @@ void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
 	}
 }
 
-/*********************************************************
- * 
- * Function Name:void SendData_Temp_Data(uint8_t tdata)
- * Function:send temperature value 
- * 
-*********************************************************/
-void SendData_Set_Command(uint8_t cmd,uint8_t data)
+/********************************************************************************
+    **
+    *Function Name:void SendWifiData_To_WifiSetTemp(uint8_t dat1)
+    *Function :
+    *Input Ref: dat1- fan of grade value 
+    *Return Ref:NO
+    *
+*******************************************************************************/
+void SendWifiData_To_WifiSetTemp(uint8_t dat1)
 {
-    outputBuf[0]=0x5A; //display board head = 0xA5
-	outputBuf[1]= 0x10; //display device Number:is 0x01
-	outputBuf[2]=cmd; // command type = 0x06 ->buzzer sound open or not
-	outputBuf[3]= data; // command order -> 01 - buzzer sound done, 00- don't buzzer sound 
-	outputBuf[4]=0x00; // data is length: 00 ->don't data 
-	outputBuf[5]=0xFE; // frame of end code -> 0xFE.
-    outputBuf[6] = bcc_check(outputBuf,6);
+        outputBuf[0]=0x5A; //head : displayBoard = 0xA5
+        outputBuf[1]=0x10; //main board device No: 01
+        outputBuf[2]=0x1A; //command type: temperature value
+        outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
+        outputBuf[4]= 0x01; //data of length: 0x01 - 1 byte.
+        outputBuf[5] =dat1;
+    
+    
+         outputBuf[6] = 0xFE;
+         outputBuf[7] = bcc_check(outputBuf,7);
+        
+        transferSize=8;
+        if(transferSize)
+        {
+            while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+            transOngoingFlag=1;
+            HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+        }
+       
 
-
-		transferSize=7;
-		if(transferSize)
-		{
-			while(transOngoingFlag);
-			transOngoingFlag=1;
-			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
-		}
-	
 }
+
+
 /********************************************************************************
     **
     *Function Name:void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
@@ -223,8 +230,8 @@ void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
 *******************************************************************************/
 void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
 {
-        outputBuf[0]=0x5A; //head : main board 0x5A
-        outputBuf[1]=0x10; //main board device No: 0x10
+        outputBuf[0]=0x5A; //head : displayBoard = 0xA5
+        outputBuf[1]=0x10; //device No: 01
         outputBuf[2]=cmd; //command type: fan speed of value 
         outputBuf[3]=data; // 0x0F : is data ,don't command data.
         outputBuf[4]= 0x0; // don't data 

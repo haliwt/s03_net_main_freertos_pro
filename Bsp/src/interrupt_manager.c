@@ -54,45 +54,33 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if(htim->Instance==TIM17){
 		
 	   tm0 ++ ;
-       
      
 	 if(tm0 > 999){//1ms *1000 = 1000ms =1s
         tm0 =0;
-        tm1++;
 	    gctl_t.gTimer_senddata_panel++;
         wifi_t.gTimer_get_beijing_time++;
 
-
+	    gctl_t.gTimer_publish_dht11++;
 	    gctl_t.gTimer_app_power_on++;
 	    gctl_t.gTimer_read_beijing_time++;
-
+	   gctl_t.gTimer_auto_detected_net_link_state++;
 
 	   gctl_t.gTimer_usart_error++;
-	
-	   gctl_t.gTImer_send_data_to_disp++;
-	
-	  
+	   wifi_t.gTimer_reconnect_wifi++;
 	   
+
+	   gctl_t.gTimer_to_publish_updata++;
+	   gctl_t.gTImer_send_data_to_disp++;
+	   wifi_t.gTimer_reconnect_wifi_order++;
+	   wifi_t.gTimer_power_off++;
+	   wifi_t.gTimer_subscriber_send ++;
+	   gctl_t.gTimer_continuce_works_time++;
 	   gctl_t.gTimer_fan_adc_times++;
 	   gctl_t.gTimer_ptc_adc_times++;
 
 	  gctl_t.gTimer_usart2_error++;
-	  gctl_t.gTimer_linking_tencen_total_counter++;
+	  gctl_t.gTimer_linking_tencen_counter++;
 	  gctl_t.gFan_counter++;
-        //gprocess 
-       gpro_t.gTimer_power_on_first_link_tencent++;
-       gpro_t.gTimer_get_data_from_tencent_data++;
-       //wifi function 
-       wifi_t.gTimer_auto_detected_net_state_times ++;
-       wifi_t.gTimer_auto_link_net_time++ ;
-
-       if(tm1> 59){
-          tm1 =0;
-          gctl_t.gTimer_continuce_works_time++;
-
-       }
-      
-	 
 	  }
  	}
  }
