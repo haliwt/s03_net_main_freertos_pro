@@ -29,7 +29,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	   if(gctl_t.noBuzzer_sound_dry_flag !=1){
 		     buzzer_sound();
 		 }
-		if(esp8266data.esp8266_login_cloud_success==1)
+		if(net_t.esp8266_login_cloud_success==1)
 		 MqttData_Publish_SetPtc(0x01);
 		 HAL_Delay(200);
 		 
@@ -48,7 +48,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			   gctl_t.gFan_continueRun =1;
 
 		     }
-			if(esp8266data.esp8266_login_cloud_success==1)
+			if(net_t.esp8266_login_cloud_success==1)
 			MqttData_Publish_SetPtc(0x0);
 			HAL_Delay(200);
 			
@@ -58,7 +58,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        		gctl_t.gPlasma=1;
        		gctl_t.gUlransonic =1;
 	         buzzer_sound();
-	   if(esp8266data.esp8266_login_cloud_success==1){
+	   if(net_t.esp8266_login_cloud_success==1){
 	        MqttData_Publish_SetPlasma(1) ;//杀菌
 	        HAL_Delay(200);
 	        MqttData_Publish_SetUltrasonic(1); //超声波
@@ -71,7 +71,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
            gctl_t.gPlasma=0;
            gctl_t.gUlransonic =0;
 	       buzzer_sound();
-	   if(esp8266data.esp8266_login_cloud_success==1){
+	   if(net_t.esp8266_login_cloud_success==1){
 	       MqttData_Publish_SetPlasma(0) ;//杀菌
 	        HAL_Delay(200);
 	        MqttData_Publish_SetUltrasonic(0); //超声波
@@ -396,7 +396,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		HAL_Delay(1000);
         SmartPhone_TryToLink_TencentCloud();
          gctl_t.gTimer_ptc_adc_times=0;
-		if(esp8266data.esp8266_login_cloud_success==1){
+		if(net_t.esp8266_login_cloud_success==1){
 			
 			
 			wifi_t.runCommand_order_lable= wifi_tencent_subscription_data;//04
@@ -411,7 +411,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
        gctl_t.gTimer_ptc_adc_times=0;
     }
 
-	 if(esp8266data.esp8266_login_cloud_success==1 && gctl_t.gPower_On  !=POWER_ON ){
+	 if(net_t.esp8266_login_cloud_success==1 && gctl_t.gPower_On  !=POWER_ON ){
        
            if(send_power_off_flag==0){
             send_power_off_flag++;

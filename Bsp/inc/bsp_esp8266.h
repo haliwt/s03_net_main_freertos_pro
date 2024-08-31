@@ -30,7 +30,8 @@ typedef enum _esp8266_para{
 	wifi_set_tcdevreg,
 	wifi_set_tcsap,
 	wifi_login_tencent,
-	wifi_link_smartphone
+	wifi_link_smartphone,
+	wifi_inquire_register_codes,
 
 
 }esp8266_para;
@@ -71,7 +72,7 @@ typedef struct ESP8266_DATA
 
 void InitWifiModule_Hardware(void);
 
-extern ESP8266DATATypedef esp8266data;
+extern ESP8266DATATypedef net_t;
 
 void InitWifiModule(void);
 

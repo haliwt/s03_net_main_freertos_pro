@@ -25,7 +25,7 @@ void wifi_link_net_handler(uint8_t (wifi_link_net_state_handler)(void))
 
 static uint8_t wifi_link_net_fun(void)
 {
-     if(esp8266data.esp8266_login_cloud_success ==1) return 1;
+     if(net_t.esp8266_login_cloud_success ==1) return 1;
      else 
         return 0;
 

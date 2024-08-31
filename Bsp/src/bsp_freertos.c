@@ -105,6 +105,8 @@ static void vTaskMsgPro(void *pvParameters)
         power_on_handler();
         send_data_to_disp();
         main_function_detected_handler();
+
+        
     	
         RunWifi_Command_Handler();
        
@@ -276,7 +278,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
          
         //  USART2->ISR = 0xf5; 
 	
-	      if(esp8266data.linking_tencent_cloud_doing ==1){
+	      if(net_t.linking_tencent_cloud_doing ==1){
 
 			gpro_t.wifi_rx_data_array[gpro_t.wifi_counter] =wifi_rx_inputBuf[0];
 			gpro_t.wifi_counter++;

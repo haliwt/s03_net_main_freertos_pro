@@ -23,7 +23,7 @@ void Receive_Data_FromCloud_Data(int type, char *str)
    uint8_t   iNameLen = 0;
     char  *p_cName = 0, *p_cPos = str;
 
-       esp8266data.rx_data_len=strlen(str);
+       net_t.rx_data_len=strlen(str);
 
       if (type == JSOBJECT) {
         /* Get Key */
@@ -37,7 +37,7 @@ void Receive_Data_FromCloud_Data(int type, char *str)
             return ;
         }
         iNameLen = p_cPos - p_cName;
-      esp8266data.rx_data_name_len=iNameLen;
+      net_t.rx_data_name_len=iNameLen;
 
         /* Get Value */
         p_cPos = strchr(p_cPos, ':');
@@ -78,14 +78,14 @@ void Subscriber_Data_FromCloud_Handler(void)
 void Subscribe_Rx_Interrupt_Handler(void)
 {
       static uint8_t det_wifi_link;
-    switch(esp8266data.rx_data_state)
+    switch(net_t.rx_data_state)
       {
       case 0: //#0
 
 	  	if((wifi_rx_inputBuf[0] == '"') ||wifi_rx_inputBuf[0]=='+') //hex :54 - "T" -fixed
-            esp8266data.rx_data_state=1; //=1
+            net_t.rx_data_state=1; //=1
           else{
-               esp8266data.rx_counter=0;
+               net_t.rx_counter=0;
             
             }
         break;
@@ -93,48 +93,48 @@ void Subscribe_Rx_Interrupt_Handler(void)
       case 1:
       
          if((wifi_rx_inputBuf[0] == 'p')  ||wifi_rx_inputBuf[0]=='T')//hex :54 - "T" -fixed
-            esp8266data.rx_data_state=2; //=1
+            net_t.rx_data_state=2; //=1
           else{
-               esp8266data.rx_counter=0;
+               net_t.rx_counter=0;
             
             }
             
          break;
       case 2: //#1
              if((wifi_rx_inputBuf[0] == 'a')||wifi_rx_inputBuf[0]=='C')  //hex :4B - "K" -fixed
-            esp8266data.rx_data_state=3; //=1
+            net_t.rx_data_state=3; //=1
          else{
-            esp8266data.rx_data_state =0;
-             esp8266data.rx_counter=0;
+            net_t.rx_data_state =0;
+             net_t.rx_counter=0;
          }
          break;
             
         case 3:
             if((wifi_rx_inputBuf[0] == 'r')||wifi_rx_inputBuf[0]=='M')    //hex :4B - "K" -fixed
-            esp8266data.rx_data_state=4; //=1
+            net_t.rx_data_state=4; //=1
          else{
-           esp8266data.rx_data_state =0;
-             esp8266data.rx_counter=0;
+           net_t.rx_data_state =0;
+             net_t.rx_counter=0;
          }
         
         break;
         
         case 4:
             if((wifi_rx_inputBuf[0] == 'a')  ||wifi_rx_inputBuf[0]=='Q')  //hex :4B - "K" -fixed
-            esp8266data.rx_data_state=5; //=1
+            net_t.rx_data_state=5; //=1
          else{
-            esp8266data.rx_data_state =0;
-             esp8266data.rx_counter=0;
+            net_t.rx_data_state =0;
+             net_t.rx_counter=0;
          }
         
         break;
 
       case 5:
        if((wifi_rx_inputBuf[0] == 'm') ||wifi_rx_inputBuf[0]=='T')   //hex :4B - "K" -fixed
-         esp8266data.rx_data_state=6; //=1
+         net_t.rx_data_state=6; //=1
          else{
-           esp8266data.rx_data_state=0;
-            esp8266data.rx_counter=0;
+           net_t.rx_data_state=0;
+            net_t.rx_counter=0;
          }
             
       break;
@@ -142,36 +142,36 @@ void Subscribe_Rx_Interrupt_Handler(void)
       
       case 6:
        if((wifi_rx_inputBuf[0] == 's')||wifi_rx_inputBuf[0]=='T')    //hex :4B - "K" -fixed
-         esp8266data.rx_data_state=7; //=1
+         net_t.rx_data_state=7; //=1
          else{
-           esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+           net_t.rx_data_state =0;
+            net_t.rx_counter=0;
          }
             
       break;
 
       case 7:
        if((wifi_rx_inputBuf[0] == '"')||wifi_rx_inputBuf[0]=='R' ||wifi_rx_inputBuf[0]=='C' ){  //hex :4B - "K" -fixed
-         esp8266data.rx_data_state=8; //=1
+         net_t.rx_data_state=8; //=1
     	}
 		else if(wifi_rx_inputBuf[0]==':' ){
 
-             esp8266data.rx_data_state=8;
+             net_t.rx_data_state=8;
 			 det_wifi_link=1;//wifi_t.wifi_reconnect_read_flag = gpro_t.wifi_rx_inputBuf[0];
 		}
 		else{
-           esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+           net_t.rx_data_state =0;
+            net_t.rx_counter=0;
          }
            
       break;
 
        case 8:
        if((wifi_rx_inputBuf[0] == ':') ||wifi_rx_inputBuf[0]=='E' ||wifi_rx_inputBuf[0]=='O' ) //hex :4B - "K" -fixed
-         esp8266data.rx_data_state=9; //=1
+         net_t.rx_data_state=9; //=1
          else{
-           esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+           net_t.rx_data_state =0;
+            net_t.rx_counter=0;
          }
 
 		
@@ -181,47 +181,47 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
       case 9:
        if((wifi_rx_inputBuf[0] == '{') ||wifi_rx_inputBuf[0]=='C' ||wifi_rx_inputBuf[0]=='N'){ //hex :4B - "K" -fixed
-         esp8266data.rx_data_state=10; //=1
+         net_t.rx_data_state=10; //=1
        	}
          else{
-           esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+           net_t.rx_data_state =0;
+            net_t.rx_counter=0;
          }
             
       break;
          
      case 10:
         
-         if(esp8266data.rx_data_success==0){
+         if(net_t.rx_data_success==0){
 		 	
-         	gpro_t.wifi_rx_data_array[esp8266data.rx_counter] = wifi_rx_inputBuf[0];
-            esp8266data.rx_counter++ ;
+         	gpro_t.wifi_rx_data_array[net_t.rx_counter] = wifi_rx_inputBuf[0];
+            net_t.rx_counter++ ;
 	
 		    
             
          if(wifi_rx_inputBuf[0]=='}' || wifi_rx_inputBuf[0]==0x0A) //0x7D='}' // end
          {
-            esp8266data.rx_data_success=1;
-            esp8266data.rx_data_state=0;
-			wifi_t.received_data_from_tencent_cloud = esp8266data.rx_counter;
-            esp8266data.rx_counter=0;
+            net_t.rx_data_success=1;
+            net_t.rx_data_state=0;
+			wifi_t.received_data_from_tencent_cloud = net_t.rx_counter;
+            net_t.rx_counter=0;
             
           
          }
 		 else if(wifi_rx_inputBuf[0]=='O' || wifi_rx_inputBuf[0]=='N'){ //auto reconect be detected 
 
-                  esp8266data.rx_data_state=11; //=1
+                  net_t.rx_data_state=11; //=1
 
 
 		 }
 		 else 
-		   esp8266data.rx_data_state=10; 
+		   net_t.rx_data_state=10; 
          }
          else{
-			esp8266data.rx_data_success=0;
+			net_t.rx_data_success=0;
 
-            esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+            net_t.rx_data_state =0;
+            net_t.rx_counter=0;
 			wifi_t.received_data_from_tencent_cloud =0;
 
          }
@@ -233,12 +233,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	  case 11:
 		if(wifi_rx_inputBuf[0]=='N' ||wifi_rx_inputBuf[0]==':'){
 		
-			esp8266data.rx_data_state=12; //=1
+			net_t.rx_data_state=12; //=1
 		
 		
 		}
 		else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -247,12 +247,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
       case 12:
 		if(wifi_rx_inputBuf[0]=='N' || wifi_rx_inputBuf[0]=='O'){
 		
-			esp8266data.rx_data_state=13; //=1
+			net_t.rx_data_state=13; //=1
 		
 		
 		}
 		else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -261,7 +261,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	  case 13:
 		if(wifi_rx_inputBuf[0]=='E' ){
 		
-			esp8266data.rx_data_state=14; //=1
+			net_t.rx_data_state=14; //=1
 		
 		
 		}
@@ -269,12 +269,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
             wifi_t.wifi_reconnect_read_flag = 0;
-		    esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+		    net_t.rx_data_state =0;
+            net_t.rx_counter=0;
 
 		}
 		else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -283,12 +283,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	  case 14:
 		if(wifi_rx_inputBuf[0]=='C'){
 		
-			esp8266data.rx_data_state=15; //=1
+			net_t.rx_data_state=15; //=1
 		
 		
 		}
 		else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -297,12 +297,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	  case 15:
 		if(wifi_rx_inputBuf[0]=='T'){
 		
-			esp8266data.rx_data_state=16; //=1
+			net_t.rx_data_state=16; //=1
 		
 		
 		}
 		else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -311,12 +311,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	  case 16:
 		if(wifi_rx_inputBuf[0]=='I'){
 		
-			esp8266data.rx_data_state=17; //=1
+			net_t.rx_data_state=17; //=1
 		
 		
 		}
 		else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -325,12 +325,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	  case 17:
 		if(wifi_rx_inputBuf[0]=='N'){
 		
-				esp8266data.rx_data_state=18; //=1
+				net_t.rx_data_state=18; //=1
 		
 		
 		}
         else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -340,13 +340,13 @@ void Subscribe_Rx_Interrupt_Handler(void)
 		if(wifi_rx_inputBuf[0]=='G'){
 		
 			wifi_t.wifi_reconnect_read_flag = 1;
-		    esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
+		    net_t.rx_data_state =0;
+            net_t.rx_counter=0;
 		
 		
 		}
         else{
-		  esp8266data.rx_data_state=0; 
+		  net_t.rx_data_state=0; 
 
 		}
 
@@ -370,22 +370,22 @@ void Subscribe_Rx_Interrupt_Handler(void)
 void Wifi_Rx_InputInfo_Handler(void)
 {
     
-    strcpy((char *)esp8266data.data, (const char *)gpro_t.wifi_rx_data_array);
-          esp8266data.data_size = gpro_t.wifi_counter;
+    strcpy((char *)net_t.data, (const char *)gpro_t.wifi_rx_data_array);
+          net_t.data_size = gpro_t.wifi_counter;
 
 
 		   if(wifi_t.soft_ap_config_flag==1){
 
-               if(strstr((const char*)esp8266data.data,"+TCSAP:WIFI_CONNECT_SUCCESS")){
-              		esp8266data.soft_ap_config_success=1;
+               if(strstr((const char*)net_t.data,"+TCSAP:WIFI_CONNECT_SUCCESS")){
+              		net_t.soft_ap_config_success=1;
 					wifi_t.soft_ap_config_flag=0;
                	}
 
 			
             else{
-				  if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
-	              esp8266data.esp8266_login_cloud_success=1;
-	              esp8266data.linking_tencent_cloud_doing=0;
+				  if(strstr((const char*)net_t.data,"+TCMQTTCONN:OK")){
+	              net_t.esp8266_login_cloud_success=1;
+	              net_t.linking_tencent_cloud_doing=0;
 				  gctl_t.auto_link_cloud_flag=0xff;
 				  wifi_t.wifi_reconnect_read_flag = 0;
 				  wifi_t.soft_ap_config_flag=0;
@@ -395,9 +395,9 @@ void Wifi_Rx_InputInfo_Handler(void)
 		  }
 		  else{
 
-		     if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
-	              esp8266data.esp8266_login_cloud_success=1;
-	              esp8266data.linking_tencent_cloud_doing=0;
+		     if(strstr((const char*)net_t.data,"+TCMQTTCONN:OK")){
+	              net_t.esp8266_login_cloud_success=1;
+	              net_t.linking_tencent_cloud_doing=0;
 				  gctl_t.auto_link_cloud_flag=0xff;
 				  wifi_t.wifi_reconnect_read_flag = 0;
 				  wifi_t.soft_ap_config_flag=0;
@@ -422,8 +422,8 @@ void Tencent_Cloud_Rx_Handler(void)
 {
     
 
-    if( esp8266data.rx_data_success==1){
-            esp8266data.rx_data_success=0;
+    if( net_t.rx_data_success==1){
+            net_t.rx_data_success=0;
         
 	      gctl_t.set_beijing_time_flag =0; //WT.EDIT 2023.06.12
 		 // wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
@@ -845,7 +845,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 {
 
    
-    switch(esp8266data.rx_data_state)
+    switch(net_t.rx_data_state)
       {
       case 0:  //#0
 
@@ -853,10 +853,10 @@ void Wifi_Rx_Beijing_Time_Handler(void)
          if(wifi_rx_inputBuf[0] == 0x01 || wifi_rx_inputBuf[0] == 0x02 ||wifi_rx_inputBuf[0] == 0x03 ||wifi_rx_inputBuf[0] == 0x04 
 		 	|| wifi_rx_inputBuf[0] == 0x05 ||wifi_rx_inputBuf[0] == 0x06 ||wifi_rx_inputBuf[0] == 0x07 ||wifi_rx_inputBuf[0] == 0x08 
 		 	|| wifi_rx_inputBuf[0] == 0x09 ||wifi_rx_inputBuf[0] == 0x0a ||wifi_rx_inputBuf[0] == 0x0b ||wifi_rx_inputBuf[0] == 0x0c ){ 
-             esp8266data.rx_data_state=1; //=1
+             net_t.rx_data_state=1; //=1
 		  }
 		  else{
-               esp8266data.rx_counter=0;
+               net_t.rx_counter=0;
                gpro_t.wifi_rx_data_done_flag = 0;
                gpro_t.wifi_counter=0;              
             }
@@ -864,9 +864,9 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 
 	  case 1:
 	  	 if(wifi_rx_inputBuf[0] == ' ')
-		  	 esp8266data.rx_data_state=2; //=1
+		  	 net_t.rx_data_state=2; //=1
 		  else{
-		      esp8266data.rx_data_state=0; //=1
+		      net_t.rx_data_state=0; //=1
 
           }
 	  	break;
@@ -874,36 +874,36 @@ void Wifi_Rx_Beijing_Time_Handler(void)
       case 2:
       
            wifi_t.real_hours=wifi_rx_inputBuf[0];
-           esp8266data.rx_data_state=3; //=1
+           net_t.rx_data_state=3; //=1
          break;
 
 	  case 3:
 	  	  if(wifi_rx_inputBuf[0] == ':')
-		  	 esp8266data.rx_data_state=4; //=1
+		  	 net_t.rx_data_state=4; //=1
 		  else{
-		      esp8266data.rx_data_state=0; //=1
+		      net_t.rx_data_state=0; //=1
 
           }
 	  	break;
       case 4: //#1
       
             wifi_t.real_minutes = wifi_rx_inputBuf[0];
-            esp8266data.rx_data_state=5; //=1
+            net_t.rx_data_state=5; //=1
        
          break;
 
 	  case 5:
 	  	 if(wifi_rx_inputBuf[0] == ':')
-		  	 esp8266data.rx_data_state=6; //=1
+		  	 net_t.rx_data_state=6; //=1
 		  else{
-		      esp8266data.rx_data_state=0; //=1
+		      net_t.rx_data_state=0; //=1
 
           }
 	  break;
             
         case 6:
            wifi_t.real_seconds = wifi_rx_inputBuf[0];
-           esp8266data.rx_data_state=7; //=1
+           net_t.rx_data_state=7; //=1
            
            
         
@@ -911,9 +911,9 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 
 		case 7:
 			if(wifi_rx_inputBuf[0] == ' ')
-		  	 esp8266data.rx_data_state=8; //=1
+		  	 net_t.rx_data_state=8; //=1
 		  else{
-		      esp8266data.rx_data_state=0; //=1
+		      net_t.rx_data_state=0; //=1
 
           }
 
@@ -922,7 +922,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 		case 8:
 			 if(wifi_rx_inputBuf[0] ==20){
                 wifi_t.get_rx_beijing_time_enable=0 ;
-				esp8266data.rx_data_state=0; //=1
+				net_t.rx_data_state=0; //=1
 				  
 		     }
 			 

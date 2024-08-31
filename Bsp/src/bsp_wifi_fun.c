@@ -84,8 +84,8 @@ void RunWifi_Command_Handler(void)
 		 gctl_t.wifi_config_net_lable=0;
 		 
 		 
-	     if(esp8266data.esp8266_login_cloud_success==1){
-		  	esp8266data.linking_tencent_cloud_doing=0;
+	     if(net_t.esp8266_login_cloud_success==1){
+		  	net_t.linking_tencent_cloud_doing=0;
 	
 	       
 			wifi_t.has_been_login_flag = 1;
@@ -99,13 +99,13 @@ void RunWifi_Command_Handler(void)
 
         case wifi_link_tencent_cloud: //02
 
-		   if(gctl_t.gPower_flag == POWER_ON){
+		   
 			 gctl_t.gTimer_ptc_adc_times=0;
 			  gctl_t.gTimer_fan_adc_times=0;
 			Wifi_SoftAP_Config_Handler();
 	        SmartPhone_LinkTencent_Cloud();
 	     
-	      if(esp8266data.esp8266_login_cloud_success==1){
+	      if(net_t.esp8266_login_cloud_success==1){
 			
 				 SendWifiData_To_Cmd(0x20,0x01) ;	//WT.EDIT 2023.03.02
 				gctl_t.first_link_tencent_cloud_flag =1;
@@ -114,9 +114,9 @@ void RunWifi_Command_Handler(void)
                 gctl_t.wifi_run_set_restart_flag =0;
 				
 			}
-		   }
+		   
            
-           if(esp8266data.esp8266_login_cloud_success==0){
+           if(net_t.esp8266_login_cloud_success==0){
              if(gctl_t.gTimer_linking_tencen_counter < 166){
                  wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
              }
@@ -270,7 +270,7 @@ void RunWifi_Command_Handler(void)
 
 	    if(gctl_t.gPower_On==POWER_ON ){
 	 
-		 esp8266data.linking_tencent_cloud_doing =0;
+		 net_t.linking_tencent_cloud_doing =0;
 	   	 if(gctl_t.set_beijing_time_flag ==1){   //&& wifi_t.gTimer_beijing_time>1){
 			 gctl_t.set_beijing_time_flag ++;
 		     wifi_t.get_rx_beijing_time_enable=1; //enable beijing times
@@ -345,7 +345,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 		SendWifiData_To_Cmd(0x20,0x00) ;
 
 
-		esp8266data.esp8266_login_cloud_success=0;
+		net_t.esp8266_login_cloud_success=0;
 
 	}
 
@@ -357,11 +357,11 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 
 	if(det_no_wifi_net==1){
 
-		if(esp8266data.esp8266_login_cloud_success==1){
+		if(net_t.esp8266_login_cloud_success==1){
 			det_no_wifi_net=0;
 			gctl_t.reconnect_tencent_cloud_flag=0;
 			gctl_t.auto_link_cloud_flag=0xff;
-			esp8266data.linking_tencent_cloud_doing =0;
+			net_t.linking_tencent_cloud_doing =0;
 
 			SendWifiData_To_Cmd(0x20,0x01) ;
 			HAL_Delay(30);
