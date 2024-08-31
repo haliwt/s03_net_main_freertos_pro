@@ -393,7 +393,7 @@ void wifi_get_beijint_time_handler(void)
     		
     		Get_BeiJing_Time_Cmd();
     	    osDelay(20);//HAL_Delay(20); //WT.EDIT .2024.08.10//HAL_Delay(20);
-    		wifi_t.gTimer_read_beijing_time=0;
+    		//wifi_t.gTimer_read_beijing_time=0;
     
             
             beijing_step =1;
@@ -403,23 +403,21 @@ void wifi_get_beijint_time_handler(void)
          break;
 
          case 1:
-             if(wifi_t.gTimer_read_beijing_time > 0 ){//
+             //if(wifi_t.gTimer_read_beijing_time > 0 ){//
     		
                 wifi_t.gTimer_read_beijing_time=0;
                  //disable publish data to tencent cloud.
                 gpro_t.gTimer_get_data_from_tencent_data=0;
-        
-        		
+                wifi_t.get_rx_beijing_time_enable=1;
+        		gpro_t.wifi_rx_data_counter =0;
         		Get_Beijing_Time();
-                wifi_t.get_rx_beijing_time_enable=1; //enable beijing times
-        		//wifi_t.wifi_uart_counter=0;
-                gpro_t.wifi_rx_data_counter =0;
-        		osDelay(20);//HAL_Delay(20); //WT.EDIT .2024.08.10
+              
+        	     osDelay(20);//HAL_Delay(20); //WT.EDIT .2024.08.10
                 
         		wifi_t.gTimer_read_beijing_time=0;
                 beijing_step =2;
           
-            }
+          //  }
 
           break; 
 

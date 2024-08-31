@@ -322,7 +322,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			if(inputBuf[0] == 0xA5){  // 0xA5 --didplay command head
                rx_data_counter=0;
                gl_tMsg.usData[rx_data_counter] = inputBuf[0];
-				state=1; //=1
+			   state=1; //=1
 
              }
             else
