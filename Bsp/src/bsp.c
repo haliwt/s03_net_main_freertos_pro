@@ -40,7 +40,7 @@ void send_data_to_disp(void)
 	
 	   gctl_t.gTImer_send_data_to_disp=0;
 	   Update_DHT11_Value();
-       buzzer_sound();
+       //buzzer_sound();
 		
 	}
 
@@ -70,7 +70,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x01: //表示开机指令
 
         if(pdata[3] == 0x01){ //open
-           buzzer_sound();
+           buzzer_sound_fun();
 
            gpro_t.gpower_on = power_on;
 
@@ -87,12 +87,14 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x02: //PTC打开关闭指令
 
      if(pdata[3] == 0x01){
-        
+          buzzer_sound();
           gctl_t.gDry = 1;
+          Dry_Function(0);
        }
        else if(pdata[3] == 0x0){
-        
+          buzzer_sound();
          gctl_t.gDry =0;
+         Dry_Function(1);
 
        }
 
@@ -102,12 +104,14 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){
            
-
+            buzzer_sound();
            gctl_t.gPlasma = 1;
+           SterIlization(0);
         }
         else if(pdata[3] == 0x0){
-
+           buzzer_sound();
           gctl_t.gPlasma = 0;
+          SterIlization(1);
 
         }
 
@@ -134,7 +138,7 @@ void receive_data_fromm_display(uint8_t *pdata)
       case 0x05: // link wifi command
 
        if(pdata[3] == 0x01){  // link wifi 
-
+           buzzer_sound();
 	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
           gctl_t.wifi_config_net_lable=wifi_set_restor;
@@ -202,6 +206,24 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         }
       break;
+
+     case 0x22: //PTC打开关闭指令,没有蜂鸣器声音。
+
+      if(pdata[3] == 0x01){
+        
+          gctl_t.gDry = 1;
+          Dry_Function(0);
+          
+       }
+       else if(pdata[3] == 0x0){
+        
+         gctl_t.gDry =0;
+         Dry_Function(1);
+
+       }
+
+     break;
+        
      
      }
 
@@ -661,6 +683,8 @@ void wifi_auto_detected_link_state(void)
           Subscriber_Data_FromCloud_Handler();
           HAL_Delay(200);
 		  }
+
+    SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
    
 }
 
@@ -717,7 +741,12 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
 			//wifi_t.linking_tencent_cloud_doing =0;
 			net_t.linking_tencent_cloud_doing= 0;
             power_on_login_tencent_cloud_flag++;
+            SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 	}
+    else if(wifi_link_net_state()==0 && power_on_login_tencent_cloud_flag ==4){
+       power_on_login_tencent_cloud_flag++;
+        SendWifiData_To_Cmd(0x1F,0x00);
+    }
 }
 
 

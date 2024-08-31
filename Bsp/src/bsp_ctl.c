@@ -196,17 +196,7 @@ void power_on_handler(void)
 
 	 case 0: //works timing 
 	 
-
-	 
-	if(gctl_t.gTimer_app_power_on >37 &&	 gctl_t.app_timer_power_on_flag == 1){
-		gctl_t.gTimer_app_power_on=0;
-		gctl_t.app_timer_power_on_flag++;
-		   for(i=0;i<36;i++){
-				 TCMQTTRCVPUB[i]=0;
-			 }
-		}
-	
-       if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==1){
+    if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==1){
 	
 		  gctl_t.first_link_tencent_cloud_flag++;
 			MqttData_Publish_SetOpen(0x01);

@@ -17,8 +17,8 @@
 #define PTC_PIN     GPIO_PIN_0
 #define PTC_GPIO    GPIOB
 
-#define PTC_SetHigh()            HAL_GPIO_WritePin(PTC_GPIO,PTC_PIN ,GPIO_PIN_SET)    // output high level
-#define PTC_SetLow()             HAL_GPIO_WritePin(PTC_GPIO,PTC_PIN ,GPIO_PIN_RESET)    // output low level
+#define PTC_SetHigh()               do{PTC_GPIO->BSRR |= PTC_PIN;}while(0)//HAL_GPIO_WritePin(PTC_GPIO,PTC_PIN ,GPIO_PIN_SET)    // output high level
+#define PTC_SetLow()                do{PTC_GPIO->BRR = PTC_PIN;}while(0) // HAL_GPIO_WritePin(PTC_GPIO,PTC_PIN ,GPIO_PIN_RESET)    // output low level
 
 
 

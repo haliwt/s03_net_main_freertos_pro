@@ -726,7 +726,8 @@ void Json_Parse_Command_Fun(void)
             if( gctl_t.set_temperature_value <20 )  gctl_t.set_temperature_value=20;
             MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
 			HAL_Delay(350);
-			SendWifiData_To_WifiSetTemp(gctl_t.set_temperature_value);
+			//SendWifiData_To_WifiSetTemp(gctl_t.set_temperature_value);
+			SendWifiData_To_Cmd(0x3A, gctl_t.set_temperature_value); //smart phone set temperature value .
 			HAL_Delay(10);
           
        }

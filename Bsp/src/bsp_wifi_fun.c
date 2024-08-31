@@ -82,6 +82,7 @@ void RunWifi_Command_Handler(void)
 				gctl_t.first_link_tencent_cloud_flag =1;
 				wifi_t.get_rx_beijing_time_enable=0;
                 gpro_t.wifi_led_fast_blink_flag=0;
+                SendData_Set_Command(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 			    wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
               
 				
