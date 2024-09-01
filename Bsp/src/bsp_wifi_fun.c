@@ -78,7 +78,7 @@ void RunWifi_Command_Handler(void)
 	     
 	      if(net_t.wifi_link_net_success==1){
 			
-				 SendWifiData_To_Cmd(0x1F,0x01) ;	//Link wifi net is success .WT.EDIT.2024.08.31
+			
 				gctl_t.first_link_tencent_cloud_flag =1;
 				wifi_t.get_rx_beijing_time_enable=0;
                 gpro_t.wifi_led_fast_blink_flag=0;
@@ -161,14 +161,4 @@ void RunWifi_Command_Handler(void)
   
 }
  
-/*****************************************************************************
-    *
-    *Function Name: static void AutoReconnect_Wifi_Neware_Function(void)
-    *Function: 
-    *Input Ref: NO
-    *Return Ref:NO
-    *
-*****************************************************************************/	 	
-
-
 

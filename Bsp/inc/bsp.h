@@ -86,6 +86,7 @@ typedef struct PROCESS_T{
   
    uint8_t wifi_led_fast_blink_flag;
    uint8_t get_beijing_time_success;
+   uint8_t link_net_step;
    
    uint8_t disp_works_hours ;    
    uint8_t disp_works_minutes ;
@@ -93,6 +94,7 @@ typedef struct PROCESS_T{
 
    uint8_t gTimer_power_on_first_link_tencent;
    uint8_t gTimer_get_data_from_tencent_data;
+   uint8_t gTimer_link_net_timer_time;
 
 
 

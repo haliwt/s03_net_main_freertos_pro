@@ -59,6 +59,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	 if(tm0 > 999){//1ms *1000 = 1000ms =1s
         tm0 =0;
         tm1++;
+        gpro_t.gTimer_link_net_timer_time++;
 	    gctl_t.gTimer_senddata_panel++;
         wifi_t.gTimer_get_beijing_time++;
 

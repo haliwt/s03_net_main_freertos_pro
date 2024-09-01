@@ -139,6 +139,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
        if(pdata[3] == 0x01){  // link wifi 
            buzzer_sound();
+           gpro_t.link_net_step =0;
 	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
           gctl_t.wifi_config_net_lable=wifi_set_restor;

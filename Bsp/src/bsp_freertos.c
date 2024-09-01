@@ -106,7 +106,8 @@ static void vTaskMsgPro(void *pvParameters)
       
         main_function_detected_handler();
         if(gpro_t.wifi_led_fast_blink_flag==1){
-            RunWifi_Command_Handler();
+            //RunWifi_Command_Handler();
+            link_wifi_net_handler(v);
 
         }
         else{
@@ -202,7 +203,7 @@ void AppTaskCreate (void)
 	
 	xTaskCreate( vTaskMsgPro,     		/* 任务函数  */
                  "vTaskMsgPro",   		/* 任务各1�7    */
-                 256,             		/* 任务栈大小，单位word，也就是4字节 */
+                 128,             		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
                  1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskMsgPro );  /* 任务句柄  */
@@ -283,7 +284,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
     if(huart->Instance==USART2)
     {
-     DISABLE_INT();
+    // DISABLE_INT();
      if(net_t.linking_tencent_cloud_doing ==1){
 
 			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
@@ -307,7 +308,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
-       ENABLE_INT();
+      // ENABLE_INT();
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
       HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}

@@ -142,8 +142,10 @@ void Wifi_SoftAP_Config_Handler(void)
            // HAL_Delay(1000);
      
 			//HAL_Delay(1000);
-			//osDelay(1000);
-            //osDelay(1000);
+			osDelay(1000);
+            osDelay(1000);
+       osDelay(1000);
+           osDelay(1000);
          
 	        
 			gctl_t.wifi_config_net_lable=wifi_set_tcdevreg;
@@ -159,7 +161,7 @@ void Wifi_SoftAP_Config_Handler(void)
 	    
    
 		osDelay(1000);
-        //osDelay(1000);
+        osDelay(1000);
 
 	  
 	     gctl_t.wifi_config_net_lable=wifi_set_tcsap;
@@ -176,6 +178,12 @@ void Wifi_SoftAP_Config_Handler(void)
 			//HAL_Delay(1000);
       
 		    ///HAL_Delay(1000);
+          osDelay(1000);
+           osDelay(1000);
+      osDelay(1000);
+           osDelay(1000);
+      osDelay(1000);
+           osDelay(1000);
 		  
          
             net_t.linking_tencent_cloud_doing =1;
@@ -183,19 +191,21 @@ void Wifi_SoftAP_Config_Handler(void)
 	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",gctl_t.randomName[0]);
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 		
-           // osDelay(1000);
-           /// osDelay(1000);
+           osDelay(1000);
+           osDelay(1000);
             HAL_Delay(1000);
-           // HAL_Delay(1000);
+           HAL_Delay(1000);
          
 			gctl_t.wifi_config_net_lable=0xff;//
 		  //   gctl_t.wifi_config_net_lable=wifi_inquire_register_codes;
-			
+	break;
+          
 	case wifi_inquire_register_codes: //0x06//WT.EDIT 2024.07.22
        wifi_t.gTimer_get_beijing_time=0;
 
          osDelay(1000);
-        
+         osDelay(1000);
+           osDelay(1000);
        
 	   if(net_t.soft_ap_config_success==0){
          
