@@ -55,8 +55,8 @@ void Wifi_Link_Tencent_Net_State(void)
 void link_wifi_net_handler(void)
 {
 
-  
-   
+    uint8_t  device_massage[150];
+  // device_massage = (uint8_t *)malloc(128);
 
         switch( gpro_t.link_net_step){
 
@@ -96,7 +96,7 @@ void link_wifi_net_handler(void)
                          WIFI_IC_ENABLE();
             			
                         sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,gctl_t.randomName[0]);
-            			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+            			at_send_data(device_massage, strlen((const char *)device_massage));
             	  		HAL_Delay(1000);
                     
                       
@@ -116,21 +116,21 @@ void link_wifi_net_handler(void)
                 
             if(gpro_t.gTimer_link_net_timer_time  > 8){
                       gpro_t.gTimer_link_net_timer_time = 0;
-
+                   gpro_t.link_net_step = 4;
              WIFI_IC_ENABLE();
 			
             sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,gctl_t.randomName[0]);
-			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+			at_send_data(device_massage, strlen((const char *)device_massage));
 	  		HAL_Delay(1000);
         
           
          
 	        
-			gctl_t.wifi_config_net_lable=wifi_set_tcdevreg;
+		
 
 
 
-               gpro_t.link_net_step = 4;
+             
 
               }
 
@@ -146,7 +146,7 @@ void link_wifi_net_handler(void)
                    net_t.linking_tencent_cloud_doing =1;
                   wifi_t.soft_ap_config_flag =1; //WE.EIDT 
 	            sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",gctl_t.randomName[0]);
-                usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+                 at_send_data(device_massage, strlen((const char *)device_massage));
 
 
                    gpro_t.link_net_step = 5;
@@ -170,7 +170,7 @@ void link_wifi_net_handler(void)
        
 	 
                     }
-
+               
                
             break;
 
@@ -186,7 +186,7 @@ void link_wifi_net_handler(void)
 
     
 
-
+     
 
 }
 

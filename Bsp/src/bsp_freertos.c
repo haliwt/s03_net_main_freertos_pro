@@ -107,7 +107,7 @@ static void vTaskMsgPro(void *pvParameters)
         main_function_detected_handler();
         if(gpro_t.wifi_led_fast_blink_flag==1){
             //RunWifi_Command_Handler();
-            link_wifi_net_handler(v);
+            link_wifi_net_handler();
 
         }
         else{
