@@ -203,7 +203,7 @@ void AppTaskCreate (void)
 	
 	xTaskCreate( vTaskMsgPro,     		/* 任务函数  */
                  "vTaskMsgPro",   		/* 任务各1�7    */
-                 128,             		/* 任务栈大小，单位word，也就是4字节 */
+                 256,             		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
                  1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskMsgPro );  /* 任务句柄  */

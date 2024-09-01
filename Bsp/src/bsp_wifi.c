@@ -56,7 +56,7 @@ void link_wifi_net_handler(void)
 {
   
 
-    uint8_t  device_massage[150];
+    uint8_t  device_massage[100];
   // device_massage = (uint8_t *)malloc(128);
 
         switch( gpro_t.link_net_step){
@@ -157,8 +157,8 @@ void link_wifi_net_handler(void)
 
                        net_t.soft_ap_config_success=0;
                 	   HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-                       HAL_Delay(1000);
-                       HAL_Delay(1000);
+                       //HAL_Delay(1000);
+                      // HAL_Delay(1000);
                        ///HAL_Delay(1000);
        
 	                    gpro_t.link_net_step = 6;
@@ -172,7 +172,7 @@ void link_wifi_net_handler(void)
 
             case 6:
 
-            if( gpro_t.gTimer_link_net_timer_time  > 3){
+            if( gpro_t.gTimer_link_net_timer_time  > 4){
 
              if(net_t.wifi_link_net_success==1){
 			
@@ -206,15 +206,15 @@ void link_wifi_net_handler(void)
              
 			 
 				 MqttData_Publish_SetOpen(0x01);
-		         //HAL_Delay(200);
-		         osDelay(100);
+		         HAL_Delay(100);
+		        // osDelay(100);
 		         Publish_Data_ToTencent_Initial_Data();
-				 //HAL_Delay(200);
-                  osDelay(100);
+				 HAL_Delay(100);
+                  //osDelay(100);
 
 				Subscriber_Data_FromCloud_Handler();
-				//HAL_Delay(200);
-	             osDelay(100);
+				HAL_Delay(100);
+	             //osDelay(100);
 
 			   
 			    

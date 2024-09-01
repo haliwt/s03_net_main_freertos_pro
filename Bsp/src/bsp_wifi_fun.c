@@ -65,6 +65,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
    *
    *
 ***********************************************/
+#if 0
 void RunWifi_Command_Handler(void)
 {
     uint8_t i,sub_to_tencent_flag;
@@ -162,3 +163,4 @@ void RunWifi_Command_Handler(void)
 }
  
 
+#endif 
