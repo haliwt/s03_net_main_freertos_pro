@@ -51,7 +51,7 @@ void InitWifiModule(void)
 	
 	
 			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-			HAL_Delay(100);
+			HAL_Delay(1000);
 	}
 		
 }
@@ -227,7 +227,7 @@ void SmartPhone_LinkTencent_Cloud(void)
        net_t.soft_ap_config_success=0;
 	   HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
-      // HAL_Delay(1000);
+       HAL_Delay(1000);
        ///HAL_Delay(1000);
        
 	 
