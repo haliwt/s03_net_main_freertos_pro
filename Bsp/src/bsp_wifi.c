@@ -54,6 +54,7 @@ void Wifi_Link_Tencent_Net_State(void)
 *****************************************************************************/	 	
 void link_wifi_net_handler(void)
 {
+  
 
     uint8_t  device_massage[150];
   // device_massage = (uint8_t *)malloc(128);
@@ -124,15 +125,7 @@ void link_wifi_net_handler(void)
 	  		HAL_Delay(1000);
         
           
-         
-	        
-		
-
-
-
-             
-
-              }
+            }
 
 
 
@@ -168,10 +161,75 @@ void link_wifi_net_handler(void)
                        HAL_Delay(1000);
                        ///HAL_Delay(1000);
        
-	 
+	                    gpro_t.link_net_step = 6;
+                        gpro_t.gTimer_link_net_timer_time = 0;
                     }
+
+                   
                
                
+            break;
+
+            case 6:
+
+            if( gpro_t.gTimer_link_net_timer_time  > 3){
+
+             if(net_t.wifi_link_net_success==1){
+			
+			
+				gctl_t.first_link_tencent_cloud_flag =1;
+				wifi_t.get_rx_beijing_time_enable=0;
+                
+                SendData_Set_Command(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+			    gpro_t.link_net_step = 7;
+              
+				
+		     }
+		     else{
+//                 if(gctl_t.gTimer_linking_tencen_total_counter < 120){
+//                     wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+//                 }
+                
+                  gpro_t.wifi_led_fast_blink_flag=0;
+                  gpro_t.link_net_step = 0xff;
+                  SendWifiData_To_Cmd(0x1F,0x00) ;	 //Link wifi net is fail .WT.EDTI .2024.08.31
+                
+           
+                }
+                
+               }
+
+            break;
+
+            case 7:
+
+             
+			 
+				 MqttData_Publish_SetOpen(0x01);
+		         //HAL_Delay(200);
+		         osDelay(100);
+		         Publish_Data_ToTencent_Initial_Data();
+				 //HAL_Delay(200);
+                  osDelay(100);
+
+				Subscriber_Data_FromCloud_Handler();
+				//HAL_Delay(200);
+	             osDelay(100);
+
+			   
+			    
+
+            gpro_t.wifi_led_fast_blink_flag=0;
+
+            gpro_t.link_net_step = 0xfe;
+
+                   
+            break;
+
+
+            default:
+
+
             break;
 
 

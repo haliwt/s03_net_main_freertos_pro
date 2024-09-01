@@ -159,7 +159,7 @@ static void vTaskStart(void *pvParameters)
          xResult = xTaskNotifyWait(0x00000000,      
 						           0xFFFFFFFF,      
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
-						          portMAX_DELAY);  /* 最大允许延迟时间,等待时间 */
+						          portMAX_DELAY);  /* 最大允许延迟时间,等待时间-block   */
 
          if((ulValue & DECODER_BIT_0 ) != 0)
           {
