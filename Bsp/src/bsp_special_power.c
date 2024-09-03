@@ -101,9 +101,9 @@ void SetPowerOn_ForDoing(void)
 void SetPowerOff_ForDoing(void)
 {
    
-	gctl_t.gPower_flag = 0; //bool 
+
 	gctl_t.gFan_continueRun =1; //the fan still run 60s
-	gctl_t.gPower_On = POWER_OFF;
+	
 	gctl_t.wifi_gPower_On = 0;
     gctl_t.set_wind_speed_value =10;
  

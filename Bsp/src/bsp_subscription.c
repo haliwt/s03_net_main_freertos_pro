@@ -448,7 +448,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	
 	if(strstr((char *)gpro_t.wifi_rx_data_array,"ptc\":0")){
-            if(gctl_t.gPower_flag ==POWER_ON){
+            if(gpro_t.gpower_on ==power_on){
 				  gctl_t.gDry=0;
 	           gctl_t.response_wifi_signal_label = PTC_OFF_ITEM;
 	         
@@ -456,7 +456,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			
     }
     else if(strstr((char *)gpro_t.wifi_rx_data_array,"ptc\":1")){
-            if(gctl_t.gPower_flag ==POWER_ON){
+            if(gpro_t.gpower_on ==power_on){
 	          gctl_t.gDry=1;
 			  gctl_t.response_wifi_signal_label = PTC_ON_ITEM;
 				
@@ -465,7 +465,7 @@ void Tencent_Cloud_Rx_Handler(void)
     }
 	
     if(strstr((char *)gpro_t.wifi_rx_data_array,"Anion\":0")){
-          if(gctl_t.gPower_flag ==POWER_ON){
+          if(gpro_t.gpower_on ==power_on){
 	          //  gctl_t.gPlasma=0;
 			gctl_t.response_wifi_signal_label = ANION_OFF_ITEM;
 		    
@@ -473,7 +473,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		 
     }
     else if(strstr((char *)gpro_t.wifi_rx_data_array,"Anion\":1")){
-            if(gctl_t.gPower_flag ==POWER_ON){
+            if(gpro_t.gpower_on ==power_on){
             //gctl_t.gPlasma=1;
 			gctl_t.response_wifi_signal_label = ANION_ON_ITEM;
 		
@@ -481,7 +481,7 @@ void Tencent_Cloud_Rx_Handler(void)
     }
 	
     if(strstr((char *)gpro_t.wifi_rx_data_array,"sonic\":0")){
-            if(gctl_t.gPower_flag ==POWER_ON){
+            if(gpro_t.gpower_on ==power_on){
            // gctl_t.gUlransonic=0;
 			gctl_t.response_wifi_signal_label = SONIC_OFF_ITEM;
         
@@ -490,7 +490,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		
     }
     else if(strstr((char *)gpro_t.wifi_rx_data_array,"sonic\":1")){
-            if(gctl_t.gPower_flag ==POWER_ON){
+            if(gpro_t.gpower_on ==power_on){
             gctl_t.gUlransonic=1;
 			gctl_t.response_wifi_signal_label = SONIC_ON_ITEM;
        
@@ -500,14 +500,14 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	
     if(strstr((char *)gpro_t.wifi_rx_data_array,"state\":1")){
-           if(gctl_t.gPower_flag ==POWER_ON){
+           if(gpro_t.gpower_on ==power_on){
             gctl_t.gModel=1;
 			gctl_t.response_wifi_signal_label = STATE_AI_MODEL_ITEM;
         	}
 		  
     }
     else if(strstr((char *)gpro_t.wifi_rx_data_array,"state\":2")){
-            if(gctl_t.gPower_flag ==POWER_ON){
+            if(gpro_t.gpower_on ==power_on){
             gctl_t.gModel=2;
 			gctl_t.response_wifi_signal_label = STATE_TIMER_MODEL_ITEM;
             }
@@ -516,7 +516,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	
     if(strstr((char *)gpro_t.wifi_rx_data_array,"temperature")){
 
-	        if(gctl_t.gPower_flag ==POWER_ON){
+	        if(gpro_t.gpower_on ==power_on){
 			gctl_t.response_wifi_signal_label = TEMPERATURE_ITEM;
             
 	        }
@@ -524,7 +524,7 @@ void Tencent_Cloud_Rx_Handler(void)
     }
    if(strstr((char *)gpro_t.wifi_rx_data_array,"find")){
 
-		 if(gctl_t.gPower_flag ==POWER_ON){
+		 if(gpro_t.gpower_on ==power_on){
 
 			gctl_t.response_wifi_signal_label= FAN_ITEM;
 		}
@@ -591,7 +591,7 @@ void Json_Parse_Command_Fun(void)
 	  break;
 
 	  case PTC_ON_ITEM:
-	  if(gctl_t.gPower_flag ==POWER_ON){
+	  if(gpro_t.gpower_on ==power_on){
 	    if(gctl_t.ptc_warning ==0){
          MqttData_Publish_SetPtc(0x01);
 	  	 osDelay(100);//HAL_Delay(350);
@@ -616,7 +616,7 @@ void Json_Parse_Command_Fun(void)
 	   break;
 
 	  case PTC_OFF_ITEM:
-	  	if(gctl_t.gPower_flag ==POWER_ON){
+	  	if(gpro_t.gpower_on ==power_on){
 	
          MqttData_Publish_SetPtc(0);
 		 osDelay(100);//HAL_Delay(350);
@@ -632,7 +632,7 @@ void Json_Parse_Command_Fun(void)
 	  	break;
 
 	  case ANION_OFF_ITEM: //"杀菌" //5
-	  	if(gctl_t.gPower_flag ==POWER_ON){
+	  	if(gpro_t.gpower_on ==power_on){
 			
             MqttData_Publish_SetPlasma(0);
 			osDelay(100);//HAL_Delay(350);
@@ -647,7 +647,7 @@ void Json_Parse_Command_Fun(void)
 	   break;
 		
 	  case ANION_ON_ITEM: //plasma 
-	  	if(gctl_t.gPower_flag ==POWER_ON){
+	  	if(gpro_t.gpower_on ==power_on){
             MqttData_Publish_SetPlasma(1);
 			osDelay(100);//HAL_Delay(350);
             gctl_t.gPlasma=1;
@@ -661,7 +661,7 @@ void Json_Parse_Command_Fun(void)
 	    break;
 
 	  case SONIC_OFF_ITEM://ultransonic off
-        if(gctl_t.gPower_flag ==POWER_ON){
+        if(gpro_t.gpower_on ==power_on){
 
             MqttData_Publish_SetUltrasonic(0);
 			osDelay(100);	//HAL_Delay(350);
@@ -675,7 +675,7 @@ void Json_Parse_Command_Fun(void)
 	  	break;
 
 	  case SONIC_ON_ITEM://ultransonic off
-	    if(gctl_t.gPower_flag ==POWER_ON){
+	    if(gpro_t.gpower_on ==power_on){
 		
              MqttData_Publish_SetUltrasonic(1);
 			 osDelay(100);	//HAL_Delay(350);
@@ -690,7 +690,7 @@ void Json_Parse_Command_Fun(void)
 	  	break;
 
 	  case STATE_TIMER_MODEL_ITEM:
-	  if(gctl_t.gPower_flag ==POWER_ON){
+	  if(gpro_t.gpower_on ==power_on){
 	         gctl_t.gModel=2;
             MqttData_Publish_SetState(2);
 			osDelay(100);//HAL_Delay(350);
@@ -704,7 +704,7 @@ void Json_Parse_Command_Fun(void)
 	  break;
 		
 	  case STATE_AI_MODEL_ITEM:
-	  	 if(gctl_t.gPower_flag ==POWER_ON){
+	  	 if(gpro_t.gpower_on ==power_on){
 		
 		    gctl_t.gModel=1;
             MqttData_Publish_SetState(1);
@@ -719,7 +719,7 @@ void Json_Parse_Command_Fun(void)
 	  	break;
 
 	  case TEMPERATURE_ITEM:
-	   if(gctl_t.gPower_flag ==POWER_ON){
+	   if(gpro_t.gpower_on ==power_on){
 		
 
             temp_decade=gpro_t.wifi_rx_data_array[14]-0x30;
@@ -739,7 +739,7 @@ void Json_Parse_Command_Fun(void)
 	  break;
 
 	  case FAN_ITEM:
-	    if(gctl_t.gPower_flag ==POWER_ON){
+	    if(gpro_t.gpower_on ==power_on){
 
 		     if(gctl_t.fan_warning ==0){
 
@@ -828,15 +828,17 @@ void Json_Parse_Command_Fun(void)
    	        buzzer_sound();
         }
          
-		gctl_t.response_wifi_signal_label=0xf0;
-
-		for(i=0;i<20;i++){
-		   gpro_t.wifi_rx_data_array[i]=0;
-		   
-
-        }
-      
 		
+
+//		for(i=0;i<20;i++){
+//		   gpro_t.wifi_rx_data_array[i]=0;
+//		   
+//
+//        }
+
+         memset(gpro_t.wifi_rx_data_array,'\0',50);
+      
+		gctl_t.response_wifi_signal_label=0xf0;
 	}
 
   

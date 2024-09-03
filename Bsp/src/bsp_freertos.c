@@ -130,7 +130,7 @@ static void vTaskMsgPro(void *pvParameters)
      
      clear_rx_copy_data();
    
-     vTaskDelay(10);
+     vTaskDelay(30);
      
     }
 
@@ -155,7 +155,7 @@ static void vTaskStart(void *pvParameters)
     while(1)
     {
 
-         #if 0 
+      
          xResult = xTaskNotifyWait(0x00000000,      
 						           0xFFFFFFFF,      
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
@@ -178,35 +178,6 @@ static void vTaskStart(void *pvParameters)
             
 
          }
-
-         #endif 
-
-         if(gpro_t.disp_rx_cmd_done_flag == 1 ){
-
-
-         gpro_t.disp_rx_cmd_done_flag = 0;
-         
-                  //  bcc_check_code =  gl_tMsg.usData[7];
-         
-                   check_code =  bcc_check(gl_tMsg.usData,uid);
-         
-                  
-         
-                  if(check_code == bcc_check_code ){
-                  
-                     receive_data_fromm_display(gl_tMsg.usData);
-                   }
-                   
-
-
-
-         }
-       
-
-         vTaskDelay(20);
-       
-      
-		
     }
 }
 /*
@@ -231,7 +202,7 @@ void AppTaskCreate (void)
                  "vTaskMsgPro",   		/* 任务各1�7    */
                  256,             		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
-                 1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
+                 2,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskMsgPro );  /* 任务句柄  */
 	
 	
@@ -239,7 +210,7 @@ void AppTaskCreate (void)
                  "vTaskStart",   		/* 任务各1�7    */
                  128,            		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
-                 2,              		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
+                 1,              		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskStart );   /* 任务句柄  */
 }
 
@@ -310,7 +281,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
     if(huart->Instance==USART2)
     {
-     DISABLE_INT();
+   //  DISABLE_INT();
      if(net_t.linking_tencent_cloud_doing ==1){
 
 			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
@@ -334,7 +305,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
-       ENABLE_INT();
+    ///   ENABLE_INT();
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
       HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}
@@ -393,7 +364,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
                  #endif 
 
-                #if 0
+                #if 1
 
                 xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
                 DECODER_BIT_0,     /* 设置目标任务事件标志位bit0  */

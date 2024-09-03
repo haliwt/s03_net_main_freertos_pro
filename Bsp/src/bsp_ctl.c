@@ -155,9 +155,9 @@ void power_on_handler(void)
 		 SetPowerOn_ForDoing();
 
          
-         gctl_t.gPower_flag = POWER_ON;
+
          gctl_t.gFan_continueRun =0;
-         gctl_t.gPower_On=POWER_ON;
+    
          gctl_t.gmt_time_flag=0;
           gctl_t.wifi_gPower_On = 1;
 
@@ -257,7 +257,7 @@ void power_on_handler(void)
 	case POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE:
   
 	    
-	 if(gctl_t.gPower_On ==POWER_ON && gctl_t.gFan_continueRun ==1){
+	 if(gpro_t.gpower_on == power_on && gctl_t.gFan_continueRun ==1){
 
               if(gctl_t.gFan_counter < 60){
           
@@ -284,8 +284,8 @@ void power_off_handler(void)
 {
         if(gctl_t.fan_continuce==0){
 
-        gctl_t.gPower_On=POWER_OFF;
-        gctl_t.gPower_flag = POWER_OFF;
+       
+  
      
 		 gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;

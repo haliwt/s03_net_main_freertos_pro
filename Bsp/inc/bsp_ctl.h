@@ -24,8 +24,8 @@ typedef enum
 
 typedef enum{
 
-   POWER_ON =0x01,
-   POWER_OFF,
+  // POWER_ON =0x01,
+  // POWER_OFF,
    RUN_COMMAND,
    POWER_CONNECTOR_WIFI,
    UPDATE_TO_PANEL_DATA,
@@ -71,7 +71,7 @@ typedef struct _RUN_T{
     
 	uint8_t gPower_On;
 	uint8_t wifi_gPower_On;
-	uint8_t gPower_flag;
+
 
 	uint8_t gDht11_flag;
 	uint8_t gTemperature;
