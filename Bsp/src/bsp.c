@@ -224,6 +224,23 @@ void receive_data_fromm_display(uint8_t *pdata)
        }
 
      break;
+
+     case 0x27:
+
+      if(pdata[3] == 0x02){
+        
+        
+          
+       }
+       else if(pdata[3] == 0x01){ //AI mode 
+        
+        
+        
+
+       }
+
+
+     break;
         
      
      }
@@ -251,13 +268,13 @@ uint8_t bcc_check(const unsigned char *data, int len)
 
 /********************************************************************************
 	*
-	*Functin Name:void void wifi_get_beijint_time_handler(void)
+	*Functin Name:void void wifi_get_beijing_tim_handler(void)
 	*Functin :
 	*Input Ref: NO
 	*Return Ref:NO
 	*
 ********************************************************************************/
-void wifi_get_beijint_time_handler(void)
+void wifi_get_beijing_tim_handler(void)
 {
 
     static uint8_t alternate_flag,flag_switch;
@@ -327,7 +344,8 @@ void wifi_get_beijint_time_handler(void)
 
             }
             else{
-
+              
+               SendWifiData_To_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
                get_beijing_flag = 10;
                net_t.linking_tencent_cloud_doing  =1; //receive from tencent command state .
              }
@@ -503,7 +521,7 @@ void wifi_get_beijint_time_handler(void)
              get_beijing_flag = 0;
 
           }
-         // wifi_t.runCommand_order_lable= wifi_again_link_net_init;//06
+        
        }
 
      
@@ -576,7 +594,7 @@ void wifi_get_beijint_time_handler(void)
      case 13:
        if(wifi_link_net_state()==1){
        
-        
+         SendWifiData_To_Data(0x1F,0x01); //0x1F: wifi link net is succes 
 
         net_t.linking_tencent_cloud_doing  =0; //receive from tencent command state .
 	    gpro_t.wifi_rx_data_counter=0; //clear USART2 counter is zero

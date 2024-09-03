@@ -106,7 +106,6 @@ static void vTaskMsgPro(void *pvParameters)
       
         main_function_detected_handler();
         if(gpro_t.wifi_led_fast_blink_flag==1){
-            //RunWifi_Command_Handler();
             link_wifi_net_handler();
 
         }
@@ -124,7 +123,7 @@ static void vTaskMsgPro(void *pvParameters)
       }
 
      if(gpro_t.wifi_led_fast_blink_flag==0){
-         wifi_get_beijint_time_handler();
+         wifi_get_beijing_tim_handler();
          wifi_auto_detected_link_state();
       }
      

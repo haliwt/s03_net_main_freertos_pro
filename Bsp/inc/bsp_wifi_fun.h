@@ -60,7 +60,7 @@ typedef struct _WIFI_FUN{
 
 
     
-    uint16_t gTimer_get_beijing_time;
+    uint8_t gTimer_get_beijing_time;
     
 	
 		
