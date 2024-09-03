@@ -68,7 +68,7 @@ void Mqtt_Value_Init(void)
     sg_info.find=gctl_t.set_wind_speed_value;
 	//if(gctl_t.set_temperature_value <20)gctl_t.set_temperature_value = 20;
 	//else if(gctl_t.set_temperature_value > 40 )gctl_t.set_temperature_value = 40;
-	sg_info.set_temperature =  gctl_t.set_temperature_value ;
+	sg_info.set_temperature = 40;  //gctl_t.set_temperature_value ;
 	
 }
 static void Mqtt_Value_update_data(void)
@@ -96,9 +96,9 @@ static void Mqtt_power_off_Value(void)
     sg_info.anion=0;  //灭菌
 	sg_info.sonic =0;  //驱虫
     sg_info.find=gctl_t.set_wind_speed_value;
-	if(gctl_t.set_temperature_value <20)gctl_t.set_temperature_value = 20;
-	else if(gctl_t.set_temperature_value > 40 )gctl_t.set_temperature_value = 40;
-	sg_info.set_temperature =  gctl_t.set_temperature_value ;
+	//if(gctl_t.set_temperature_value <20)gctl_t.set_temperature_value = 20;
+	//else if(gctl_t.set_temperature_value > 40 )gctl_t.set_temperature_value = 40;
+	sg_info.set_temperature = 20; //gctl_t.set_temperature_value ;
 	
 }
 

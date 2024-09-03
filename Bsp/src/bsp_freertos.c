@@ -130,7 +130,7 @@ static void vTaskMsgPro(void *pvParameters)
      
      clear_rx_copy_data();
    
-     vTaskDelay(30);
+     vTaskDelay(10);
      
     }
 
@@ -155,7 +155,7 @@ static void vTaskStart(void *pvParameters)
     while(1)
     {
 
-           
+         #if 0 
          xResult = xTaskNotifyWait(0x00000000,      
 						           0xFFFFFFFF,      
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
@@ -178,6 +178,32 @@ static void vTaskStart(void *pvParameters)
             
 
          }
+
+         #endif 
+
+         if(gpro_t.disp_rx_cmd_done_flag == 1 ){
+
+
+         gpro_t.disp_rx_cmd_done_flag = 0;
+         
+                  //  bcc_check_code =  gl_tMsg.usData[7];
+         
+                   check_code =  bcc_check(gl_tMsg.usData,uid);
+         
+                  
+         
+                  if(check_code == bcc_check_code ){
+                  
+                     receive_data_fromm_display(gl_tMsg.usData);
+                   }
+                   
+
+
+
+         }
+       
+
+         vTaskDelay(20);
        
       
 		
@@ -284,7 +310,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
     if(huart->Instance==USART2)
     {
-    // DISABLE_INT();
+     DISABLE_INT();
      if(net_t.linking_tencent_cloud_doing ==1){
 
 			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
@@ -308,7 +334,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
-      // ENABLE_INT();
+       ENABLE_INT();
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
       HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}
@@ -367,6 +393,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
                  #endif 
 
+                #if 0
+
                 xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
                 DECODER_BIT_0,     /* 设置目标任务事件标志位bit0  */
                 eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
@@ -374,6 +402,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
                 /* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
                 portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+                #endif 
                   
               }
 
