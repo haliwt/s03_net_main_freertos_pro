@@ -449,7 +449,7 @@ void wifi_get_beijint_time_handler(void)
                 gpro_t.get_beijing_time_success = 1;
 
                 SendWifiData_To_PanelTime(gpro_t.disp_works_hours,gpro_t.disp_works_minutes,gpro_t.disp_works_time_seconds);
-
+                osDelay(50);
 
                 get_beijing_flag = 0;
               }

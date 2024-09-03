@@ -180,7 +180,7 @@ void link_wifi_net_handler(void)
 				gctl_t.first_link_tencent_cloud_flag =1;
 				wifi_t.get_rx_beijing_time_enable=0;
                 
-                SendData_Set_Command(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+               SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 			    gpro_t.link_net_step = 7;
               
 				
@@ -203,25 +203,21 @@ void link_wifi_net_handler(void)
 
             case 7:
 
-             
+              gpro_t.wifi_led_fast_blink_flag=0;
+              gpro_t.gTimer_get_data_from_tencent_data=0;
 			 
 				 MqttData_Publish_SetOpen(0x01);
-		         HAL_Delay(100);
+		         HAL_Delay(20);
 		        // osDelay(100);
 		         Publish_Data_ToTencent_Initial_Data();
-				 HAL_Delay(100);
+				 HAL_Delay(20);
                   //osDelay(100);
 
 				Subscriber_Data_FromCloud_Handler();
-				HAL_Delay(100);
+				HAL_Delay(20);
 	             //osDelay(100);
 
-			   
-			    
-
-            gpro_t.wifi_led_fast_blink_flag=0;
-
-            gpro_t.link_net_step = 0xfe;
+			 gpro_t.link_net_step = 0xfe;
 
                    
             break;

@@ -82,7 +82,7 @@ typedef struct _RUN_T{
     uint8_t fan_continuce;
     
 
-	uint8_t RunCommand_Label;
+
 	uint8_t dp_link_wifi_fail;
 	uint8_t wifi_set_temperature_value_flag;
 	uint8_t buzzer_sound_flag ;
@@ -117,7 +117,7 @@ typedef struct _RUN_T{
 
 
 	uint8_t set_beijing_time_flag;
-	uint8_t rx_command_tag;
+
 
 	//fan:
 	uint8_t gFan_pwm_duty_level;
@@ -158,7 +158,7 @@ typedef struct _RUN_T{
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;
       uint8_t wifi_config_net_lable;
-      uint8_t wifi_power_on_flag ;
+    
 	  //ADC
 	  uint8_t ptc_warning;
 	  uint8_t ptc_remove_warning_send_data;

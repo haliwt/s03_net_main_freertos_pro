@@ -286,7 +286,7 @@ void power_off_handler(void)
 
         gctl_t.gPower_On=POWER_OFF;
         gctl_t.gPower_flag = POWER_OFF;
-        gctl_t.RunCommand_Label = POWER_OFF;
+     
 		 gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;

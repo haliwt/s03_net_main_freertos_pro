@@ -128,7 +128,7 @@ static void vTaskMsgPro(void *pvParameters)
          wifi_auto_detected_link_state();
       }
      
-    // clear_rx_copy_data();
+     clear_rx_copy_data();
    
      vTaskDelay(30);
      
@@ -148,7 +148,7 @@ static void vTaskStart(void *pvParameters)
 {
     MSG_T *ptMsg;
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(20); /* 1.测试设定的-设置最大等待时间为50ms */
+	//const TickType_t xMaxBlockTime = pdMS_TO_TICKS(20); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
 
 	
@@ -181,7 +181,7 @@ static void vTaskStart(void *pvParameters)
        
       
 		
-         }
+    }
 }
 /*
 *********************************************************************************************************
