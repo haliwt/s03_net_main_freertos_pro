@@ -33,6 +33,8 @@ void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds);
 void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data);
 
 
+void SendWifiData_To_Data(uint8_t cmd,uint8_t data);
+
 
 void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart);
 void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart);

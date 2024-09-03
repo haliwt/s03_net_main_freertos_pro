@@ -575,10 +575,7 @@ void Json_Parse_Command_Fun(void)
 		 	MqttData_Publish_SetOpen(0);  
 			HAL_Delay(100);
 
-             
-
-	
-			gpro_t.gpower_on = power_off;
+            gpro_t.gpower_on = power_off;
 	
             SendWifiData_To_Cmd(0x01,0x0);
 			HAL_Delay(5);
@@ -689,13 +686,13 @@ void Json_Parse_Command_Fun(void)
 	   gctl_t.response_wifi_signal_label=0xff;
 	  	break;
 
-	  case STATE_TIMER_MODEL_ITEM:
+	  case STATE_TIMER_MODEL_ITEM: //timer timing mode 0x0A
 	  if(gpro_t.gpower_on ==power_on){
 	         gctl_t.gModel=2;
             MqttData_Publish_SetState(2);
 			osDelay(100);//HAL_Delay(350);
         
-			SendWifiData_To_Cmd(0x07,0x0);
+			SendWifiData_To_Cmd(0x27,0x02);
 		   HAL_Delay(5);
         }
     
@@ -703,14 +700,14 @@ void Json_Parse_Command_Fun(void)
 	   gctl_t.response_wifi_signal_label = 0xff;
 	  break;
 		
-	  case STATE_AI_MODEL_ITEM:
+	  case STATE_AI_MODEL_ITEM: // beijing timing 0x09
 	  	 if(gpro_t.gpower_on ==power_on){
 		
 		    gctl_t.gModel=1;
             MqttData_Publish_SetState(1);
 			osDelay(100);//HAL_Delay(350);
           
-			SendWifiData_To_Cmd(0x07,0x0);
+			SendWifiData_To_Cmd(0x27,0x01);
 		   HAL_Delay(5);
         }
      
@@ -729,8 +726,8 @@ void Json_Parse_Command_Fun(void)
             if( gctl_t.set_temperature_value <20 )  gctl_t.set_temperature_value=20;
             MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
 			osDelay(100);//HAL_Delay(350);
-			SendWifiData_To_Cmd(0x3A, gctl_t.set_temperature_value); //smart phone set temperature value .
-			HAL_Delay(10);
+			SendWifiData_To_Data(0x3A, gctl_t.set_temperature_value); //smart phone set temperature value .
+			osDelay(5);//HAL_Delay(10);
           
        }
      
@@ -836,7 +833,7 @@ void Json_Parse_Command_Fun(void)
 //
 //        }
 
-         memset(gpro_t.wifi_rx_data_array,'\0',50);
+         memset(gpro_t.wifi_rx_data_array,'\0',20);
       
 		gctl_t.response_wifi_signal_label=0xf0;
 	}

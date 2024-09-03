@@ -4,7 +4,7 @@
 _run_t gctl_t; 
 
 
-static void Single_Command_ReceiveCmd(uint8_t cmd); 
+ 
 
 
 /**********************************************************************
@@ -15,6 +15,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd);
 	*Return Ref: NO
 	*
 **********************************************************************/
+#if 0
 static void Single_Command_ReceiveCmd(uint8_t cmd)
 {
     static uint8_t no_buzzer_sound_dry_off;
@@ -117,6 +118,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 
 }
+#endif 
 /**********************************************************************
 	*
 	*Functin Name: void Single_ReceiveCmd(uint8_t cmd)
@@ -145,7 +147,7 @@ void SystemReset(void)
 **********************************************************************/
 void power_on_handler(void)
 {
-   uint8_t i;
+  // uint8_t i;
    static uint8_t run_flag;
     
     switch(run_flag){

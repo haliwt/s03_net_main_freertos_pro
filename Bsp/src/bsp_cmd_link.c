@@ -226,10 +226,10 @@ void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
         outputBuf[0]=0x5A; //head : main board 0x5A
         outputBuf[1]=0x10; //main board device No: 0x10
         outputBuf[2]=cmd; //command type: fan speed of value 
-        outputBuf[3]=data; // 0x0F : is data ,don't command data.
-        outputBuf[4]= 0x0; // don't data 
-        
-        outputBuf[5] = 0xFE;
+        outputBuf[3]=data; // 0x0F : is data ,don't command order.
+        outputBuf[4]= 0x0; // don't data ,onlay is command order,recieve data is 1byte .
+       
+        outputBuf[5] = 0xFE; //frame is end of byte.
         outputBuf[6] = bcc_check(outputBuf,6);
         
         transferSize=7;
@@ -242,6 +242,35 @@ void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
 	
 }
 
+/********************************************************************************
+    **
+    *Function Name:void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
+    *Function : commad order , data -command type
+    *Input Ref: commad order , data -command type
+    *Return Ref:NO
+    *
+*******************************************************************************/
+void SendWifiData_To_Data(uint8_t cmd,uint8_t data)
+{
+        outputBuf[0]=0x5A; //head : main board 0x5A
+        outputBuf[1]=0x10; //main board device No: 0x10
+        outputBuf[2]=cmd; //command type: fan speed of value 
+        outputBuf[3]=0x0F; // 0x0F : is data ,don't command order.
+        outputBuf[4]= 0x01; // don't data ,onlay is command order,recieve data is 1byte .
+        outputBuf[5]= data; // don't data 
+        
+        outputBuf[6] = 0xFE;
+        outputBuf[7] = bcc_check(outputBuf,7);
+        
+        transferSize=8;
+        if(transferSize)
+        {
+            while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+            transOngoingFlag=1;
+            HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+        }
+	
+}
 
 
 void EUSART_SetTxInterruptHandler(void (* interruptHandler)(void))
