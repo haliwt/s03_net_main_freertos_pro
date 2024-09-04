@@ -22,7 +22,7 @@ void SetPowerOn_ForDoing(void)
 		     Update_DHT11_Value();
 			 HAL_Delay(200);
 	         gctl_t.set_wind_speed_value =100;
-			gctl_t.wifi_gPower_On=1;
+		
 			MqttData_Publish_Update_Data();
 			 HAL_Delay(200);
 
@@ -84,7 +84,7 @@ void SetPowerOn_ForDoing(void)
 			 HAL_Delay(100);
 
 		     gctl_t.set_wind_speed_value =100;
-			 gctl_t.wifi_gPower_On=1;
+	
 		     MqttData_Publish_Update_Data();
 		     HAL_Delay(200);
 
@@ -104,7 +104,7 @@ void SetPowerOff_ForDoing(void)
 
 	gctl_t.gFan_continueRun =1; //the fan still run 60s
 	
-	gctl_t.wifi_gPower_On = 0;
+
     gctl_t.set_wind_speed_value =10;
  
     gctl_t.gFan = 0;

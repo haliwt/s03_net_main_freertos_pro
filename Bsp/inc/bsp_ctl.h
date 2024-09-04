@@ -70,7 +70,7 @@ typedef enum{
 typedef struct _RUN_T{
     
 	uint8_t gPower_On;
-	uint8_t wifi_gPower_On;
+
 
 
 	uint8_t gDht11_flag;
@@ -90,6 +90,8 @@ typedef struct _RUN_T{
 	uint8_t process_run_guarantee_flag;
 	uint8_t usart2_error_falg ;
 	uint8_t power_off_fan_state ;
+
+    uint8_t process_run_step;
    
 
 	
@@ -102,13 +104,13 @@ typedef struct _RUN_T{
     //app timer
 	//uint8_t app_timer_power_on_ref;
 	uint8_t app_timer_power_on_flag ;
-	uint8_t app_timer_power_off_flag ;
+
 
     
     uint8_t decodeFlag;
 	uint8_t sendtimes;
     uint8_t setup_timer_flag;
-    uint8_t gmt_time_flag;
+
     uint8_t gTimer_send_0xaa;
 	uint8_t response_wifi_signal_label;
     uint8_t flash_write_data_error;
@@ -125,7 +127,7 @@ typedef struct _RUN_T{
 	uint8_t gFan_counter;
 	uint8_t  gFan;
     //ptc:
-    uint8_t ptc_first_detected_times;
+   
   
       
 
@@ -164,7 +166,7 @@ typedef struct _RUN_T{
 	  uint8_t ptc_remove_warning_send_data;
 
 
-	  uint8_t gTimer_app_power_on;
+
 	
 	  
 

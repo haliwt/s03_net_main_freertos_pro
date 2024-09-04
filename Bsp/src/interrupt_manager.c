@@ -64,7 +64,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         wifi_t.gTimer_get_beijing_time++;
 
 
-	    gctl_t.gTimer_app_power_on++;
+	 
 	    gctl_t.gTimer_read_beijing_time++;
 
 

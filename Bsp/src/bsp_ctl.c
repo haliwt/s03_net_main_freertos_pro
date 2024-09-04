@@ -148,9 +148,9 @@ void SystemReset(void)
 void power_on_handler(void)
 {
   // uint8_t i;
-   static uint8_t run_flag;
+
     
-    switch(run_flag){
+    switch(gpro_t.process_run_step){
 
 	case 0: //1
 	     
@@ -160,54 +160,51 @@ void power_on_handler(void)
 
          gctl_t.gFan_continueRun =0;
     
-         gctl_t.gmt_time_flag=0;
-          gctl_t.wifi_gPower_On = 1;
-
-    
-         gctl_t.gTImer_send_data_to_disp=0;
-	     gctl_t.gTimer_senddata_panel=0;
-		 gctl_t.gTimer_app_power_on=0;
-		 gctl_t.app_timer_power_off_flag =0;
-		 gctl_t.gTimer_continuce_works_time=0;
+     
+         gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
+         
+	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
+		
+	    gctl_t.gTimer_continuce_works_time=0;
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
 		 gctl_t.fan_warning =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
-		 gctl_t.ptc_first_detected_times=0;
+		
 		 gctl_t.set_wind_speed_value= 100;
 
         gctl_t.fan_continuce=0;
-        if(wifi_link_net_state() ==1){
-            Subscriber_Data_FromCloud_Handler();
-    		osDelay(100);//HAL_Delay(350);
+        gctl_t.first_link_tencent_cloud_flag=1;
+      
 
-         }
-	    run_flag= UPDATE_TO_PANEL_DATA;
+        send_data_to_disp();
+	    gpro_t.process_run_step= UPDATE_TO_PANEL_DATA;
 
         
 	   
     
 	break;
         
-    
-
-   case UPDATE_TO_PANEL_DATA: //5
+    case UPDATE_TO_PANEL_DATA: //5
 
     switch(gctl_t.interval_time_stop_run){
 
 	 case 0: //works timing 
 	 
-    if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==1){
+    if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==1 && gctl_t.app_timer_power_on_flag==0){
 	
 		  gctl_t.first_link_tencent_cloud_flag++;
-			MqttData_Publish_SetOpen(0x01);
+
+            
+            MqttData_Publish_SetOpen(0x01);
 			HAL_Delay(100);
+			Subscriber_Data_FromCloud_Handler();
+    		HAL_Delay(100);//HAL_Delay(350);
 			Publish_Data_ToTencent_Initial_Data();
 			HAL_Delay(200);
 	
-		   Subscriber_Data_FromCloud_Handler();
-		   HAL_Delay(200);
+		   
 	   }
     
 
@@ -255,41 +252,16 @@ void power_on_handler(void)
 
      }
     break;
-
-	case POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE:
-  
-	    
-	 if(gpro_t.gpower_on == power_on && gctl_t.gFan_continueRun ==1){
-
-              if(gctl_t.gFan_counter < 60){
-          
-                      Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
-                  }       
-
-	           if(gctl_t.gFan_counter > 59){
-		           
-				   gctl_t.gFan_counter=0;
-				
-				   gctl_t.gFan_continueRun++;
-				   FAN_Stop();
-	           }
-
-	 }
-
-
-	break;
-
    }
 }
+
 
 void power_off_handler(void)
 {
         if(gctl_t.fan_continuce==0){
 
        
-  
-     
-		 gctl_t.set_wind_speed_value=10;
+          gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;
 		
@@ -301,7 +273,7 @@ void power_off_handler(void)
 		 gctl_t.fan_warning =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
-		 gctl_t.ptc_first_detected_times=0;
+		
           SetPowerOff_ForDoing();
 		
 		  gctl_t.fan_continuce ++;
@@ -330,7 +302,7 @@ void power_off_handler(void)
        }
 
        
-
+        gpro_t.process_run_step=0;
 	   
 		  if(gctl_t.gFan_counter < 60 && gctl_t.fan_continuce==1){
           

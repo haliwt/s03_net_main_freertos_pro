@@ -84,14 +84,11 @@ void PowerOff_Host(void (*poweroffHandler)(void));
 
 
 
-void wifiDisplayTemperature_Humidity(void);
 
 
-void wifiUpdate_SetTimeValue(uint8_t tv);
-void wifiUpdate_SetTemperatureValue(uint8_t temp);
 
-void RunWifi_Command_Handler(void);
-void GetNTP_Times(void);
+
+
 
 
 #endif 

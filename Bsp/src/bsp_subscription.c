@@ -778,7 +778,7 @@ void Json_Parse_Command_Fun(void)
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
 			  gctl_t.app_timer_power_on_flag = 1;
-		      gctl_t.app_timer_power_off_flag = 0;
+		
 			   MqttData_Publish_SetOpen(1);  
 			   osDelay(100);//HAL_Delay(350);
 		
@@ -795,7 +795,7 @@ void Json_Parse_Command_Fun(void)
 			}
 		    if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
 		   
-		        gctl_t.app_timer_power_off_flag = 1;
+		   
 			    gctl_t.app_timer_power_on_flag = 0;
                 __HAL_UART_CLEAR_OREFLAG(&huart2);
 		 			MqttData_Publish_SetOpen(0);  

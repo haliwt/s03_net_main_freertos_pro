@@ -97,13 +97,7 @@ void link_wifi_net_handler(void)
             			at_send_data(device_massage, strlen((const char *)device_massage));
             	  		HAL_Delay(1000);
                     
-                      
-	        
-			
-		
- 
-
-                      gpro_t.link_net_step = 3;
+                       gpro_t.link_net_step = 3;
 
                  }
 
