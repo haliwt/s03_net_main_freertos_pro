@@ -79,7 +79,7 @@ typedef struct _RUN_T{
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
 	uint8_t interval_time_stop_run ;
-    uint8_t fan_continuce;
+    uint8_t power_off_ref_value_flag;
     
 
 
@@ -123,8 +123,8 @@ typedef struct _RUN_T{
 
 	//fan:
 	uint8_t gFan_pwm_duty_level;
-	uint8_t gFan_continueRun;
-	uint8_t gFan_counter;
+	uint8_t interval_2_hous_fan_one_minute_flag;
+	uint8_t gTimer_fan_run_one_minute;
 	uint8_t  gFan;
     //ptc:
    

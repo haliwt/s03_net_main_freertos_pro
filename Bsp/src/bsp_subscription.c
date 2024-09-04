@@ -561,6 +561,7 @@ void Json_Parse_Command_Fun(void)
 		gctl_t.fan_warning =0;
 		gctl_t.ptc_remove_warning_send_data =0;
 		gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
+		gctl_t.power_off_ref_value_flag=1; // app power on 
 	    SendWifiData_To_Cmd(0x01,0x01);
 		HAL_Delay(5);
        
@@ -778,6 +779,7 @@ void Json_Parse_Command_Fun(void)
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
 			  gctl_t.app_timer_power_on_flag = 1;
+              gctl_t.power_off_ref_value_flag=1; // app power on 
 		
 			   MqttData_Publish_SetOpen(1);  
 			   osDelay(100);//HAL_Delay(350);
@@ -846,7 +848,7 @@ void Json_Parse_Command_Fun(void)
 void Parse_Json_Statement(void)
 {
 
-   if(rx_app_timer_power_on_flag == 1){
+   //if(rx_app_timer_power_on_flag == 1){
     
      if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 				
@@ -891,10 +893,10 @@ void Parse_Json_Statement(void)
 
       rx_app_timer_power_on_flag ++;
 
-      memset(TCMQTTRCVPUB,'\0',40);
+    //  memset(TCMQTTRCVPUB,'\0',40);
 
   
-    }
+   // }
    
 
 

@@ -5,7 +5,7 @@
 
 
 
-void SetPowerOn_ForDoing(void);
+void smartphone_timer_power_on_and_normal_handler(void);
 void SetPowerOff_ForDoing(void);
 
 

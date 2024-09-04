@@ -268,13 +268,13 @@ uint8_t bcc_check(const unsigned char *data, int len)
 
 /********************************************************************************
 	*
-	*Functin Name:void void wifi_get_beijing_tim_handler(void)
+	*Functin Name:void void wifi_get_beijing_time_handler(void)
 	*Functin :
 	*Input Ref: NO
 	*Return Ref:NO
 	*
 ********************************************************************************/
-void wifi_get_beijing_tim_handler(void)
+void wifi_get_beijing_time_handler(void)
 {
 
     static uint8_t alternate_flag,flag_switch;
@@ -342,6 +342,7 @@ void wifi_get_beijing_tim_handler(void)
            
                 alternate_flag++;
                 net_t.linking_tencent_cloud_doing  =0; //receive from tencent command state .
+                SendWifiData_To_Data(0x1F,0x01);
                 //gpro_t.gTimer_pro_update_dht11_data =0; //disable publish to data to tencent .
 
             }

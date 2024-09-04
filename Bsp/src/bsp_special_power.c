@@ -3,7 +3,7 @@
 
 void (*Single_Usart_ReceiveData)(uint8_t cmd);
 
-void SetPowerOn_ForDoing(void)
+void smartphone_timer_power_on_and_normal_handler(void)
 {
     
   switch(gctl_t.app_timer_power_on_flag){
@@ -13,7 +13,7 @@ void SetPowerOn_ForDoing(void)
 		gctl_t.gDry = 1;
 		gctl_t.gPlasma =1;       //"杀菌"
 		gctl_t.gUlransonic = 1; // "驱虫"
-	    gctl_t.gFan_counter=0;
+	    gctl_t.gTimer_fan_run_one_minute=0;
 
          if(wifi_link_net_state() ==1){
     
@@ -38,33 +38,32 @@ void SetPowerOn_ForDoing(void)
 
 	case 1: //app timer timing power of 
 	       gctl_t.gModel =1;
+
+          Parse_Json_Statement();
 		  
-
-	       Parse_Json_Statement();
-
-	  
-		    if( gctl_t.gPlasma==1){ //Anion
-				gctl_t.gPlasma=1;
+           if( gctl_t.gPlasma==1){ //Anion
+			
 
 				SendWifiData_To_Cmd(0x03,0x01);
-				HAL_Delay(2);
+                osDelay(100);
+			
 			}
 			else{
 				gctl_t.gPlasma =0;
 				SendWifiData_To_Cmd(0x03,0x0);
-				HAL_Delay(2);
+				 osDelay(100);
 			}
 
 
 			if(gctl_t.gUlransonic==1){
 
 					SendWifiData_To_Cmd(0x04,0x01);
-					HAL_Delay(2);
+					 osDelay(100);
 			}
 			else {
 					gctl_t.gUlransonic=0;
 					SendWifiData_To_Cmd(0x04,0x0);
-					HAL_Delay(2);
+					 osDelay(100);
 			}
 
 
@@ -72,16 +71,14 @@ void SetPowerOn_ForDoing(void)
 			if(gctl_t.gDry==1){
 
 				SendWifiData_To_Cmd(0x02,0x01);
-				HAL_Delay(2);
+				 osDelay(100);
 			}
 			else{
 					gctl_t.gDry=0;
 					SendWifiData_To_Cmd(0x02,0x0);
-					HAL_Delay(2);
+					 osDelay(100);
 
 			}
-		 
-			 HAL_Delay(100);
 
 		     gctl_t.set_wind_speed_value =100;
 	
@@ -92,17 +89,13 @@ void SetPowerOn_ForDoing(void)
 	     break;
 		}
 			
-        
-
-
-	
- }
+}
 
 void SetPowerOff_ForDoing(void)
 {
    
 
-	gctl_t.gFan_continueRun =1; //the fan still run 60s
+	gctl_t.interval_2_hous_fan_one_minute_flag =1; //the fan still run 60s
 	
 
     gctl_t.set_wind_speed_value =10;

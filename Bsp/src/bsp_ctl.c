@@ -4,7 +4,7 @@
 _run_t gctl_t; 
 
 
- 
+static void smartphone_app_timer_power_on_handler(void);
 
 
 /**********************************************************************
@@ -27,7 +27,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case DRY_ON:
          gctl_t.gDry = 1;
-	      gctl_t.gFan_continueRun =0;
+	      gctl_t.interval_2_hous_fan_one_minute_flag =0;
 	   if(gctl_t.noBuzzer_sound_dry_flag !=1){
 		     buzzer_sound();
 		 }
@@ -46,8 +46,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			if( no_buzzer_sound_dry_off !=1)
 			     buzzer_sound();
 			 if(gctl_t.gPlasma ==0){ //plasma turn off flag
-			  gctl_t.gFan_counter =0;
-			   gctl_t.gFan_continueRun =1;
+			  gctl_t.gTimer_fan_run_one_minute =0;
+			   gctl_t.interval_2_hous_fan_one_minute_flag =1;
 
 		     }
 			if(net_t.wifi_link_net_success==1)
@@ -154,13 +154,14 @@ void power_on_handler(void)
 
 	case 0: //1
 	     
-		 SetPowerOn_ForDoing();
+
+         smartphone_timer_power_on_and_normal_handler();
 
          
 
-         gctl_t.gFan_continueRun =0;
+         gctl_t.interval_2_hous_fan_one_minute_flag =0;
     
-     
+        
          gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
          
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
@@ -174,7 +175,7 @@ void power_on_handler(void)
 		
 		 gctl_t.set_wind_speed_value= 100;
 
-        gctl_t.fan_continuce=0;
+        gctl_t.power_off_ref_value_flag=1;
         gctl_t.first_link_tencent_cloud_flag=1;
       
 
@@ -204,16 +205,27 @@ void power_on_handler(void)
 			Publish_Data_ToTencent_Initial_Data();
 			HAL_Delay(200);
 	
-		   
-	   }
+	  }
+//      else if(wifi_link_net_state() ==1 && gctl_t.app_timer_power_on_flag==1){
+//           
+//
+//            smartphone_app_timer_power_on_handler();
+//            osDelay(100);
+//            MqttData_Publish_Update_Data();
+//		    HAL_Delay(200);
+//
+//            gctl_t.app_timer_power_on_flag++;
+//
+//
+//      }
     
 
 	if(gctl_t.gTimer_continuce_works_time > 119){//if(gctl_t.gTimer_continuce_works_time > 600){
 	
 	     gctl_t.gTimer_continuce_works_time =0;
          gctl_t.interval_time_stop_run =1;
-	     gctl_t.gFan_continueRun =1;
-		 gctl_t.gFan_counter=0;
+	     gctl_t.interval_2_hous_fan_one_minute_flag =1;
+		 gctl_t.gTimer_fan_run_one_minute=0;
     }
     
 	 break;
@@ -230,18 +242,18 @@ void power_on_handler(void)
 		    gctl_t.interval_time_stop_run =0;
       }
 
-	 if(gctl_t.gFan_continueRun ==1){
+	 if(gctl_t.interval_2_hous_fan_one_minute_flag ==1){
 
-	      if(gctl_t.gFan_counter < 60){
+	      if(gctl_t.gTimer_fan_run_one_minute < 60){
 	  
 	              Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
 	          }       
 
-	       if(gctl_t.gFan_counter > 59){
+	       if(gctl_t.gTimer_fan_run_one_minute > 59){
 	           
-			   gctl_t.gFan_counter=0;
+			   gctl_t.gTimer_fan_run_one_minute=0;
 			
-			   gctl_t.gFan_continueRun=0;
+			   gctl_t.interval_2_hous_fan_one_minute_flag=0;
 			   FAN_Stop();
 	       }
 
@@ -258,7 +270,7 @@ void power_on_handler(void)
 
 void power_off_handler(void)
 {
-        if(gctl_t.fan_continuce==0){
+        if(gctl_t.power_off_ref_value_flag==1){
 
        
           gctl_t.set_wind_speed_value=10;
@@ -276,11 +288,12 @@ void power_off_handler(void)
 		
           SetPowerOff_ForDoing();
 		
-		  gctl_t.fan_continuce ++;
-          gctl_t.gFan_counter=0;
+		  gctl_t.power_off_ref_value_flag ++;
+          gctl_t.gTimer_fan_run_one_minute=0;
          }
-
-       if(wifi_link_net_state() == 1 && gctl_t.fan_continuce == 1){
+        
+      /**************************************************************/
+       if(wifi_link_net_state() == 1 && gctl_t.power_off_ref_value_flag == 2){
 
           MqttData_Publish_PowerOff_Ref(); 
           osDelay(200);//HAL_Delay(200);
@@ -297,7 +310,7 @@ void power_off_handler(void)
            Subscriber_Data_FromCloud_Handler();
 		  osDelay(200);
 		 
-           gctl_t.fan_continuce ++;
+           gctl_t.power_off_ref_value_flag ++;
 
 
        }
@@ -305,14 +318,14 @@ void power_off_handler(void)
        
         gpro_t.process_run_step=0;
 	   
-		  if(gctl_t.gFan_counter < 60 && gctl_t.fan_continuce==1){
+		  if(gctl_t.gTimer_fan_run_one_minute < 60 && gctl_t.power_off_ref_value_flag==3){
           
                    
 			Fan_One_Power_Off_Speed();
                   
            }       
            else{
-		          gctl_t.fan_continuce =5;
+		          gctl_t.power_off_ref_value_flag =5;
 				  
 				   FAN_Stop();
                   
@@ -324,7 +337,7 @@ void power_off_handler(void)
 void main_function_detected_handler(void)
 {
 
-if(gctl_t.gTimer_senddata_panel >0  &&  gctl_t.interval_time_stop_run ==0){ //300ms
+if(gctl_t.gTimer_senddata_panel >1  &&  gctl_t.interval_time_stop_run ==0){ //300ms
          gctl_t.gTimer_senddata_panel=0;
            ActionEvent_Handler();
      }
@@ -333,6 +346,50 @@ if(gctl_t.gTimer_senddata_panel >0  &&  gctl_t.interval_time_stop_run ==0){ //30
 }
 
 
+/*****************************************************************************************
+    *
+    *
+    *
+    *
+    *
+*****************************************************************************************/
+static void smartphone_app_timer_power_on_handler(void)
+{
+    if(gctl_t.gDry == 1 && gctl_t.ptc_warning ==0){
 
+	     SendWifiData_To_Cmd(0x02,0x01); //PTC ON
+
+	}
+	else{
+		  
+		   SendWifiData_To_Cmd(0x02,0x0); //PTC OFF
+		   
+	}
+	//kill
+	if(gctl_t.gPlasma == 1){
+		
+	    SendWifiData_To_Cmd(0x03,0x01); //PLASMA  ON
+	}
+	else{
+
+		SendWifiData_To_Cmd(0x03,0x0); //PLASMA OFF
+	}
+	//driver bug
+	if(gctl_t.gUlransonic ==1){
+	
+	 SendWifiData_To_Cmd(0x04,0x01); //ULTRA  ON
+		
+	}
+	else{
+	 
+        SendWifiData_To_Cmd(0x04,0x00); //ULTRA  OFF
+
+	}
+
+	
+    MqttData_Publish_Update_Data();
+		     HAL_Delay(200);
+
+}
 
     

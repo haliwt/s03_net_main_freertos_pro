@@ -117,7 +117,7 @@ uint8_t bcc_check(const unsigned char *data, int len);
 
 void send_data_to_disp(void);
 
-void wifi_get_beijing_tim_handler(void);
+void wifi_get_beijing_time_handler(void);
 
 
 void adc_detected_hundler(void);

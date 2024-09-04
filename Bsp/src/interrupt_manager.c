@@ -79,7 +79,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	  gctl_t.gTimer_usart2_error++;
 	  gctl_t.gTimer_linking_tencen_total_counter++;
-	  gctl_t.gFan_counter++;
+	  gctl_t.gTimer_fan_run_one_minute++;
         //gprocess 
        gpro_t.gTimer_power_on_first_link_tencent++;
        gpro_t.gTimer_get_data_from_tencent_data++;
@@ -87,7 +87,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        wifi_t.gTimer_auto_detected_net_state_times ++;
        wifi_t.gTimer_auto_link_net_time++ ;
 
-       if(tm1> 59){
+       if(tm1> 59){ //one minute
           tm1 =0;
           gctl_t.gTimer_continuce_works_time++;
 

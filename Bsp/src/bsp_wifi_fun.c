@@ -16,7 +16,7 @@ void (*SetTemperature)(void);
 uint8_t get_rx_beijing_time_enable;
 
 
-static void AutoReconnect_Wifi_Neware_Function(void);
+
 
 
 void PowerOn_Host(void (* poweronHandler)(void))
