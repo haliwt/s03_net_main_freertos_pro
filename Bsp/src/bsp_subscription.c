@@ -6,6 +6,7 @@
 
 uint8_t TCMQTTRCVPUB[40];
 
+uint8_t rx_app_timer_power_on_flag;
 
 
  
@@ -419,17 +420,16 @@ void clear_rx_copy_data(void)
 void Tencent_Cloud_Rx_Handler(void)
 {
     
-
+   
     if(net_t.rx_data_success==1){
             net_t.rx_data_success=0;
         
-	      gctl_t.set_beijing_time_flag =0; //WT.EDIT 2023.06.12
-		 // wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
-	
-     if(wifi_t.received_data_from_tencent_cloud > 22){
+	    
+	if(wifi_t.received_data_from_tencent_cloud > 22){
 	    wifi_t.received_data_from_tencent_cloud=0;
 		wifi_t.get_rx_beijing_time_enable=0;
 		gctl_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+         rx_app_timer_power_on_flag=1;
 	   // __HAL_UART_CLEAR_OREFLAG(&huart2);
 		strncpy((char*)TCMQTTRCVPUB,(char *)gpro_t.wifi_rx_data_array,40);
 	    
@@ -545,7 +545,7 @@ void Json_Parse_Command_Fun(void)
 
 
    switch(gctl_t.response_wifi_signal_label){
-       gctl_t.set_beijing_time_flag =0;
+  
 	   wifi_t.get_rx_beijing_time_enable=0; //enab
 	
 
@@ -772,7 +772,7 @@ void Json_Parse_Command_Fun(void)
 
 	  case APP_TIMER_POWER_ON_REF :
 
-	       gctl_t.set_beijing_time_flag=0;
+	  
 		   wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 	  	
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
@@ -784,7 +784,7 @@ void Json_Parse_Command_Fun(void)
 		
 		
 			   gpro_t.gpower_on = power_on;
-			   SendWifiData_To_Cmd(0x20,0x01);
+			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open 
 			   HAL_Delay(10);
             
 			   buzzer_temp_on=0;
@@ -803,7 +803,7 @@ void Json_Parse_Command_Fun(void)
 	
 	            gpro_t.gpower_on = power_off;
 
-			SendWifiData_To_Cmd(0x01,0x0); //turn off power off
+			SendWifiData_To_Cmd(0x21,0x0); //turn off power off
 			HAL_Delay(10);
        
 		      buzzer_temp_on=0;
@@ -846,7 +846,8 @@ void Json_Parse_Command_Fun(void)
 void Parse_Json_Statement(void)
 {
 
- 
+   if(rx_app_timer_power_on_flag == 1){
+    
      if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 				
 			gctl_t.gDry=0;
@@ -888,9 +889,12 @@ void Parse_Json_Statement(void)
 
 
 
+      rx_app_timer_power_on_flag ++;
+
+      memset(TCMQTTRCVPUB,'\0',40);
 
   
-
+    }
    
 
 

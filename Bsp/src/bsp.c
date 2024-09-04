@@ -297,6 +297,7 @@ void wifi_get_beijing_tim_handler(void)
                
 
                  if(flag_switch == 1){
+                    wifi_t.get_rx_beijing_time_enable=0;
                     Subscriber_Data_FromCloud_Handler();
                     osDelay(100);//HAL_Delay(200)
                     get_beijing_flag = 1;
@@ -305,6 +306,7 @@ void wifi_get_beijing_tim_handler(void)
                  }
                 else if(flag_switch >  1 && gpro_t.gpower_on == power_off){
                     flag_switch=0;
+                    wifi_t.get_rx_beijing_time_enable=0;
                     Update_Dht11_Totencent_Value();
                     osDelay(50);//HAL_Delay(200) //WT.EDIT 2024.08.10
                     
@@ -314,7 +316,7 @@ void wifi_get_beijing_tim_handler(void)
                  else{ //WT.EDIT 2024.08.10 ADD ITEM
                      if(flag_switch > 1){
                         flag_switch=0;
-                         
+                        wifi_t.get_rx_beijing_time_enable=0; 
                        get_beijing_flag = 1;
                      }
 
@@ -362,10 +364,7 @@ void wifi_get_beijing_tim_handler(void)
       case 2:
 
 
-	   
-	   
-
-	   if(gpro_t.get_beijing_time_success == 0){
+	    if(gpro_t.get_beijing_time_success == 0){
 		
 
          get_beijing_flag = 3;
@@ -390,8 +389,8 @@ void wifi_get_beijing_tim_handler(void)
         }
 		else{
               alternate_flag=0;
-               //gpro_t.gTimer_pro_update_dht11_data=0;
-			   get_beijing_flag = 6;
+             
+			  get_beijing_flag = 6;
 
 		}
 
@@ -451,7 +450,7 @@ void wifi_get_beijing_tim_handler(void)
             wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 
             if(real_hours < 25 && real_minutes < 61 ){
-            if(real_hours == 0x08 && (real_minutes < 0x06)){
+            if(real_hours == 0x08 && (real_minutes < 0x0A)){
                 get_beijing_flag = 0;
 
             }

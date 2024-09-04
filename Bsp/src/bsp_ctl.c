@@ -280,7 +280,7 @@ void power_off_handler(void)
           gctl_t.gFan_counter=0;
          }
 
-       if(wifi_link_net_state() == 1){
+       if(wifi_link_net_state() == 1 && gctl_t.fan_continuce == 1){
 
           MqttData_Publish_PowerOff_Ref(); 
           osDelay(200);//HAL_Delay(200);
@@ -297,6 +297,7 @@ void power_off_handler(void)
            Subscriber_Data_FromCloud_Handler();
 		  osDelay(200);
 		 
+           gctl_t.fan_continuce ++;
 
 
        }

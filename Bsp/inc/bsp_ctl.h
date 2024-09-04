@@ -118,7 +118,7 @@ typedef struct _RUN_T{
     uint8_t flash_read_data;
 
 
-	uint8_t set_beijing_time_flag;
+
 
 
 	//fan:
