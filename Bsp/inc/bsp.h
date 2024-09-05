@@ -38,7 +38,7 @@
 #include "gpio.h"
 #include "usart.h"
 #include "adc.h"
-#include "dma.h"
+//#include "dma.h"
 
 
 

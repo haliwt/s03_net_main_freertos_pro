@@ -71,7 +71,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+ HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -86,7 +86,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_TIM1_Init();
   MX_TIM16_Init();
   MX_TIM17_Init();
@@ -95,7 +94,8 @@ int main(void)
   MX_TIM3_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-    bsp_init();
+   bsp_init();
+
    HAL_TIM_Base_Start_IT(&htim17);
    UART_Start_Receive_IT(&huart1,inputBuf,1);
    UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);

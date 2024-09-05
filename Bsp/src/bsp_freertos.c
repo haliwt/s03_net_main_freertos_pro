@@ -12,7 +12,7 @@ static void AppTaskCreate (void);
 
 
 /* 创建任务通信机制 */
-static void AppObjCreate(void);
+//static void AppObjCreate(void);
 
 
 /***********************************************************************************************************
@@ -23,7 +23,7 @@ static TaskHandle_t xHandleTaskMsgPro = NULL;
 static TaskHandle_t xHandleTaskStart = NULL;
 
 //static QueueHandle_t xQueue1 = NULL;
-static QueueHandle_t xQueue2 = NULL;
+//static QueueHandle_t xQueue2 = NULL;
 //static QueueHandle_t xQueue3 = NULL;
 
 
@@ -103,8 +103,10 @@ static void vTaskMsgPro(void *pvParameters)
 	    }
         
         power_on_handler();
+
+        works_run_two_hours_state();
       
-        main_function_detected_handler();
+        main_function_detected_handler(gctl_t.interval_time_two_hours_stop_flag);
         if(gpro_t.wifi_led_fast_blink_flag==1){
             link_wifi_net_handler();
 
@@ -134,18 +136,16 @@ static void vTaskMsgPro(void *pvParameters)
     }
 
 }
-/*
-*********************************************************************************************************
+/**********************************************************************************************************
 *	凄1�7 敄1�7 各1�7: vTaskStart
 *	功能说明: 启动任务，也就是朢�高优先级任务，这里用作按键扫描��1�7
 *	彄1�7    叄1�7: pvParameters 是在创建该任务时传��的形参
 *	迄1�7 囄1�7 倄1�7: 旄1�7
 *   伄1�7 兄1�7 纄1�7: 4  (数��越小优先级越低，这个跟uCOS相反)
-*********************************************************************************************************
-*/
+**********************************************************************************************************/
 static void vTaskStart(void *pvParameters)
 {
-    MSG_T *ptMsg;
+  
 	BaseType_t xResult;
 	//const TickType_t xMaxBlockTime = pdMS_TO_TICKS(20); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
@@ -159,7 +159,7 @@ static void vTaskStart(void *pvParameters)
 						           0xFFFFFFFF,      
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
 						          portMAX_DELAY);  /* 最大允许延迟时间,等待时间-block   */
-
+         if(xResult == pdPASS){
          if((ulValue & DECODER_BIT_0 ) != 0)
           {
             gpro_t.disp_rx_cmd_done_flag = 0;
@@ -168,14 +168,12 @@ static void vTaskStart(void *pvParameters)
 
             check_code =  bcc_check(gl_tMsg.usData,uid);
 
-           
-
            if(check_code == bcc_check_code ){
            
               receive_data_fromm_display(gl_tMsg.usData);
             }
             
-
+        }
          }
     }
 }
@@ -213,57 +211,6 @@ void AppTaskCreate (void)
                  &xHandleTaskStart );   /* 任务句柄  */
 }
 
-
-
-/*
-*********************************************************************************************************
-*	凄1�7 敄1�7 各1�7: AppObjCreate
-*	功能说明: 创建任务通信机制
-*	彄1�7    叄1�7: 旄1�7
-*	迄1�7 囄1�7 倄1�7: 旄1�7
-*********************************************************************************************************
-*/
-void AppObjCreate (void)
-{
-    #if 1
-
-//   /* 创建10个uint8_t型消息队刄1�7 */
-//	xQueue1 = xQueueCreate(4, sizeof(uint8_t));
-//    if( xQueue1 == 0 )
-//    {
-//        /* 没有创建成功，用户可以在这里加入创建失败的处理机刄1�7 */
-//    }
-	
-	/* 创建10个存储指针变量的消息队列，由于CM3/CM4内核昄1�732位机，一个指针变量占甄1�74个字芄1�7 */
-	xQueue2 = xQueueCreate(10, sizeof(struct Msg *));
-    if( xQueue2 == 0 )
-    {
-        /* 没有创建成功，用户可以在这里加入创建失败的处理机刄1�7 */
-    }
-
-	
-
-	#endif 
-
-    #if 0
-
-	 /* 创建队列雄1�7 */
-    xQueueSet = xQueueCreateSet(QUEUESET_LENGTH);
-    /* 创建队列*/
-    xQueue1 = xQueueCreate(QUEUE_LENGTH, QUEUE_ITEM_SIZE);
-    xQueue2 = xQueueCreate(QUEUE_LENGTH, QUEUE_ITEM_SIZE);
-	
-    /* 创建二��信号量 */
-    xSemaphore = xSemaphoreCreateBinary();
-	
-    /* 将队列和二��信号量添加到队列集丄1�7 */
-    xQueueAddToSet(xQueue1, xQueueSet);
-    xQueueAddToSet(xQueue2, xQueueSet);
-    xQueueAddToSet(xSemaphore, xQueueSet);
-    #endif 
-}
-
-
 /********************************************************************************
 	**
 	*Function Name:void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -276,7 +223,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
      static uint8_t state;
      BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-     MSG_T *ptMsg;
+   //  MSG_T *ptMsg;
 
     if(huart->Instance==USART2)
     {

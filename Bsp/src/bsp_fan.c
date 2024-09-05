@@ -5,19 +5,11 @@ static void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
 
-void FAN_CCW_RUN(void)
-{
-   FAN_CW_SetLow();
-   SetLevel_Fan_PWMA(100);
-  
-}
+
 
 void FAN_Stop(void)
 {
    FAN_CW_SetLow(); //brake
-  //  FAN_GPIO_Init();
-  // HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_RESET);
-   //HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
    SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
 }
 
@@ -56,7 +48,7 @@ void Fan_Two_Speed(void)
 void ShutDown_AllFunction(void)
 {
 	
-	PLASMA_SetLow(); //
+	PLASMA_SetLow();
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 	PTC_SetLow();
 	FAN_Stop();
@@ -65,18 +57,18 @@ void ShutDown_AllFunction(void)
 
 }
 //"杀毒" 
-void SterIlization(uint8_t sel)
+void ultrasonic_fun(uint8_t sel)
 {
     if(sel==0){//open 
 		
-		 PLASMA_SetHigh();
+		
 		 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 
 	}
 	else{ //close
 
 			
-		PLASMA_SetLow();
+		
 		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
 	
 
@@ -102,6 +94,22 @@ void Dry_Function(uint8_t sel)
    }
 
 }
+
+
+void plasma_fun(uint8_t sel)
+{
+     if(sel ==0){
+        PLASMA_SetHigh();
+
+     }
+     else{
+
+        PLASMA_SetLow();
+     }
+
+}
+
+
 
 void Fan_RunSpeed_Fun(void)
 {

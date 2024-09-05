@@ -30,7 +30,7 @@ void smartphone_timer_power_on_and_normal_handler(void)
        	
 			
 	    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
-	    PLASMA_SetHigh(); //
+	    PLASMA_SetHigh();
 	    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 	    PTC_SetHigh();
   

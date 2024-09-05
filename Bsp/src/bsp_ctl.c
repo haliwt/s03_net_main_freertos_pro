@@ -4,7 +4,7 @@
 _run_t gctl_t; 
 
 
-static void smartphone_app_timer_power_on_handler(void);
+//static void smartphone_app_timer_power_on_handler(void);
 
 
 /**********************************************************************
@@ -179,7 +179,7 @@ void power_on_handler(void)
         gctl_t.first_link_tencent_cloud_flag=1;
       
 
-        send_data_to_disp();
+         Update_DHT11_Value();
 	    gpro_t.process_run_step= UPDATE_TO_PANEL_DATA;
 
         
@@ -189,9 +189,7 @@ void power_on_handler(void)
         
     case UPDATE_TO_PANEL_DATA: //5
 
-    switch(gctl_t.interval_time_stop_run){
-
-	 case 0: //works timing 
+  
 	 
     if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==1 && gctl_t.app_timer_power_on_flag==0){
 	
@@ -204,33 +202,47 @@ void power_on_handler(void)
     		HAL_Delay(100);//HAL_Delay(350);
 			Publish_Data_ToTencent_Initial_Data();
 			HAL_Delay(200);
+
+             SendWifiData_To_Data(0x1F,0x01);
+             osDelay(20);
+
+             Update_DHT11_Value();
+              osDelay(20);
 	
 	  }
-//      else if(wifi_link_net_state() ==1 && gctl_t.app_timer_power_on_flag==1){
-//           
-//
-//            smartphone_app_timer_power_on_handler();
-//            osDelay(100);
-//            MqttData_Publish_Update_Data();
-//		    HAL_Delay(200);
-//
-//            gctl_t.app_timer_power_on_flag++;
-//
-//
-//      }
-    
+      else if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==0){
+
+           gctl_t.first_link_tencent_cloud_flag++;
+           Update_DHT11_Value();
+           osDelay(20);
+      }
+
+
+     break;
+  }
+}
+      
+/**********************************************************************
+    *
+    *Functin Name: 
+    *Function : be check key of value 
+    *Input Ref:  key of value
+    *Return Ref: NO
+    *
+************************************************************************/
+void works_run_two_hours_state(void)
+{
 
 	if(gctl_t.gTimer_continuce_works_time > 119){//if(gctl_t.gTimer_continuce_works_time > 600){
 	
 	     gctl_t.gTimer_continuce_works_time =0;
-         gctl_t.interval_time_stop_run =1;
+         gctl_t.interval_time_two_hours_stop_flag =1;
 	     gctl_t.interval_2_hous_fan_one_minute_flag =1;
 		 gctl_t.gTimer_fan_run_one_minute=0;
     }
-    
-	 break;
+    if(gctl_t.interval_time_two_hours_stop_flag ==1){
 
-	 case 1:  //interval times 10 minutes,stop works
+	
 	 	
 		PLASMA_SetLow(); //
 		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
@@ -239,7 +251,7 @@ void power_on_handler(void)
 	
 	  if(gctl_t.gTimer_continuce_works_time > 10){
              gctl_t.gTimer_continuce_works_time=0;
-		    gctl_t.interval_time_stop_run =0;
+		    gctl_t.interval_time_two_hours_stop_flag =0;
       }
 
 	 if(gctl_t.interval_2_hous_fan_one_minute_flag ==1){
@@ -260,12 +272,10 @@ void power_on_handler(void)
 	  }
 	 
 
-	 break;
+    }
 
-     }
-    break;
-   }
 }
+ 
 
 
 void power_off_handler(void)
@@ -277,7 +287,7 @@ void power_off_handler(void)
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;
 		
-		gctl_t.interval_time_stop_run =0;
+		gctl_t.interval_time_two_hours_stop_flag =0;
 		gctl_t.gTimer_continuce_works_time=0;
 	
 
@@ -334,10 +344,10 @@ void power_off_handler(void)
 	  
 }
 
-void main_function_detected_handler(void)
+void main_function_detected_handler(uint8_t cmd)
 {
 
-if(gctl_t.gTimer_senddata_panel >1  &&  gctl_t.interval_time_stop_run ==0){ //300ms
+if(gctl_t.gTimer_senddata_panel >1  &&  cmd ==0){ //300ms
          gctl_t.gTimer_senddata_panel=0;
            ActionEvent_Handler();
      }
@@ -346,50 +356,5 @@ if(gctl_t.gTimer_senddata_panel >1  &&  gctl_t.interval_time_stop_run ==0){ //30
 }
 
 
-/*****************************************************************************************
-    *
-    *
-    *
-    *
-    *
-*****************************************************************************************/
-static void smartphone_app_timer_power_on_handler(void)
-{
-    if(gctl_t.gDry == 1 && gctl_t.ptc_warning ==0){
-
-	     SendWifiData_To_Cmd(0x02,0x01); //PTC ON
-
-	}
-	else{
-		  
-		   SendWifiData_To_Cmd(0x02,0x0); //PTC OFF
-		   
-	}
-	//kill
-	if(gctl_t.gPlasma == 1){
-		
-	    SendWifiData_To_Cmd(0x03,0x01); //PLASMA  ON
-	}
-	else{
-
-		SendWifiData_To_Cmd(0x03,0x0); //PLASMA OFF
-	}
-	//driver bug
-	if(gctl_t.gUlransonic ==1){
-	
-	 SendWifiData_To_Cmd(0x04,0x01); //ULTRA  ON
-		
-	}
-	else{
-	 
-        SendWifiData_To_Cmd(0x04,0x00); //ULTRA  OFF
-
-	}
-
-	
-    MqttData_Publish_Update_Data();
-		     HAL_Delay(200);
-
-}
 
     

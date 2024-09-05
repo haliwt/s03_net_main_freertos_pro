@@ -22,25 +22,24 @@
 
 
 
-#define BUZZER_SetHigh()            HAL_GPIO_WritePin(BUZZER_GPIO,BUZZER_PIN,GPIO_PIN_SET)    // output high level
-#define BUZZER_SetLow()             HAL_GPIO_WritePin(BUZZER_GPIO,BUZZER_PIN,GPIO_PIN_RESET)    // output low level
-#define BUZZER_TOGGLE()             HAL_GPIO_TogglePin(BUZZER_GPIO,BUZZER_PIN ) 
+//#define BUZZER_SetHigh()            HAL_GPIO_WritePin(BUZZER_GPIO,BUZZER_PIN,GPIO_PIN_SET)    // output high level
+//#define BUZZER_SetLow()             HAL_GPIO_WritePin(BUZZER_GPIO,BUZZER_PIN,GPIO_PIN_RESET)    // output low level
+//#define BUZZER_TOGGLE()             HAL_GPIO_TogglePin(BUZZER_GPIO,BUZZER_PIN ) 
 
 
 
 
-#define PLASMA_PIN      GPIO_PIN_5
-#define PLASMA_GPIO     GPIOA
 
-#define PLASMA_SetHigh()            HAL_GPIO_WritePin(PLASMA_GPIO,PLASMA_PIN,GPIO_PIN_SET)    // output high level
-#define PLASMA_SetLow()             HAL_GPIO_WritePin(PLASMA_GPIO,PLASMA_PIN,GPIO_PIN_RESET)    // output low level
+
+#define PLASMA_SetHigh()           do{PLASMA_GPIO_Port-> BSRR |= PLASMA_Pin;}while(0) //HAL_GPIO_WritePin(PLASMA_GPIO,PLASMA_PIN,GPIO_PIN_SET)    // output high level
+#define PLASMA_SetLow()            do{PLASMA_GPIO_Port-> BRR = PLASMA_Pin;}while(0)// HAL_GPIO_WritePin(PLASMA_GPIO,PLASMA_PIN,GPIO_PIN_RESET)    // output low level
 
 
 
 
 
 void FAN_Stop(void);
-void SterIlization(uint8_t sel);
+
 
 
 
@@ -59,5 +58,7 @@ void Fan_One_Power_Off_Speed(void);
 void Fan_RunSpeed_Fun(void);
 void Fan_Full_Speed(void);
 
+void ultrasonic_fun(uint8_t sel);
+void plasma_fun(uint8_t sel);
 
 #endif 

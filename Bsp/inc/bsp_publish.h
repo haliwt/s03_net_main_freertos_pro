@@ -18,13 +18,6 @@ typedef enum{
 }warning_item;
 
 
-typedef enum{
-
-    no_warning,
-	warning
-
-
-}warning_state;
 
 
 

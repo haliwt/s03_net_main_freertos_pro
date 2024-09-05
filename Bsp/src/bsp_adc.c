@@ -4,134 +4,108 @@
 
 /* USER CODE BEGIN 0 */
 
-#define ADC_CHANNEL_NUMBER               2
+//#define ADC_CHANNEL_NUMBER               2
 
-static uint16_t Get_Adc_Channel_0(void) ;
-static uint16_t Get_Adc_Channel_1(void) ; 
-static uint16_t Get_Adc_Average(uint8_t ch,uint8_t times);
+//static uint16_t Get_Adc_Channel_0(void) ;
+//static uint16_t Get_Adc_Channel_1(void) ; 
+
 
 
 uint16_t fan_detect_voltage;
-uint16_t motor_detect_voltage;
-__IO uint32_t ADC_ConvertedValueLocal[ADC_CHANNEL_NUMBER];
+uint16_t ptc_detect_voltage;
 
-uint32_t ADC_ConvertedValue[ADC_CHANNEL_NUMBER];
+static void Judge_PTC_Temperature_Value(void);
+static uint16_t Get_Fan_Adc_Average(uint32_t ch,uint8_t times);
+static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times);
+
+static uint16_t Get_Adc_Channel(uint32_t ch) ;
+
+static uint16_t Get_Adc_Channel_0(uint32_t ch);
+static uint16_t Get_Adc_Channel_1(uint32_t ch);
 
 
 
 /*****************************************************************
 *
-	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
+	*Function Name: static uint16_t Get_Adc_Channel(uint32_t ch) 
 	*Function ADC input channel be selected "which one channe"
 	*Input Ref: which one ? AC_Channel_?
 	*Return Ref: No
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Channel_0(void)   
+static uint16_t Get_Adc_Channel_0(uint32_t ch)   
 {
     ADC_ChannelConfTypeDef ADC1_ChanConf;
-   
 
-	ADC1_ChanConf.Channel=ADC_CHANNEL_0;                                   //ĂÂ¨ÂľĂ
-    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                 //设置规则组的，ADC1转换排名                          
-    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //Â˛ĂĂĂšĂÂąÂźĂ¤               
+	ADC1_ChanConf.Channel=ADC_CHANNEL_0;                                   //Í¨µÀ
+    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序列
+    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
 
 
-	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        ///* 通道配置 */
+	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
 	
-   // HAL_ADC_Start(&hadc1);                               //start ADC transmit
-
-    HAL_ADC_Start_DMA(&hadc1,&ADC_ConvertedValue[0],1);  //启动ADC DMA 传输
+    HAL_ADC_Start(&hadc1);                               //start ADC transmit
 	
-    HAL_ADC_PollForConversion(&hadc1,10);                /* 轮询转换 */
+    HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
  
-	return (uint16_t)HAL_ADC_GetValue(&hadc1);	       /* 返回最近一次ADC1规则组的转换结果 */
-}
-
-/*****************************************************************
-*
-	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
-	*Function ADC input channel be selected "which one channe"
-	*Input Ref: which one ? AC_Channel_?
-	*Return Ref: No
-	*
-	*
-*****************************************************************/
-static uint16_t Get_Adc_Channel_1(void)   
-{
-    ADC_ChannelConfTypeDef ADC1_ChanConf;
-   
-    //配置采样通道
-	ADC1_ChanConf.Channel=ADC_CHANNEL_1;        //ĂÂ¨ÂľĂ
-    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_2;   //设置规则组的，ADC1转换排名                          
-    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //Â˛ĂĂĂšĂÂąÂźĂ¤               
-
-
-	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //ĂÂ¨ÂľĂĂĂ¤ĂĂ
-	
-   // HAL_ADC_Start(&hadc1);                             /* 开启ADC */
-
-    
-    HAL_ADC_Start_DMA(&hadc1,&ADC_ConvertedValue[1],2);  //启动ADC DMA 传输
-	
-    HAL_ADC_PollForConversion(&hadc1,10);              /* 轮询转换 */
- 
-	//return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	  /* 返回最近一次ADC1规则组的转换结果 */
+	return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
 }
 
 
+static uint16_t Get_Adc_Channel_1(uint32_t ch)   
+{
+    ADC_ChannelConfTypeDef ADC1_ChanConf;
 
-/* USER CODE BEGIN 1 */
+	ADC1_ChanConf.Channel=ADC_CHANNEL_1;                                   //Í¨µÀ
+    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序列
+    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
+
+
+	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
+	
+    HAL_ADC_Start(&hadc1);                               //start ADC transmit
+	
+    HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
+ 
+	return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
+}
+
+
 /*****************************************************************
 *
-	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
+	*Function Name: static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times)
 	*Function ADC input channel be selected "which one channe"
 	*Input Ref: which one ? AC_Channel_?
 	*Return Ref: No
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Average(uint8_t ch,uint8_t times)
+static uint16_t Get_Fan_Adc_Average(uint32_t ch,uint8_t times)
 {
-
-    uint32_t temp_val=0;
+	uint32_t temp_val=0;
 	uint8_t t;
-
-   if(ch == 0){
-
-   
-	for(t=0;t<times;t++)
-	{
-		temp_val+=Get_Adc_Channel_0()  ; 
-		//osDelay(2);
-	}
-	return temp_val/times;
-    }
-    else{
-
-        for(t=0;t<times;t++)
-        {
-            temp_val+=Get_Adc_Channel_1()  ; 
-           // osDelay(2);
-        }
-        return temp_val/times;
-    }
+   temp_val=  Get_Adc_Channel_0(ch);   
+//	for(t=0;t<times;t++)
+//	{
+//		temp_val+=Get_Adc_Channel_0(ch);
+//		delay_ms(5);
+//	}
+	return temp_val;
 } 
 
-//uint16_t Get_Adc_Voltage_Value(uint8_t times) 
-//{
-//    // 定义一个变量，用于存储计算出的电压值
-//    uint16_t temp_voltage_value;
-//    // 定义一个变量，用于存储读取到的模拟电压的十六进制数
-//    uint16_t temp_hex_value;
-//    // 读取times次，计算平均值
-//    temp_hex_value = Get_Adc_Hex_Average(times);
-//    // 使用公式计算出实际的电压值
-//    temp_voltage_value = (temp_hex_value * 3300) / 4096; // amplification -> 1000 multiple
-//    // 返回实际的电压值
-//    return temp_voltage_value;
-//}
+static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
+{
+	uint32_t temp_val=0;
+	uint8_t t;
+    temp_val=Get_Adc_Channel_1(ch);   
+//	for(t=0;t<times;t++)
+//	{
+//		temp_val+=Get_Adc_Channel_1(ch);
+//		delay_ms(5);
+//	}
+	return temp_val ;
+}
 
 /*****************************************************************
 	*
@@ -144,108 +118,140 @@ static uint16_t Get_Adc_Average(uint8_t ch,uint8_t times)
 *****************************************************************/
 void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 {
-	volatile uint16_t adc_fan_hex;
-	static uint8_t detect_error_times;
-	 ADC_ChannelConfTypeDef sConfig = {0};
-   // if(gpro_t.works_time_out_flag == 0){
-   // adc_fan_hex = Get_Adc_Average(channel,times);
-  sConfig.Channel = ADC_CHANNEL_0;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-   
-    HAL_ADC_Start_DMA(&hadc1,&ADC_ConvertedValue[0],1);  //启动ADC DMA 传输
+	
+   static uint8_t detect_error_times;
+   uint16_t adc_fan_hex;
+   Fan_Full_Speed();
+   osDelay(100);
+   adc_fan_hex = Get_Fan_Adc_Average(channel,times);
 
-    fan_detect_voltage =(uint16_t)(((ADC_ConvertedValue[0]& 0xfff) * 33000)/4096); //amplification 1000 ,3.111V -> 3111
-	//HAL_Delay(5);
+    fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
-	if( fan_detect_voltage >0 ){
-           detect_error_times=0;
-		   #if DEBUG
-             printf("adc= %d",run_t.fan_detect_voltage);
-		   #endif 
+
+  #if 0
+    if(fan_detect_voltage < 350){ //500  now and then is bug false alarm rate  .
+       detect_error_times++;
+	   if(detect_error_times >2){
+	   	
+		 
+		   gctl_t.fan_warning = 1;
+		   
+		
+          MqttData_Publis_SetFan(0);
+	      HAL_Delay(350);
+
+
+
+
+	
+		   
+	    
+	       buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+			osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
           
-    }
-	else{
+           SendWifiData_To_Cmd(0x09, 0x01);
 
+	
+
+		   Publish_Data_Warning(fan_warning,warning);
+	       HAL_Delay(200);
+		}
 	          
-			   if(detect_error_times >0){
-			   		detect_error_times=0;
-		       
-			       buzzer_sound();//Buzzer_KeySound();
-			        osDelay(100);
-				   buzzer_sound();//Buzzer_KeySound();
-			        osDelay(100);
-				   buzzer_sound();//Buzzer_KeySound();
-			        osDelay(100);
-				   buzzer_sound();//Buzzer_KeySound();
-			      osDelay(100);
-				 
-				  
-
-			   	}
-	           detect_error_times++;
 
      }
-   /// }
+
+  #endif 
+
+ 
+
+   
 }
 
 void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times)
 {
-  //  volatile uint16_t adc_motor_hex;
-	static uint8_t detect_error_times;
-	 ADC_ChannelConfTypeDef sConfig = {0};
-   // if(gpro_t.works_time_out_flag == 0){
-    //adc_motor_hx = Get_Adc_Average(channel,times);
 
-  sConfig.Channel = ADC_CHANNEL_1;
-  sConfig.Rank = ADC_REGULAR_RANK_2;
-  sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
- // ADC_ConvertedValue[1]=0;
-    HAL_ADC_Start_DMA(&hadc1,&ADC_ConvertedValue[1],1);  //启动ADC DMA 传输
+  uint16_t adcx;
+	
+  adcx = Get_Ptc_Adc_Average(channel,times);
 
-    motor_detect_voltage=(uint16_t)(((ADC_ConvertedValue[1]    & 0xfff)* 33000)/4096); //amplification 1000 ,3.111V -> 3111
-	//HAL_Delay(5);
+     ptc_detect_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
 
-	if(motor_detect_voltage >0 ){
-           detect_error_times=0;
-		   #if DEBUG
-             printf("adc= %d",run_t.fan_detect_voltage);
-		   #endif 
-          
-    }
-	else{
+	
+	 // run_t.ptc_temp_voltage= run_t.ptc_temp_voltage - MODIFICATION_VALUE ;
+	  Judge_PTC_Temperature_Value();
 
-	          
-			   if(detect_error_times >0){
-			   		detect_error_times=0;
-		           buzzer_sound();//Buzzer_KeySound();
-			       osDelay(50);
-				   buzzer_sound();//Buzzer_KeySound();
-			       osDelay(50);
-				   buzzer_sound();//Buzzer_KeySound();
-			       osDelay(50);
-				   buzzer_sound();//Buzzer_KeySound();
-			       osDelay(50);
-				   
-				  
-
-			   	}
-	           detect_error_times++;
-
-     }
-   /// }
-
-
+	
 }
 
 
+/*****************************************************************
+	*
+	*Function Name: void Judge_PTC_Temperature_Value(void)
+	*Function: PTC adc read voltage
+	*Input Ref: NO
+	*Return Ref: No
+	*
+	*
+*****************************************************************/
+static void Judge_PTC_Temperature_Value(void)
+{
+ 
+ 
+   //if(run_t.ptc_temp_voltage < 54 || run_t.ptc_temp_voltage ==54){ //75 degree
+   
+  //if(run_t.ptc_temp_voltage < 60 || run_t.ptc_temp_voltage ==60){ //70 degree
+  #ifdef JINGPAI
+	  if(ptc_detect_voltage < 373 || ptc_detect_voltage ==373){ //90 degree
+
+  #else 
+      if(ptc_detect_voltage < 400 || ptc_detect_voltage ==400){ //87 degree
+
+  #endif 
+		
+        gctl_t.gDry = 0;
+		PTC_SetLow(); //turn off
+        gctl_t.ptc_warning =1;
+        
+		MqttData_Publish_SetPtc(0);
+		HAL_Delay(350);  
+		
+		Publish_Data_Warning(ptc_temp_warning,warning);
+	
+	       
+		       
+			       buzzer_sound();//Buzzer_KeySound();
+			        osDelay(50);
+				   buzzer_sound();//Buzzer_KeySound();
+			        osDelay(50);
+				   buzzer_sound();//Buzzer_KeySound();
+			        osDelay(50);
+				   buzzer_sound();//Buzzer_KeySound();
+			      osDelay(50);
+
+                  SendWifiData_To_Cmd(0x08,0x01);
+				 
+                if(wifi_link_net_state()==1){
+                
+                   Publish_Data_Warning(fan_warning,warning); //fan of default warning.
+	               osDelay(100);
+                
+                 }
+				  
+
+			
+
+     }
+		
+
+		
+}
 
 
