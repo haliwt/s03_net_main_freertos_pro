@@ -676,13 +676,13 @@ void adc_detected_hundler(void)
     if(gctl_t.gTimer_ptc_adc_times > 5 ){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
-        Get_Ptc_ADC_Fun(ADC_CHANNEL_1,1);
+        Get_Ptc_ADC_Fun(ADC_CHANNEL_1,5);
         
 
     }
     if(gctl_t.gTimer_fan_adc_times > 8){ //2 minute 180s
         gctl_t.gTimer_fan_adc_times =0;
-        Get_Fan_ADC_Fun(ADC_CHANNEL_0,1);
+        Get_Fan_ADC_Fun(ADC_CHANNEL_0,5);
         
     }
 

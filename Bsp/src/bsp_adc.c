@@ -18,24 +18,26 @@ static void Judge_PTC_Temperature_Value(void);
 static uint16_t Get_Fan_Adc_Average(uint32_t ch,uint8_t times);
 static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times);
 
-static uint16_t Get_Adc_Channel(uint32_t ch) ;
 
-static uint16_t Get_Adc_Channel_0(uint32_t ch);
-static uint16_t Get_Adc_Channel_1(uint32_t ch);
+
+static uint16_t Get_Fan_Adc_Channel_0(uint32_t ch);
+static uint16_t Get_Ptc_Adc_Channel_1(uint32_t ch);
 
 
 
 /*****************************************************************
 *
-	*Function Name: static uint16_t Get_Adc_Channel(uint32_t ch) 
-	*Function ADC input channel be selected "which one channe"
+	*Function Name: static uint16_t Get_Adc_Channel_0(uint32_t ch)   
+	*Function: FAN of volatage be detected ADC 
 	*Input Ref: which one ? AC_Channel_?
 	*Return Ref: No
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Channel_0(uint32_t ch)   
+static uint16_t Get_Fan_Adc_Channel_0(uint32_t ch)   
 {
+    HAL_StatusTypeDef status;
+
     ADC_ChannelConfTypeDef ADC1_ChanConf;
 
 	ADC1_ChanConf.Channel=ADC_CHANNEL_0;                                   //Í¨µÀ
@@ -47,18 +49,39 @@ static uint16_t Get_Adc_Channel_0(uint32_t ch)
 	
     HAL_ADC_Start(&hadc1);                               //start ADC transmit
 	
-    HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
+    status =  HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
+
+    if(status == HAL_OK){
  
-	return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
+	   return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
+
+    }
+    else if(status == HAL_TIMEOUT){
+
+       return 0xff;
+
+    }
+    else{
+
+       return 0xfe;
+    }
 }
 
-
-static uint16_t Get_Adc_Channel_1(uint32_t ch)   
+/*****************************************************************
+*
+	*Function Name: static uint16_t Get_Adc_Channel_0(uint32_t ch)   
+	*Function: FAN of volatage be detected ADC 
+	*Input Ref: which one ? AC_Channel_?
+	*Return Ref: No
+	*
+	*
+*****************************************************************/
+static uint16_t Get_Ptc_Adc_Channel_1(uint32_t ch)   
 {
     ADC_ChannelConfTypeDef ADC1_ChanConf;
 
 	ADC1_ChanConf.Channel=ADC_CHANNEL_1;                                   //Í¨µÀ
-    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序列
+    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1 ;                               //第一个序列
     ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
 
 
@@ -85,26 +108,26 @@ static uint16_t Get_Fan_Adc_Average(uint32_t ch,uint8_t times)
 {
 	uint32_t temp_val=0;
 	uint8_t t;
-   temp_val=  Get_Adc_Channel_0(ch);   
-//	for(t=0;t<times;t++)
-//	{
-//		temp_val+=Get_Adc_Channel_0(ch);
-//		delay_ms(5);
-//	}
-	return temp_val;
+  // temp_val=  Get_Fan_Adc_Channel_0(ch);   
+	for(t=0;t<times;t++)
+	{
+		temp_val+=Get_Fan_Adc_Channel_0(ch);   
+		
+	}
+	return temp_val/times;
 } 
 
 static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
 {
 	uint32_t temp_val=0;
 	uint8_t t;
-    temp_val=Get_Adc_Channel_1(ch);   
-//	for(t=0;t<times;t++)
-//	{
-//		temp_val+=Get_Adc_Channel_1(ch);
-//		delay_ms(5);
-//	}
-	return temp_val ;
+   // temp_val=Get_Ptc_Adc_Channel_1(ch);   
+	for(t=0;t<times;t++)
+	{
+		temp_val+=Get_Ptc_Adc_Channel_1(ch); 
+		
+	}
+	return temp_val/times ;
 }
 
 /*****************************************************************
@@ -114,39 +137,33 @@ static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
 	*Input Ref: which one ? AC_Channel_?, hexadecimal of average
 	*Return Ref: No
 	*
-	*
 *****************************************************************/
 void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 {
 	
    static uint8_t detect_error_times;
    uint16_t adc_fan_hex;
+   
    Fan_Full_Speed();
-   osDelay(100);
+   osDelay(300);
    adc_fan_hex = Get_Fan_Adc_Average(channel,times);
 
     fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
 
-  #if 0
-    if(fan_detect_voltage < 350){ //500  now and then is bug false alarm rate  .
+  
+    if(fan_detect_voltage < 350 && fan_detect_voltage !=0x03 && fan_detect_voltage !=0x04){ //500  now and then is bug false alarm rate  .
        detect_error_times++;
 	   if(detect_error_times >2){
 	   	
-		 
+		 detect_error_times= 3;
 		   gctl_t.fan_warning = 1;
 		   
 		
           MqttData_Publis_SetFan(0);
 	      HAL_Delay(350);
 
-
-
-
-	
-		   
-	    
-	       buzzer_sound();//Buzzer_KeySound();
+           buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
 		   buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
@@ -164,26 +181,32 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 		   Publish_Data_Warning(fan_warning,warning);
 	       HAL_Delay(200);
 		}
-	          
+    }
+    else{
 
-     }
+        gctl_t.fan_warning = 0;
 
-  #endif 
-
- 
-
-   
+    }
 }
-
+/*****************************************************************
+	*
+	*Function Name: void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times)
+	*Function ADC input channel be selected "which one channe"
+	*Input Ref: which one ? AC_Channel_?, hexadecimal of average
+	*Return Ref: No
+	*
+*****************************************************************/
 void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times)
 {
 
   uint16_t adcx;
+
+  if(gctl_t.ptc_warning ==0){
 	
-  adcx = Get_Ptc_Adc_Average(channel,times);
+     adcx = Get_Ptc_Adc_Average(channel,times);
 
      ptc_detect_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
-
+   }
 	
 	 // run_t.ptc_temp_voltage= run_t.ptc_temp_voltage - MODIFICATION_VALUE ;
 	  Judge_PTC_Temperature_Value();
