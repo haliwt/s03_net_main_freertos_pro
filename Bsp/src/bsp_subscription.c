@@ -78,7 +78,7 @@ void Subscriber_Data_FromCloud_Handler(void)
 ********************************************************************************/
 void Subscribe_Rx_Interrupt_Handler(void)
 {
-      static uint8_t det_wifi_link;
+     
     switch(net_t.rx_data_state)
       {
       case 0: //#0
@@ -593,7 +593,10 @@ void Json_Parse_Command_Fun(void)
 	    if(gctl_t.ptc_warning ==0){
          MqttData_Publish_SetPtc(0x01);
 	  	 osDelay(100);//HAL_Delay(350);
-	     gctl_t.gDry=1;
+
+         if(gctl_t.interval_time_two_hours_stop_flag ==0){
+	       gctl_t.gDry=1;
+         }
 		
 		 SendWifiData_To_Cmd(0x02,0x01);
 		 HAL_Delay(5);
@@ -648,7 +651,9 @@ void Json_Parse_Command_Fun(void)
 	  	if(gpro_t.gpower_on ==power_on){
             MqttData_Publish_SetPlasma(1);
 			osDelay(100);//HAL_Delay(350);
-            gctl_t.gPlasma=1;
+			if(gctl_t.interval_time_two_hours_stop_flag ==0){
+              gctl_t.gPlasma=1;
+            }
 			
 			SendWifiData_To_Cmd(0x03,0x01);
 	  	   HAL_Delay(5);
@@ -663,7 +668,9 @@ void Json_Parse_Command_Fun(void)
 
             MqttData_Publish_SetUltrasonic(0);
 			osDelay(100);	//HAL_Delay(350);
-            gctl_t.gUlransonic=0;
+			
+              gctl_t.gUlransonic=0;
+            
 	
 			SendWifiData_To_Cmd(0x04,0x0);
 			HAL_Delay(5);
@@ -677,7 +684,11 @@ void Json_Parse_Command_Fun(void)
 		
              MqttData_Publish_SetUltrasonic(1);
 			 osDelay(100);	//HAL_Delay(350);
-            gctl_t.gUlransonic=1;
+
+            if(gctl_t.interval_time_two_hours_stop_flag ==0){
+                gctl_t.gUlransonic=1;
+
+              }
 		
 			SendWifiData_To_Cmd(0x04,0x01);
 			HAL_Delay(5);

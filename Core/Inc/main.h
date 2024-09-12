@@ -80,7 +80,7 @@ void Error_Handler(void);
 //Buzzer GPIO 
 #define BEEP_Pin GPIO_PIN_1
 #define BEEP_GPIO_Port GPIOB
-
+//dht11 GPIO
 #define TEMP_SENSOR_Pin GPIO_PIN_13
 #define TEMP_SENSOR_GPIO_Port GPIOB
 

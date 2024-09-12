@@ -7,10 +7,12 @@ static void Auto_InitWifiModule_Hardware(void);
 static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 
 
-
+ 
 
 void bsp_init(void)
 {
+   delay_init(64);
+    dht11_init();
    buzzer_init();
    wifi_init();
 
@@ -88,6 +90,8 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      if(pdata[3] == 0x01){
           buzzer_sound();
+
+       if(gctl_t.interval_time_two_hours_stop_flag ==0){
           gctl_t.gDry = 1;
           Dry_Function(0);
           if(wifi_link_net_state()==1){
@@ -95,8 +99,10 @@ void receive_data_fromm_display(uint8_t *pdata)
 	  	      osDelay(100);//HAL_Delay(350);
            }
        }
+       }
        else if(pdata[3] == 0x0){
           buzzer_sound();
+       
          gctl_t.gDry =0;
          Dry_Function(1);
          if(wifi_link_net_state()==1){
@@ -468,16 +474,7 @@ void wifi_get_beijing_time_handler(void)
                 real_seconds = (gpro_t.wifi_rx_data_array[47]-0x30)*10 + gpro_t.wifi_rx_data_array[48]-0x30;
 
                 wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
-
-//                if(real_hours < 25 && real_minutes < 61 ){
-//                if(real_hours == 0x08 && (real_minutes < 0x0A)){
-//                    get_beijing_flag = 0;
-//
-//                }
-//                else{
-
-
-                    gpro_t.disp_works_hours = real_hours;    
+                gpro_t.disp_works_hours = real_hours;    
                     gpro_t.disp_works_minutes = real_minutes;
 
                     gpro_t.disp_works_time_seconds = real_seconds;
@@ -487,7 +484,7 @@ void wifi_get_beijing_time_handler(void)
                     osDelay(50);
 
                     get_beijing_flag = 0;
-                 // }
+                
                 }
                 else if(gpro_t.wifi_rx_data_array[50] == 0x31){  //"0x31" ASCII = '1'
 
@@ -673,16 +670,20 @@ void wifi_get_beijing_time_handler(void)
 void adc_detected_hundler(void)
 {
    
-    if(gctl_t.gTimer_ptc_adc_times > 5 ){ //65s//3 minutes 120s
+
+   
+
+    if(gctl_t.gTimer_ptc_adc_times > 5 && gctl_t.interval_time_two_hours_stop_flag ==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
-        Get_Ptc_ADC_Fun(ADC_CHANNEL_1,5);
+       Get_Ptc_ADC_Fun(1,5);
+        
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 8){ //2 minute 180s
+    if(gctl_t.gTimer_fan_adc_times > 8 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
         gctl_t.gTimer_fan_adc_times =0;
-        Get_Fan_ADC_Fun(ADC_CHANNEL_0,5);
+        Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         
     }
 

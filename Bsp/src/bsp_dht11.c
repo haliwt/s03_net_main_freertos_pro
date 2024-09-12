@@ -2,199 +2,172 @@
 
 
 
-#define Bit_RESET 0
-#define Bit_SET   1
-
-uint8_t read_flag;
-
-static void DHT11_Mode_IPU(void);
-static void DHT11_Mode_Out_PP(void);
-static uint8_t DHT11_ReadByte(void);
-DHT11_Data_TypeDef DHT11;
-void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11);
-
-
-//µÈ´ıus¼¶±ğ
-//void delay_us(unsigned long i)
-//{
-//	unsigned long j;
-//	for(;i>0;i--)
-//	{
-//			for(j=6;j>0;j--);
-//	}
-//}
-
-
 /**
-  * º¯Êı¹¦ÄÜ: DHT11 ³õÊ¼»¯º¯Êı
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
-  */
-void DHT11_Init ( void )
+ * @brief       å¤ä½DHT11
+ * @param       data: è¦å†™å…¥çš„æ•°æ®
+ * @retval      æ— 
+ */
+static void dht11_reset(void)
 {
-
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	DHT11_Mode_Out_PP();
-	
-	DHT11_Dout_HIGH();  // À­¸ßGPIO
+    DHT11_DQ_OUT(0);    /* æ‹‰ä½DQ */
+    delay_ms(20);       /* æ‹‰ä½è‡³å°‘18ms */
+    DHT11_DQ_OUT(1);    /* DQ=1 */
+    delay_us(30);       /* ä¸»æœºæ‹‰é«˜10~35us */
 }
 
 /**
-  * º¯Êı¹¦ÄÜ: Ê¹DHT11-DATAÒı½Å±äÎªÉÏÀ­ÊäÈëÄ£Ê½
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
-  */
-static void DHT11_Mode_IPU(void)
+ * @brief       ç­‰å¾…DHT11çš„å›åº”
+ * @param       æ— 
+ * @retval      0, DHT11æ­£å¸¸
+ *              1, DHT11å¼‚å¸¸/ä¸å­˜åœ¨
+ */
+uint8_t dht11_check(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = DHT11_Dout_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DHT11_Dout_PORT, &GPIO_InitStruct);
-}
+    uint8_t retry = 0;
+    uint8_t rval = 0;
 
-/**
-  * º¯Êı¹¦ÄÜ: Ê¹DHT11-DATAÒı½Å±äÎªÍÆÍìÊä³öÄ£Ê½
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
-  */
-static void DHT11_Mode_Out_PP(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = DHT11_Dout_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DHT11_Dout_PORT, &GPIO_InitStruct);
-}
+    while (DHT11_DQ_IN && retry < 100)  /* DHT11ä¼šæ‹‰ä½83us */
+    {
+        retry++;
+        delay_us(1);
+    }
 
-/**
-  * º¯Êı¹¦ÄÜ: ´ÓDHT11¶ÁÈ¡Ò»¸ö×Ö½Ú£¬MSBÏÈĞĞ
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
-  */
-static uint8_t DHT11_ReadByte ( void )
-{
-	uint8_t i, temp=0;
-	
-	for(i=0;i<8;i++)    
-	{	 
-		/*Ã¿bitÒÔ50usµÍµçÆ½±êÖÃ¿ªÊ¼£¬ÂÖÑ¯Ö±µ½´Ó»ú·¢³ö µÄ50us µÍµçÆ½ ½áÊø*/  
-		while(DHT11_Data_IN()==Bit_RESET);
+    if (retry >= 100)
+    {
+        rval = 1;
+    }
+    else
+    {
+        retry = 0;
 
-		/*DHT11 ÒÔ26~28usµÄ¸ßµçÆ½±íÊ¾¡°0¡±£¬ÒÔ70us¸ßµçÆ½±íÊ¾¡°1¡±£¬
-		 *Í¨¹ı¼ì²â x usºóµÄµçÆ½¼´¿ÉÇø±ğÕâÁ½¸ö×´ £¬x ¼´ÏÂÃæµÄÑÓÊ± 
-		 */
-		delay_us(40); //ÑÓÊ±x us Õâ¸öÑÓÊ±ĞèÒª´óÓÚÊı¾İ0³ÖĞøµÄÊ±¼ä¼´¿É	   	  
-
-		if(DHT11_Data_IN()==Bit_SET)/* x usºóÈÔÎª¸ßµçÆ½±íÊ¾Êı¾İ¡°1¡± */
-		{
-			/* µÈ´ıÊı¾İ1µÄ¸ßµçÆ½½áÊø */
-			while(DHT11_Data_IN()==Bit_SET);
-
-			temp|=(uint8_t)(0x01<<(7-i));  //°ÑµÚ7-iÎ»ÖÃ1£¬MSBÏÈĞĞ 
-		}
-		else	 // x usºóÎªµÍµçÆ½±íÊ¾Êı¾İ¡°0¡±
-		{			   
-			temp&=(uint8_t)~(0x01<<(7-i)); //°ÑµÚ7-iÎ»ÖÃ0£¬MSBÏÈĞĞ
-		}
-	}
-	return temp;
-}
-
-/**
-  * º¯Êı¹¦ÄÜ: Ò»´ÎÍêÕûµÄÊı¾İ´«ÊäÎª40bit£¬¸ßÎ»ÏÈ³ö
-  * ÊäÈë²ÎÊı: DHT11_Data:DHT11Êı¾İÀàĞÍ
-  * ·µ »Ø Öµ: ERROR£º  ¶ÁÈ¡³ö´í
-  *           SUCCESS£º¶ÁÈ¡³É¹¦
-  * Ëµ    Ã÷£º8bit Êª¶ÈÕûÊı + 8bit Êª¶ÈĞ¡Êı + 8bit ÎÂ¶ÈÕûÊı + 8bit ÎÂ¶ÈĞ¡Êı + 8bit Ğ£ÑéºÍ 
-  */
-uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
-{  
-  uint8_t temp;
-  uint16_t humi_temp;
-  
-	/*Êä³öÄ£Ê½*/
-	DHT11_Mode_Out_PP();
-	/*Ö÷»úÀ­µÍ*/
-	DHT11_Dout_LOW();
-	/*ÑÓÊ±18ms*/
-	HAL_Delay(20);
-
-	/*×ÜÏßÀ­¸ß Ö÷»úÑÓÊ±30us*/
-	DHT11_Dout_HIGH(); 
-
-	delay_us(30);   //ÑÓÊ±30us
-
-	/*Ö÷»úÉèÎªÊäÈë ÅĞ¶Ï´Ó»úÏìÓ¦ĞÅºÅ*/ 
-	DHT11_Mode_IPU();
-  delay_us(40);   //ÑÓÊ±30us
-	/*ÅĞ¶Ï´Ó»úÊÇ·ñÓĞµÍµçÆ½ÏìÓ¦ĞÅºÅ Èç²»ÏìÓ¦ÔòÌø³ö£¬ÏìÓ¦ÔòÏòÏÂÔËĞĞ*/   
-	if(DHT11_Data_IN()==Bit_RESET)     
-	{
-    /*ÂÖÑ¯Ö±µ½´Ó»ú·¢³ö µÄ80us µÍµçÆ½ ÏìÓ¦ĞÅºÅ½áÊø*/  
-    while(DHT11_Data_IN()==Bit_RESET);
-
-    /*ÂÖÑ¯Ö±µ½´Ó»ú·¢³öµÄ 80us ¸ßµçÆ½ ±êÖÃĞÅºÅ½áÊø*/
-    while(DHT11_Data_IN()==Bit_SET);
-
-    /*¿ªÊ¼½ÓÊÕÊı¾İ*/   
-    DHT11_Data->humi_high8bit= DHT11_ReadByte();
-    DHT11_Data->humi_low8bit = DHT11_ReadByte();
-    DHT11_Data->temp_high8bit= DHT11_ReadByte();
-    DHT11_Data->temp_low8bit = DHT11_ReadByte();
-    DHT11_Data->check_sum    = DHT11_ReadByte();
-
-    /*¶ÁÈ¡½áÊø£¬Òı½Å¸ÄÎªÊä³öÄ£Ê½*/
-    DHT11_Mode_Out_PP();
-    /*Ö÷»úÀ­¸ß*/
-    DHT11_Dout_HIGH();
+        while (!DHT11_DQ_IN && retry < 100) /* DHT11æ‹‰ä½åä¼šå†æ¬¡æ‹‰é«˜87us */
+        {
+            retry++;
+            delay_us(1);
+        }
+        if (retry >= 100) rval = 1;
+    }
     
-    /* ¶ÔÊı¾İ½øĞĞ´¦Àí */
-    humi_temp=DHT11_Data->humi_high8bit*100+DHT11_Data->humi_low8bit;
-    DHT11_Data->humidity =(float)humi_temp/100;
-    
-    humi_temp=DHT11_Data->temp_high8bit*100+DHT11_Data->temp_low8bit;
-    DHT11_Data->temperature=(float)humi_temp/100;    
-    
-    /*¼ì²é¶ÁÈ¡µÄÊı¾İÊÇ·ñÕıÈ·*/
-    temp = DHT11_Data->humi_high8bit + DHT11_Data->humi_low8bit + 
-           DHT11_Data->temp_high8bit+ DHT11_Data->temp_low8bit;
-    if(DHT11_Data->check_sum==temp)
-    { 
-      return SUCCESS;
+    return rval;
+}
+
+/**
+ * @brief       ä»DHT11è¯»å–ä¸€ä¸ªä½
+ * @param       æ— 
+ * @retval      è¯»å–åˆ°çš„ä½å€¼: 0 / 1
+ */
+uint8_t dht11_read_bit(void)
+{
+    uint8_t retry = 0;
+
+    while (DHT11_DQ_IN && retry < 100)  /* ç­‰å¾…å˜ä¸ºä½ç”µå¹³ */
+    {
+        retry++;
+        delay_us(1);
+    }
+
+    retry = 0;
+
+    while (!DHT11_DQ_IN && retry < 100) /* ç­‰å¾…å˜é«˜ç”µå¹³ */
+    {
+        retry++;
+        delay_us(1);
+    }
+
+    delay_us(40);       /* ç­‰å¾…40us */
+
+    if (DHT11_DQ_IN)    /* æ ¹æ®å¼•è„šçŠ¶æ€è¿”å› bit */
+    {
+        return 1;
     }
     else 
-      return ERROR;
-	}	
-	else
-		return ERROR;
+    {
+        return 0;
+    }
 }
 
-
-void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
+/**
+ * @brief       ä»DHT11è¯»å–ä¸€ä¸ªå­—èŠ‚
+ * @param       æ— 
+ * @retval      è¯»åˆ°çš„æ•°æ®
+ */
+static uint8_t dht11_read_byte(void)
 {
-	read_flag =DHT11_Read_TempAndHumidity(pdth11);
-    if(read_flag == 0){
-		   
-		   gctl_t.gDht11_humidity = (pdth11->humi_high8bit);
-		   
-		   gctl_t.gDht11_temperature = (pdth11->temp_high8bit);
-	   
-	 }
+    uint8_t i, data = 0;
 
+    for (i = 0; i < 8; i++)         /* å¾ªç¯è¯»å–8ä½æ•°æ® */
+    {
+        data <<= 1;                 /* é«˜ä½æ•°æ®å…ˆè¾“å‡º, å…ˆå·¦ç§»ä¸€ä½ */
+        data |= dht11_read_bit();   /* è¯»å–1bitæ•°æ® */
+    }
+
+    return data;
 }
+
+/**
+ * @brief       ä»DHT11è¯»å–ä¸€æ¬¡æ•°æ®
+ * @param       temp: æ¸©åº¦å€¼(èŒƒå›´:-20~50Â°)
+ * @param       humi: æ¹¿åº¦å€¼(èŒƒå›´:5%~95%)
+ * @retval      0, æ­£å¸¸.
+ *              1, å¤±è´¥
+ */
+uint8_t dht11_read_data(uint8_t *temp, uint8_t *humi)
+{
+    uint8_t buf[5];
+    uint8_t i;
+    dht11_reset();
+
+    if (dht11_check() == 0)
+    {
+        for (i = 0; i < 5; i++)     /* è¯»å–40ä½æ•°æ® */
+        {
+            buf[i] = dht11_read_byte();
+        }
+
+        if ((buf[0] + buf[1] + buf[2] + buf[3]) == buf[4])
+        {
+            *humi = buf[0];
+            *temp = buf[2];
+        }
+    }
+    else
+    {
+        return 1;
+    }
+    
+    return 0;
+}
+
+/**
+ * @brief       åˆå§‹åŒ–DHT11çš„IOå£ DQ åŒæ—¶æ£€æµ‹DHT11çš„å­˜åœ¨
+ * @param       æ— 
+ * @retval      0, æ­£å¸¸
+ *              1, ä¸å­˜åœ¨/ä¸æ­£å¸¸
+ */
+uint8_t dht11_init(void)
+{
+    GPIO_InitTypeDef gpio_init_struct;
+
+    DHT11_DQ_GPIO_CLK_ENABLE();     /* å¼€å¯DQå¼•è„šæ—¶é’Ÿ */
+
+    gpio_init_struct.Pin = DHT11_DQ_GPIO_PIN;
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_OD;            /* å¼€æ¼è¾“å‡º */
+    gpio_init_struct.Pull = GPIO_PULLUP;                    /* ä¸Šæ‹‰ */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* é«˜é€Ÿ */
+    HAL_GPIO_Init(DHT11_DQ_GPIO_PORT, &gpio_init_struct);   /* åˆå§‹åŒ–DHT11_DQå¼•è„š */
+    /* DHT11_DQå¼•è„šæ¨¡å¼è®¾ç½®,å¼€æ¼è¾“å‡º,ä¸Šæ‹‰, è¿™æ ·å°±ä¸ç”¨å†è®¾ç½®IOæ–¹å‘äº†, å¼€æ¼è¾“å‡ºçš„æ—¶å€™(=1), ä¹Ÿå¯ä»¥è¯»å–å¤–éƒ¨ä¿¡å·çš„é«˜ä½ç”µå¹³ */
+
+    dht11_reset();
+    return dht11_check();
+}
+
+
 
 void Update_DHT11_Value(void)
 {
     
   
-   Dht11_Read_TempHumidity_Handler(&DHT11);
+   dht11_read_data(&gctl_t.gDht11_temperature,&gctl_t.gDht11_humidity);
 	
 
    sendData_Real_TimeHum(gctl_t.gDht11_humidity ,gctl_t.gDht11_temperature);
@@ -206,7 +179,7 @@ void Update_Dht11_Totencent_Value(void)
 {
 
 
-	Dht11_Read_TempHumidity_Handler(&DHT11);
+	dht11_read_data(&gctl_t.gDht11_temperature,&gctl_t.gDht11_humidity);
 
 	MqttData_Publis_ReadTempHum(gctl_t.gDht11_temperature,gctl_t.gDht11_humidity);
 

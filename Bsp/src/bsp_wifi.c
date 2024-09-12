@@ -74,16 +74,13 @@ void link_wifi_net_handler(void)
             break;
 
             case 1:
-                    WIFI_IC_ENABLE();
-                 	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
-                	
-                   
-        		
-        			
-        			gctl_t.randomName[0]=HAL_GetUIDw0();
-                    gpro_t.gTimer_link_net_timer_time = 0;
-                    
-		            gpro_t.link_net_step = 2;
+                WIFI_IC_ENABLE();
+                HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+
+                gctl_t.randomName[0]=HAL_GetUIDw0();
+                gpro_t.gTimer_link_net_timer_time = 0;
+
+                gpro_t.link_net_step = 2;
 
             break;
 
@@ -220,18 +217,7 @@ void link_wifi_net_handler(void)
             break;
 
 
-
-
-
-
-
         }
-
-
-
-    
-
-     
 
 }
 

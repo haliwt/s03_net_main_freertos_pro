@@ -176,10 +176,12 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
           
            SendWifiData_To_Cmd(0x09, 0x01);
 
-	
+	       if(wifi_link_net_state()==1){
 
-		   Publish_Data_Warning(fan_warning,warning);
-	       HAL_Delay(200);
+    		   Publish_Data_Warning(fan_warning,warning);
+    	       HAL_Delay(200);
+
+           }
 		}
     }
     else{
@@ -207,6 +209,11 @@ void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times)
 
      ptc_detect_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
    }
+
+   #if UNIT_TEST
+
+        ptc_detect_voltage =300;
+   #endif 
 	
 	 // run_t.ptc_temp_voltage= run_t.ptc_temp_voltage - MODIFICATION_VALUE ;
 	  Judge_PTC_Temperature_Value();
@@ -240,40 +247,31 @@ static void Judge_PTC_Temperature_Value(void)
   #endif 
 		
         gctl_t.gDry = 0;
-		PTC_SetLow(); //turn off
+        PTC_SetLow(); //ptc turn off
         gctl_t.ptc_warning =1;
-        
-		MqttData_Publish_SetPtc(0);
-		HAL_Delay(350);  
-		
-		Publish_Data_Warning(ptc_temp_warning,warning);
-	
-	       
-		       
-			       buzzer_sound();//Buzzer_KeySound();
-			        osDelay(50);
-				   buzzer_sound();//Buzzer_KeySound();
-			        osDelay(50);
-				   buzzer_sound();//Buzzer_KeySound();
-			        osDelay(50);
-				   buzzer_sound();//Buzzer_KeySound();
-			      osDelay(50);
 
-                  SendWifiData_To_Cmd(0x08,0x01);
-				 
-                if(wifi_link_net_state()==1){
-                
-                   Publish_Data_Warning(fan_warning,warning); //fan of default warning.
-	               osDelay(100);
-                
-                 }
-				  
+        buzzer_sound();//Buzzer_KeySound();
+        osDelay(50);
+        buzzer_sound();//Buzzer_KeySound();
+        osDelay(50);
+        buzzer_sound();//Buzzer_KeySound();
+        osDelay(50);
+        buzzer_sound();//Buzzer_KeySound();
+        osDelay(50);
 
-			
+        SendWifiData_To_Cmd(0x08,0x01);
+
+        if(wifi_link_net_state()==1){
+
+        MqttData_Publish_SetPtc(0);
+        HAL_Delay(100);  
+
+        Publish_Data_Warning(ptc_temp_warning ,warning); //fan of default warning.
+        osDelay(100);
+
+        }
 
      }
-		
-
 		
 }
 

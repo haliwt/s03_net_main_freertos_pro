@@ -42,6 +42,8 @@
 
 
 
+#define UNIT_TEST    0
+
 
 
 #define WIFI_RX_NUMBERS         1
