@@ -56,6 +56,8 @@ void link_wifi_net_handler(void)
     uint8_t  device_massage[100];
   // device_massage = (uint8_t *)malloc(128);
 
+      
+
         switch( gpro_t.link_net_step){
 
             case 0: //one step
@@ -141,21 +143,19 @@ void link_wifi_net_handler(void)
             case 5:
                 
 
-                   if(net_t.soft_ap_config_success==1){
+            if(net_t.soft_ap_config_success==1){
 
-                       net_t.soft_ap_config_success=0;
-                	   HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-                       //HAL_Delay(1000);
-                      // HAL_Delay(1000);
-                       ///HAL_Delay(1000);
-       
-	                    gpro_t.link_net_step = 6;
-                        gpro_t.gTimer_link_net_timer_time = 0;
-                    }
+            net_t.soft_ap_config_success=0;
+            HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+            //HAL_Delay(1000);
+            // HAL_Delay(1000);
+            ///HAL_Delay(1000);
+
+            gpro_t.link_net_step = 6;
+            gpro_t.gTimer_link_net_timer_time = 0;
+            }
 
                    
-               
-               
             break;
 
             case 6:
@@ -174,9 +174,6 @@ void link_wifi_net_handler(void)
 				
 		     }
 		     else{
-//                 if(gctl_t.gTimer_linking_tencen_total_counter < 120){
-//                     wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
-//                 }
                 
                   gpro_t.wifi_led_fast_blink_flag=0;
                   gpro_t.link_net_step = 0xff;

@@ -51,20 +51,11 @@ static uint16_t Get_Fan_Adc_Channel_0(uint32_t ch)
 	
     status =  HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
 
-    if(status == HAL_OK){
+    
  
 	   return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
 
-    }
-    else if(status == HAL_TIMEOUT){
-
-       return 0xff;
-
-    }
-    else{
-
-       return 0xfe;
-    }
+  
 }
 
 /*****************************************************************
@@ -111,10 +102,11 @@ static uint16_t Get_Fan_Adc_Average(uint32_t ch,uint8_t times)
   // temp_val=  Get_Fan_Adc_Channel_0(ch);   
 	for(t=0;t<times;t++)
 	{
-		temp_val+=Get_Fan_Adc_Channel_0(ch);   
+		temp_val+=Get_Fan_Adc_Channel_0(ch);  
+        HAL_Delay(10);
 		
 	}
-	return temp_val/times;
+	return (uint16_t)temp_val/times;
 } 
 
 static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
@@ -125,9 +117,9 @@ static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
 	for(t=0;t<times;t++)
 	{
 		temp_val+=Get_Ptc_Adc_Channel_1(ch); 
-		
+		HAL_Delay(10);
 	}
-	return temp_val/times ;
+	return (uint16_t)temp_val/times ;
 }
 
 /*****************************************************************
@@ -144,15 +136,14 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
    static uint8_t detect_error_times;
    uint16_t adc_fan_hex;
    
-   Fan_Full_Speed();
-   osDelay(300);
+ 
    adc_fan_hex = Get_Fan_Adc_Average(channel,times);
 
     fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
 
   
-    if(fan_detect_voltage < 350 && fan_detect_voltage !=0x03 && fan_detect_voltage !=0x04){ //500  now and then is bug false alarm rate  .
+    if(fan_detect_voltage < 350 ){ //500  now and then is bug false alarm rate  .
        detect_error_times++;
 	   if(detect_error_times >2){
 	   	

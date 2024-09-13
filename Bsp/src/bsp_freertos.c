@@ -103,17 +103,24 @@ static void vTaskMsgPro(void *pvParameters)
 	    }
         
         power_on_handler();
-
         works_run_two_hours_state();
-      
+
         main_function_detected_handler(gctl_t.interval_time_two_hours_stop_flag);
         if(gpro_t.wifi_led_fast_blink_flag==1){
+            if(gctl_t.gTimer_linking_tencen_total_counter  > 119){
+
+               gpro_t.wifi_led_fast_blink_flag =0;
+
+            }
+            else
             link_wifi_net_handler();
+            
 
         }
         else{
            send_data_to_disp();
            adc_detected_hundler();
+           
 
         }
        
@@ -124,7 +131,7 @@ static void vTaskMsgPro(void *pvParameters)
            power_off_handler();
       }
 
-     if(gpro_t.wifi_led_fast_blink_flag==0){
+     if(gpro_t.wifi_led_fast_blink_flag==0 && gpro_t.wifi_led_fast_blink_flag==0){
          wifi_get_beijing_time_handler();
          wifi_auto_detected_link_state();
       }
@@ -233,7 +240,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
 			gpro_t.wifi_rx_data_counter++;
 
-			if(*wifi_rx_inputBuf==0X0A) // 0x0A = "\n"
+			if(wifi_rx_inputBuf[0]==0X0A) // 0x0A = "\n"
 			{
 				
 				Wifi_Rx_InputInfo_Handler();

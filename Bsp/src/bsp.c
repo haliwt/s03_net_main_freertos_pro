@@ -671,19 +671,17 @@ void adc_detected_hundler(void)
 {
    
 
-   
-
-    if(gctl_t.gTimer_ptc_adc_times > 5 && gctl_t.interval_time_two_hours_stop_flag ==0){ //65s//3 minutes 120s
+   if(gctl_t.gTimer_ptc_adc_times > 5 && gctl_t.interval_time_two_hours_stop_flag ==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
-       Get_Ptc_ADC_Fun(1,5);
+       Get_Ptc_ADC_Fun(1,10);
         
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 8 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
+    if(gctl_t.gTimer_fan_adc_times > 21 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
         gctl_t.gTimer_fan_adc_times =0;
-        Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
+        Get_Fan_ADC_Fun(ADC_CHANNEL_0,10);
         
     }
 
@@ -700,23 +698,18 @@ void adc_detected_hundler(void)
 **********************************************************************/
 void wifi_auto_detected_link_state(void)
 {
-    static uint8_t power_on_dc,counter;
-	if(counter < 2 && wifi_link_net_state()==0){
+  
+	if(power_on_login_tencent_cloud_flag     <  5 && wifi_link_net_state()==0){
 		
       Auto_InitWifiModule_Hardware();//InitWifiModule();
       Auto_SmartPhone_TryToLink_TencentCloud();
 	  net_t.linking_tencent_cloud_doing = 1;
 
-		if(counter ==0){
-			counter++;
-         
-       }
+	
        
     }
-    if(wifi_link_net_state()==1    && power_on_dc ==0){
-              power_on_dc++;
-   
-             counter= 5;
+    if(wifi_link_net_state()==1    && power_on_login_tencent_cloud_flag < 4){
+              
              
            //wifi_t.linking_tencent_cloud_doing = 0;
            net_t.linking_tencent_cloud_doing  =0;
@@ -729,9 +722,12 @@ void wifi_auto_detected_link_state(void)
           }
           Subscriber_Data_FromCloud_Handler();
           HAL_Delay(200);
-		  }
 
-    SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+          SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+   }
+   
+
+   
    
 }
 
