@@ -86,6 +86,8 @@ typedef struct PROCESS_T{
    uint8_t wifi_rx_data_array[150];
    uint8_t wifi_rx_data_counter;
 
+   uint8_t get_beijing_flag;
+
    uint8_t process_run_step;
   
    uint8_t wifi_led_fast_blink_flag;

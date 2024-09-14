@@ -66,9 +66,10 @@ void link_wifi_net_handler(void)
         		HAL_Delay(1000);
         		//HAL_Delay(1000);
         		//HAL_Delay(1000);
+        		//net_t.linking_tencent_cloud_doing =1;
         		WIFI_IC_ENABLE();
-        		at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
-        		//at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+        		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+        		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
         		HAL_Delay(1000);
 
                  gpro_t.link_net_step = 1;

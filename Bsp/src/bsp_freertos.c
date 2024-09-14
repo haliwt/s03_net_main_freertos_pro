@@ -120,7 +120,7 @@ static void vTaskMsgPro(void *pvParameters)
          wifi_auto_detected_link_state();
       }
      
-     clear_rx_copy_data();
+    // clear_rx_copy_data();
    
      vTaskDelay(30);
      
@@ -224,7 +224,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
 			gpro_t.wifi_rx_data_counter++;
 
-			if(wifi_rx_inputBuf[0]==0X0A) // 0x0A = "\n"
+			if(*wifi_rx_inputBuf==0x0A) // 0x0A = "\n"
 			{
 				
 				Wifi_Rx_InputInfo_Handler();
