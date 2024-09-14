@@ -106,24 +106,8 @@ static void vTaskMsgPro(void *pvParameters)
         works_run_two_hours_state();
 
         main_function_detected_handler(gctl_t.interval_time_two_hours_stop_flag);
-        if(gpro_t.wifi_led_fast_blink_flag==1){
-            if(gctl_t.gTimer_linking_tencen_total_counter  > 119){
-
-               gpro_t.wifi_led_fast_blink_flag =0;
-
-            }
-            else
-            link_wifi_net_handler();
-            
-
-        }
-        else{
-           send_data_to_disp();
-           adc_detected_hundler();
-           
-
-        }
-       
+        link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag);
+        
 
       }
       else{

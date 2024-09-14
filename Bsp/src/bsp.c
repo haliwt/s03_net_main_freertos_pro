@@ -24,8 +24,31 @@ uint8_t real_hours,real_minutes,real_seconds;
 
 uint8_t auto_link_net_flag;
 
-uint8_t power_on_login_tencent_cloud_flag  ;       
+uint8_t power_on_login_tencent_cloud_flag  ;
 
+
+void link_wifi_to_tencent_handler(uint8_t data)
+{
+
+    
+    if(data == 1){//if(gpro_t.wifi_led_fast_blink_flag==1){
+        if(gctl_t.gTimer_linking_tencen_total_counter  > 119){
+
+           data = 0;//gpro_t.wifi_led_fast_blink_flag =0;
+
+        }
+        else
+        link_wifi_net_handler();
+        
+
+    }
+    else{
+       send_data_to_disp();
+       adc_detected_hundler();
+    }
+       
+
+}
 
 /**********************************************************************
     *

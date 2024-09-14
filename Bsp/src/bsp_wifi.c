@@ -67,8 +67,8 @@ void link_wifi_net_handler(void)
         		//HAL_Delay(1000);
         		//HAL_Delay(1000);
         		WIFI_IC_ENABLE();
-        		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
-        		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+        		at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+        		//at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
         		HAL_Delay(1000);
 
                  gpro_t.link_net_step = 1;
@@ -105,25 +105,22 @@ void link_wifi_net_handler(void)
 
             case 3:
                 
-            if(gpro_t.gTimer_link_net_timer_time  > 8){
+            if(gpro_t.gTimer_link_net_timer_time  > 2){
                       gpro_t.gTimer_link_net_timer_time = 0;
                    gpro_t.link_net_step = 4;
-             WIFI_IC_ENABLE();
+            WIFI_IC_ENABLE();
 			
-            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,gctl_t.randomName[0]);
-			at_send_data(device_massage, strlen((const char *)device_massage));
+            HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
 	  		HAL_Delay(1000);
         
           
             }
 
-
-
             break;
 
 
             case 4:
-                 if(gpro_t.gTimer_link_net_timer_time  > 10){
+                 if(gpro_t.gTimer_link_net_timer_time  > 7){
                                gpro_t.gTimer_link_net_timer_time = 0;
 
                    net_t.linking_tencent_cloud_doing =1;
