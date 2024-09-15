@@ -226,17 +226,9 @@ static void Judge_PTC_Temperature_Value(void)
 {
  
  
-   //if(run_t.ptc_temp_voltage < 54 || run_t.ptc_temp_voltage ==54){ //75 degree
-   
-  //if(run_t.ptc_temp_voltage < 60 || run_t.ptc_temp_voltage ==60){ //70 degree
-  #ifdef JINGPAI
-	  if(ptc_detect_voltage < 373 || ptc_detect_voltage ==373){ //90 degree
+  
+	 if(ptc_detect_voltage < 373 || ptc_detect_voltage ==373){ //90 degree
 
-  #else 
-      if(ptc_detect_voltage < 400 || ptc_detect_voltage ==400){ //87 degree
-
-  #endif 
-		
         gctl_t.gDry = 0;
         PTC_SetLow(); //ptc turn off
         gctl_t.ptc_warning =1;
