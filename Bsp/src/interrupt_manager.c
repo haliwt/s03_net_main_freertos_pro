@@ -83,6 +83,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         //gprocess 
        gpro_t.gTimer_power_on_first_link_tencent++;
        gpro_t.gTimer_get_data_from_tencent_data++;
+       gpro_t.gTimer_dc_power_on_auto_link_net++;
        //wifi function 
        wifi_t.gTimer_auto_detected_net_state_times ++;
        wifi_t.gTimer_auto_link_net_time++ ;

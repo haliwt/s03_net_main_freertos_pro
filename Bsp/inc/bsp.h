@@ -101,6 +101,7 @@ typedef struct PROCESS_T{
    uint8_t gTimer_power_on_first_link_tencent;
    uint8_t gTimer_get_data_from_tencent_data;
    uint8_t gTimer_link_net_timer_time;
+   uint8_t gTimer_dc_power_on_auto_link_net;
 
 
 

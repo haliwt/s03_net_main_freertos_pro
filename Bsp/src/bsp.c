@@ -222,7 +222,10 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x0F){ //数据
 
-        
+            gctl_t.set_temperature_value = pdata[5] ;
+
+          MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
+		  osDelay(20);//HAL_Delay(350);
 
         }
       break;
@@ -239,7 +242,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x0F){ //数据
 
-           
+          
 
 
         }
@@ -283,12 +286,18 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x27:
 
       if(pdata[3] == 0x02){
+         gctl_t.gModel=2;
+         MqttData_Publish_SetState(2);
+	     osDelay(100);//HAL_Delay(350);
         
         
           
        }
        else if(pdata[3] == 0x01){ //AI mode 
         
+         gctl_t.gModel=1;
+         MqttData_Publish_SetState(1);
+	     osDelay(100);//HAL_Delay(350);
         
         
 
@@ -734,10 +743,11 @@ void adc_detected_hundler(void)
 **********************************************************************/
 void wifi_auto_detected_link_state(void)
 {
-  
+    static uint8_t dc_power_on;
 	if(power_on_login_tencent_cloud_flag     <  5 && wifi_link_net_state()==0){
 		
       net_t.linking_tencent_cloud_doing = 1;
+      gpro_t.gTimer_dc_power_on_auto_link_net = 0;
 
       Auto_InitWifiModule_Hardware();//InitWifiModule();
       Auto_SmartPhone_TryToLink_TencentCloud();
@@ -746,18 +756,19 @@ void wifi_auto_detected_link_state(void)
 	
        
     }
-    if(wifi_link_net_state()==1    && power_on_login_tencent_cloud_flag < 5){
+    if(wifi_link_net_state()==1    && gpro_t.gTimer_dc_power_on_auto_link_net > 1 && dc_power_on ==0 ){
               
-             
+             dc_power_on ++ ;
            //wifi_t.linking_tencent_cloud_doing = 0;
            net_t.linking_tencent_cloud_doing  =0;
-
+           gpro_t.process_run_step=0;
         
           if(gpro_t.gpower_on == power_off){
 		     MqttData_Publish_PowerOff_Ref();
                HAL_Delay(200);
 
           }
+          
           Subscriber_Data_FromCloud_Handler();
           HAL_Delay(200);
 

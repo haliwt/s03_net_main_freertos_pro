@@ -196,12 +196,16 @@ void power_on_handler(void)
 		  gctl_t.first_link_tencent_cloud_flag++;
 
             
-            MqttData_Publish_SetOpen(0x01);
-			HAL_Delay(100);
-			Subscriber_Data_FromCloud_Handler();
-    		HAL_Delay(100);//HAL_Delay(350);
+            
+
 			Publish_Data_ToTencent_Initial_Data();
 			HAL_Delay(200);
+
+            MqttData_Publish_SetOpen(0x01);
+			HAL_Delay(100);
+
+            Subscriber_Data_FromCloud_Handler();
+    		HAL_Delay(100);//HAL_Delay(350);
 
              SendWifiData_To_Data(0x1F,0x01);
              osDelay(20);
@@ -326,7 +330,7 @@ void power_off_handler(void)
        }
 
        
-        gpro_t.process_run_step=0;
+        gpro_t.process_run_step=0;//gpro_t.process_run_step
 	   
 		  if(gctl_t.gTimer_fan_run_one_minute < 60 && gctl_t.power_off_ref_value_flag==3){
           

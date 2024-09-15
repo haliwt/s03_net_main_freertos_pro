@@ -535,17 +535,14 @@ void Tencent_Cloud_Rx_Handler(void)
 void Json_Parse_Command_Fun(void)
 {
 
-  uint8_t i;
+ 
     static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
 	static uint8_t buzzer_temp_on;
 
 
    switch(gctl_t.response_wifi_signal_label){
   
-	   wifi_t.get_rx_beijing_time_enable=0; //enab
-	
-
-     case OPEN_ON_ITEM:
+	case OPEN_ON_ITEM:
       
 		MqttData_Publish_SetOpen(1);  
 		HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
