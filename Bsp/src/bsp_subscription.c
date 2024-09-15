@@ -300,11 +300,12 @@ void Wifi_Rx_InputInfo_Handler(void)
   
    
 
-            if(strstr((const char*)gpro_t.wifi_rx_data_array,"+TCSAP:WIFI_CONNECT_SUCCESS")){
+           if(strstr((const char*)gpro_t.wifi_rx_data_array,"+TCSAP:WIFI_CONNECT_SUCCESS")){
               		net_t.soft_ap_config_success=1;
 					
             }
-            else if(strstr((const char*)gpro_t.wifi_rx_data_array,"+TCMQTTCONN:OK")){
+           
+            if(strstr((const char*)gpro_t.wifi_rx_data_array,"+TCMQTTCONN:OK")){
 	              net_t.wifi_link_net_success=1;
 	              net_t.linking_tencent_cloud_doing=0;
 				  gctl_t.auto_link_cloud_flag=0xff;

@@ -185,7 +185,7 @@ void receive_data_fromm_display(uint8_t *pdata)
       case 0x05: // link wifi command
 
        if(pdata[3] == 0x01){  // link wifi 
-           buzzer_sound();
+          // buzzer_sound();
            gpro_t.link_net_step =0;
 	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
@@ -737,14 +737,16 @@ void wifi_auto_detected_link_state(void)
   
 	if(power_on_login_tencent_cloud_flag     <  5 && wifi_link_net_state()==0){
 		
+      net_t.linking_tencent_cloud_doing = 1;
+
       Auto_InitWifiModule_Hardware();//InitWifiModule();
       Auto_SmartPhone_TryToLink_TencentCloud();
-	  net_t.linking_tencent_cloud_doing = 1;
+	 
 
 	
        
     }
-    if(wifi_link_net_state()==1    && power_on_login_tencent_cloud_flag < 4){
+    if(wifi_link_net_state()==1    && power_on_login_tencent_cloud_flag < 5){
               
              
            //wifi_t.linking_tencent_cloud_doing = 0;
