@@ -224,10 +224,7 @@ void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times)
 *****************************************************************/
 static void Judge_PTC_Temperature_Value(void)
 {
- 
- 
-  
-	 if(ptc_detect_voltage < 331 || ptc_detect_voltage ==331){ //95 degree
+    if(ptc_detect_voltage < 331 || ptc_detect_voltage ==331){ //95 degree
 
         gctl_t.gDry = 0;
         PTC_SetLow(); //ptc turn off
@@ -252,10 +249,9 @@ static void Judge_PTC_Temperature_Value(void)
         Publish_Data_Warning(ptc_temp_warning ,warning); //fan of default warning.
         osDelay(100);
 
-        }
+     }
 
      }
-		
 }
 
 

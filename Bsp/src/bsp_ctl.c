@@ -255,6 +255,7 @@ void works_run_two_hours_state(void)
 	
 	  if(gctl_t.gTimer_continuce_works_time > 10){
              gctl_t.gTimer_continuce_works_time=0;
+             gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
 		    gctl_t.interval_time_two_hours_stop_flag =0;
       }
 

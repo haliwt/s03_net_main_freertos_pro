@@ -104,6 +104,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){ //open
            buzzer_sound_fun();
+           
 
            gpro_t.gpower_on = power_on;
 
@@ -121,6 +122,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      if(pdata[3] == 0x01){
           buzzer_sound();
+        
 
        if(gctl_t.interval_time_two_hours_stop_flag ==0){
           gctl_t.gDry = 1;
@@ -133,6 +135,7 @@ void receive_data_fromm_display(uint8_t *pdata)
        }
        else if(pdata[3] == 0x0){
           buzzer_sound();
+          
        
          gctl_t.gDry =0;
          Dry_Function(1);
@@ -150,12 +153,14 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(pdata[3] == 0x01){
            
             buzzer_sound();
+           
            gctl_t.gPlasma = 1;
           
            PLASMA_SetHigh();
         }
         else if(pdata[3] == 0x0){
            buzzer_sound();
+           
           gctl_t.gPlasma = 0;
         
           PLASMA_SetLow();
@@ -185,7 +190,7 @@ void receive_data_fromm_display(uint8_t *pdata)
       case 0x05: // link wifi command
 
        if(pdata[3] == 0x01){  // link wifi 
-          // buzzer_sound();
+           buzzer_sound();
            gpro_t.link_net_step =0;
 	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
@@ -205,7 +210,8 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x06: //buzzer sound done
 
         if(pdata[3] == 0x01){  //buzzer sound 
-             buzzer_sound();
+             //buzzer_sound();
+            gpro_t.buzzer_sound_flag = 1;
 
         }
         else if(pdata[3] == 0x0){ // don't buzzer sound .
@@ -262,6 +268,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
       if(pdata[3] == 0x01){
         
+        if(gctl_t.interval_time_two_hours_stop_flag ==0){
           gctl_t.gDry = 1;
           Dry_Function(0);
          if(wifi_link_net_state()==1){
@@ -269,6 +276,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 	  	      osDelay(100);//HAL_Delay(350);
            }
           
+         }
        }
        else if(pdata[3] == 0x0){
         
@@ -286,6 +294,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x27:
 
       if(pdata[3] == 0x02){
+       
          gctl_t.gModel=2;
          MqttData_Publish_SetState(2);
 	     osDelay(100);//HAL_Delay(350);
@@ -294,7 +303,7 @@ void receive_data_fromm_display(uint8_t *pdata)
           
        }
        else if(pdata[3] == 0x01){ //AI mode 
-        
+       
          gctl_t.gModel=1;
          MqttData_Publish_SetState(1);
 	     osDelay(100);//HAL_Delay(350);
@@ -719,14 +728,14 @@ void adc_detected_hundler(void)
    if(gctl_t.gTimer_ptc_adc_times > 5 && gctl_t.interval_time_two_hours_stop_flag ==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
-       Get_Ptc_ADC_Fun(1,30);
+       Get_Ptc_ADC_Fun(1,10);
         
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 21 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
+    if(gctl_t.gTimer_fan_adc_times > 60 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
         gctl_t.gTimer_fan_adc_times =0;
-        Get_Fan_ADC_Fun(ADC_CHANNEL_0,30);
+        Get_Fan_ADC_Fun(ADC_CHANNEL_0,10);
         
     }
 

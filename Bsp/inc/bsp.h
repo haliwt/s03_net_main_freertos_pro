@@ -85,6 +85,7 @@ typedef struct PROCESS_T{
    uint8_t disp_rx_cmd_done_flag;
    uint8_t wifi_rx_data_array[150];
    uint8_t wifi_rx_data_counter;
+   uint8_t buzzer_sound_flag ;
 
    uint8_t get_beijing_flag;
 

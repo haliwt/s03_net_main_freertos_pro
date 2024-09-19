@@ -161,6 +161,12 @@ static void vTaskStart(void *pvParameters)
            if(check_code == bcc_check_code ){
            
               receive_data_fromm_display(gl_tMsg.usData);
+              if(gpro_t.buzzer_sound_flag == 1){
+                  gpro_t.buzzer_sound_flag++ ;
+                  buzzer_sound();
+
+
+              }
             }
             
         }
