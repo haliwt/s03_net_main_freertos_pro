@@ -227,7 +227,7 @@ static void Judge_PTC_Temperature_Value(void)
  
  
   
-	 if(ptc_detect_voltage < 373 || ptc_detect_voltage ==373){ //90 degree
+	 if(ptc_detect_voltage < 331 || ptc_detect_voltage ==331){ //95 degree
 
         gctl_t.gDry = 0;
         PTC_SetLow(); //ptc turn off

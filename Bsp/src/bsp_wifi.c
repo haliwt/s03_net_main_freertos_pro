@@ -88,7 +88,7 @@ void link_wifi_net_handler(void)
             break;
 
             case 2:
-                 if(gpro_t.gTimer_link_net_timer_time  > 3){
+                 if(gpro_t.gTimer_link_net_timer_time  > 5){
                      gpro_t.gTimer_link_net_timer_time = 0;
 
                          WIFI_IC_ENABLE();
@@ -106,7 +106,7 @@ void link_wifi_net_handler(void)
 
             case 3:
                 
-            if(gpro_t.gTimer_link_net_timer_time  > 2){
+            if(gpro_t.gTimer_link_net_timer_time  > 7){
                       gpro_t.gTimer_link_net_timer_time = 0;
                    gpro_t.link_net_step = 4;
             WIFI_IC_ENABLE();
@@ -158,7 +158,7 @@ void link_wifi_net_handler(void)
 
             case 6:
 
-            if( gpro_t.gTimer_link_net_timer_time  > 4){
+            if( gpro_t.gTimer_link_net_timer_time  > 5){
 
              if(net_t.wifi_link_net_success==1){
 			

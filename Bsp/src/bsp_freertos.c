@@ -111,8 +111,7 @@ static void vTaskMsgPro(void *pvParameters)
 
       }
       else{
-
-           power_off_handler();
+            power_off_handler();
       }
 
      if(gpro_t.wifi_led_fast_blink_flag==0 ){

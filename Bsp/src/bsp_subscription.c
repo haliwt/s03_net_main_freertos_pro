@@ -555,7 +555,7 @@ void Json_Parse_Command_Fun(void)
 		gctl_t.ptc_remove_warning_send_data =0;
 		gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
 		gctl_t.power_off_ref_value_flag=1; // app power on 
-	    SendWifiData_To_Cmd(0x01,0x01);
+	    SendWifiData_To_Cmd(0x31,0x01); //smart phone is power on
 		HAL_Delay(5);
        
 		buzzer_temp_on=0;
@@ -571,7 +571,7 @@ void Json_Parse_Command_Fun(void)
 
             gpro_t.gpower_on = power_off;
 	
-            SendWifiData_To_Cmd(0x01,0x0);
+            SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off
 			HAL_Delay(5);
           
 			buzzer_temp_on=0;
