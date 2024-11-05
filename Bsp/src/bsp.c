@@ -107,6 +107,12 @@ void receive_data_fromm_display(uint8_t *pdata)
            
 
            gpro_t.gpower_on = power_on;
+            gctl_t.gModel=1;
+    	    gctl_t.gFan = 1;
+    		gctl_t.gDry = 1;
+    		gctl_t.gPlasma =1;       //"杀菌"
+    		gctl_t.gUlransonic = 1; // "驱虫"
+    	    gctl_t.gTimer_fan_run_one_minute=0;
 
         }
         else if(pdata[3] == 0x0){ //close 
@@ -190,7 +196,7 @@ void receive_data_fromm_display(uint8_t *pdata)
       case 0x05: // link wifi command
 
        if(pdata[3] == 0x01){  // link wifi 
-           buzzer_sound();
+         //  buzzer_sound();
            gpro_t.link_net_step =0;
 	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
@@ -207,11 +213,12 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      break;
 
-     case 0x06: //buzzer sound done
+     case 0x06: //buzzer sound command
 
         if(pdata[3] == 0x01){  //buzzer sound 
-             //buzzer_sound();
-            gpro_t.buzzer_sound_flag = 1;
+            buzzer_sound();
+            pdata[2] =0xff;
+            *pdata = 0xff;
 
         }
         else if(pdata[3] == 0x0){ // don't buzzer sound .
@@ -307,9 +314,6 @@ void receive_data_fromm_display(uint8_t *pdata)
          gctl_t.gModel=1;
          MqttData_Publish_SetState(1);
 	     osDelay(100);//HAL_Delay(350);
-        
-        
-
        }
 
 
@@ -577,15 +581,12 @@ void wifi_get_beijing_time_handler(void)
 
      if(wifi_t.gTimer_auto_detected_net_state_times > 100){
 
-		wifi_t.gTimer_auto_detected_net_state_times=0;
+		      wifi_t.gTimer_auto_detected_net_state_times=0;
 
     
 
          if(wifi_link_net_state()==0){
-              gpro_t.get_beijing_flag = 11;
-           
-          
-           
+            gpro_t.get_beijing_flag = 11;
             net_t.linking_tencent_cloud_doing  =1; //receive from tencent command state .
             gpro_t.wifi_rx_data_counter=0;
            

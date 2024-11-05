@@ -96,11 +96,7 @@ static void vTaskMsgPro(void *pvParameters)
      
     if( gpro_t.gpower_on == power_on){
 
-       if(gctl_t.buzzer_sound_flag == 1){
-	 	gctl_t.buzzer_sound_flag = 0;
-	    buzzer_sound();
-
-	    }
+     
         
         power_on_handler();
         works_run_two_hours_state();
@@ -121,7 +117,7 @@ static void vTaskMsgPro(void *pvParameters)
      
     // clear_rx_copy_data();
    
-     vTaskDelay(30);
+     vTaskDelay(50);//30
      
     }
 
@@ -151,26 +147,19 @@ static void vTaskStart(void *pvParameters)
 						          portMAX_DELAY);  /* 最大允许延迟时间,等待时间-block   */
          if(xResult == pdPASS){
          if((ulValue & DECODER_BIT_0 ) != 0)
-          {
+         {
             gpro_t.disp_rx_cmd_done_flag = 0;
-
-           //  bcc_check_code =  gl_tMsg.usData[7];
 
             check_code =  bcc_check(gl_tMsg.usData,uid);
 
            if(check_code == bcc_check_code ){
            
               receive_data_fromm_display(gl_tMsg.usData);
-              if(gpro_t.buzzer_sound_flag == 1){
-                  gpro_t.buzzer_sound_flag++ ;
-                  buzzer_sound();
-
-
-              }
+              
             }
             
         }
-         }
+        }
     }
 }
 /*
@@ -239,7 +228,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      } 
 		  else{
 
-		         if(wifi_t.get_rx_beijing_time_enable==1){
+		    if(wifi_t.get_rx_beijing_time_enable==1){
 					gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] = wifi_rx_inputBuf[0];
 					gpro_t.wifi_rx_data_counter++;
 					

@@ -158,7 +158,7 @@ void link_wifi_net_handler(void)
 
             case 6:
 
-            if( gpro_t.gTimer_link_net_timer_time  > 5){
+            if( gpro_t.gTimer_link_net_timer_time  > 6){
 
              if(net_t.wifi_link_net_success==1){
 			
@@ -174,7 +174,7 @@ void link_wifi_net_handler(void)
 		     else{
                 
                   gpro_t.wifi_led_fast_blink_flag=0;
-                  gpro_t.link_net_step = 0xff;
+                  gpro_t.link_net_step = 8;
                   SendWifiData_To_Data(0x1F,0x00) ;	 //Link wifi net is fail .WT.EDTI .2024.08.31
                 
            
@@ -203,6 +203,16 @@ void link_wifi_net_handler(void)
 			 gpro_t.link_net_step = 0xfe;
 
                    
+            break;
+
+
+            case 8:
+
+
+              gpro_t.get_beijing_flag= 10;
+              wifi_t.gTimer_auto_detected_net_state_times = 120;
+              gpro_t.link_net_step = 0xff;
+
             break;
 
 
