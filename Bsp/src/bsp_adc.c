@@ -139,7 +139,7 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
  
    adc_fan_hex = Get_Fan_Adc_Average(channel,times);
 
-    fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
+   fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
 
   
