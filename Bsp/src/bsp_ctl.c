@@ -285,9 +285,15 @@ void works_run_two_hours_state(void)
 
 void power_off_handler(void)
 {
-        if(gctl_t.power_off_ref_value_flag==1){
 
-       
+    static uint8_t fan_run_one_minute_flag;
+
+
+      if(gctl_t.power_off_ref_value_flag==1){
+
+          gctl_t.power_off_ref_value_flag ++;
+          gctl_t.gTimer_fan_run_one_minute=0;
+          fan_run_one_minute_flag=1;
           gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;
@@ -303,8 +309,8 @@ void power_off_handler(void)
 		
           SetPowerOff_ForDoing();
 		
-		  gctl_t.power_off_ref_value_flag ++;
-          gctl_t.gTimer_fan_run_one_minute=0;
+		
+        
          }
         
       /**************************************************************/
@@ -333,19 +339,19 @@ void power_off_handler(void)
        
         gpro_t.process_run_step=0;//gpro_t.process_run_step
 	   
-		  if(gctl_t.gTimer_fan_run_one_minute < 60 && gctl_t.power_off_ref_value_flag==3){
+		if(gctl_t.gTimer_fan_run_one_minute < 60 &&  fan_run_one_minute_flag==1){
           
                    
 			Fan_One_Power_Off_Speed();
                   
-           }       
-           else{
-		          gctl_t.power_off_ref_value_flag =5;
-				  
+        }       
+        else if(fan_run_one_minute_flag==1){
+		   
+			       fan_run_one_minute_flag++;
 				   FAN_Stop();
                   
 				  
-	         }
+	    }
 	  
 }
 

@@ -66,8 +66,8 @@ void Error_Handler(void);
 //#define WIFI_EN_Pin GPIO_PIN_12       //GPIO_PIN_12 is S03 WIFI :GPIO_PIN_4 is s04w
 
 
-#define WIFI_EN_Pin GPIO_PIN_4       //GPIO_PIN_12 is S03 WIFI :GPIO_PIN_4 is s04w
-#define WIFI_EN_GPIO_Port GPIOA
+#define WIFI_EN_Pin GPIO_PIN_5       //GPIO_PIN_12 is S03 WIFI :GPIO_PIN_4 is s04w
+#define WIFI_EN_GPIO_Port GPIOB
 
 
 //main boadr function GPIO

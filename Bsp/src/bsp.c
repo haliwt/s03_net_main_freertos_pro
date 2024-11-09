@@ -105,7 +105,7 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(pdata[3] == 0x01){ //open
            buzzer_sound_fun();
            
-
+          SendWifiData_Answer_Cmd(0x01,0x01);
            gpro_t.gpower_on = power_on;
             gctl_t.gModel=1;
     	    gctl_t.gFan = 1;
@@ -113,10 +113,12 @@ void receive_data_fromm_display(uint8_t *pdata)
     		gctl_t.gPlasma =1;       //"杀菌"
     		gctl_t.gUlransonic = 1; // "驱虫"
     	    gctl_t.gTimer_fan_run_one_minute=0;
+            
 
         }
         else if(pdata[3] == 0x0){ //close 
            buzzer_sound();
+           SendWifiData_Answer_Cmd(0x01,0x02); //power off .
            gpro_t.gpower_on = power_off;
 
 
