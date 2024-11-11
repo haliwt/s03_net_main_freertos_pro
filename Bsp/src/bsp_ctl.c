@@ -309,8 +309,6 @@ void power_off_handler(void)
 		
           SetPowerOff_ForDoing();
 		
-		
-        
          }
         
       /**************************************************************/

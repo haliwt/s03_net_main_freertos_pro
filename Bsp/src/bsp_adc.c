@@ -103,7 +103,7 @@ static uint16_t Get_Fan_Adc_Average(uint32_t ch,uint8_t times)
 	for(t=0;t<times;t++)
 	{
 		temp_val+=Get_Fan_Adc_Channel_0(ch);  
-        HAL_Delay(10);
+        osDelay(5);//WT.EDIT 2024.11.11 modifiy //HAL_Delay(10);
 		
 	}
 	return (uint16_t)temp_val/times;
@@ -117,7 +117,7 @@ static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
 	for(t=0;t<times;t++)
 	{
 		temp_val+=Get_Ptc_Adc_Channel_1(ch); 
-		HAL_Delay(10);
+		osDelay(5);//WT.EDIT 2024.11.11 modifiy//HAL_Delay(10);
 	}
 	return (uint16_t)temp_val/times ;
 }
@@ -145,10 +145,10 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
   
     if(fan_detect_voltage < 350 ){ //500  now and then is bug false alarm rate  .
        detect_error_times++;
-	   if(detect_error_times >2){
+       if(detect_error_times >2){
 	   	
-		 detect_error_times= 3;
-		   gctl_t.fan_warning = 1;
+		  detect_error_times= 3;
+		  gctl_t.fan_warning = 1;
 		   
 		
           MqttData_Publis_SetFan(0);

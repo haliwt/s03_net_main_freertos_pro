@@ -731,14 +731,14 @@ void adc_detected_hundler(void)
    if(gctl_t.gTimer_ptc_adc_times > 10 && gctl_t.interval_time_two_hours_stop_flag ==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
-       Get_Ptc_ADC_Fun(ADC_CHANNEL_1,10);
+       Get_Ptc_ADC_Fun(ADC_CHANNEL_1,20);
         
         
 
     }
     if(gctl_t.gTimer_fan_adc_times > 21 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
         gctl_t.gTimer_fan_adc_times =0;
-        Get_Fan_ADC_Fun(ADC_CHANNEL_0,10);
+        Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         
     }
 

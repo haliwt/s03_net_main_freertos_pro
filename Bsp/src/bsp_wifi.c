@@ -63,14 +63,15 @@ void link_wifi_net_handler(void)
             case 0: //one step
 
                 WIFI_IC_DISABLE();
-        		HAL_Delay(1000);
+        		//HAL_Delay(1000);
         		//HAL_Delay(1000);
         		//HAL_Delay(1000);
         		//net_t.linking_tencent_cloud_doing =1;
         		WIFI_IC_ENABLE();
         		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
         		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-        		HAL_Delay(1000);
+        		//HAL_Delay(1000);
+        		osDelay(1000);
 
                  gpro_t.link_net_step = 1;
 
@@ -95,7 +96,7 @@ void link_wifi_net_handler(void)
             			
                         sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,gctl_t.randomName[0]);
             			at_send_data(device_massage, strlen((const char *)device_massage));
-            	  		HAL_Delay(1000);
+            	  		osDelay(1000);//HAL_Delay(1000);
                     
                        gpro_t.link_net_step = 3;
 
@@ -112,7 +113,7 @@ void link_wifi_net_handler(void)
             WIFI_IC_ENABLE();
 			
             HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
-	  		HAL_Delay(1000);
+	  		osDelay(1000);//HAL_Delay(1000);
         
           
             }
