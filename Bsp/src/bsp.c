@@ -45,8 +45,9 @@ void link_wifi_to_tencent_handler(uint8_t data)
            }
 
         }
-        else
-        link_wifi_net_handler();
+        else{
+         link_wifi_net_handler();
+        }
         
 
     }
