@@ -98,9 +98,9 @@ static void vTaskMsgPro(void *pvParameters)
 
         power_on_handler();
         works_run_two_hours_state();
-
-        main_function_detected_handler(gctl_t.interval_time_two_hours_stop_flag);
         link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
+
+ 
 
 
     }

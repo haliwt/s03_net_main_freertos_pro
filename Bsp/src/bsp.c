@@ -131,23 +131,21 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      if(pdata[3] == 0x01){
           buzzer_sound();
-        
+         gctl_t.gDry = 1;
 
-       if(gctl_t.interval_time_two_hours_stop_flag ==0){
-          gctl_t.gDry = 1;
-          Dry_Function(0);
+      if(gctl_t.interval_time_two_hours_stop_flag ==0){
+           PTC_SetHigh();
           if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x01);
 	  	      osDelay(100);//HAL_Delay(350);
            }
+       
        }
        }
        else if(pdata[3] == 0x0){
           buzzer_sound();
-          
-       
-         gctl_t.gDry =0;
-         Dry_Function(1);
+          gctl_t.gDry =0;
+         PTC_SetLow();
          if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(100);//HAL_Delay(350);
@@ -278,20 +276,21 @@ void receive_data_fromm_display(uint8_t *pdata)
 
       if(pdata[3] == 0x01){
         
+
+         gctl_t.gDry = 1;
         if(gctl_t.interval_time_two_hours_stop_flag ==0){
-          gctl_t.gDry = 1;
-          Dry_Function(0);
-         if(wifi_link_net_state()==1){
-              MqttData_Publish_SetPtc(0x01);
-	  	      osDelay(100);//HAL_Delay(350);
-           }
+              PTC_SetHigh();
+             if(wifi_link_net_state()==1){
+                  MqttData_Publish_SetPtc(0x01);
+    	  	      osDelay(100);//HAL_Delay(350);
+               }
+          }
           
-         }
-       }
-       else if(pdata[3] == 0x0){
+      }
+      else if(pdata[3] == 0x0){
         
          gctl_t.gDry =0;
-         Dry_Function(1);
+        PTC_SetLow();
           if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(100);//HAL_Delay(350);

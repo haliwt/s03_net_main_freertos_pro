@@ -190,7 +190,7 @@ void power_on_handler(void)
     case UPDATE_TO_PANEL_DATA: //5
 
   
-	 if(gpro_t.wifi_led_fast_blink_flag==0){
+	if(gpro_t.wifi_led_fast_blink_flag==0){
     if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==1 && gctl_t.app_timer_power_on_flag==0){
 	
 		  gctl_t.first_link_tencent_cloud_flag++;
@@ -237,13 +237,15 @@ void power_on_handler(void)
 void works_run_two_hours_state(void)
 {
 
-	if(gctl_t.gTimer_continuce_works_time > 119){//if(gctl_t.gTimer_continuce_works_time > 600){
+	if(gctl_t.gTimer_continuce_works_time > 119){//119
 	
 	     gctl_t.gTimer_continuce_works_time =0;
          gctl_t.interval_time_two_hours_stop_flag =1;
 	     gctl_t.interval_2_hous_fan_one_minute_flag =1;
 		 gctl_t.gTimer_fan_run_one_minute=0;
     }
+
+    
     if(gctl_t.interval_time_two_hours_stop_flag ==1){
 
 	
@@ -253,10 +255,12 @@ void works_run_two_hours_state(void)
 		PTC_SetLow();
 
 	
-	  if(gctl_t.gTimer_continuce_works_time > 10){
+	  if(gctl_t.gTimer_continuce_works_time > 10){ //10
              gctl_t.gTimer_continuce_works_time=0;
              gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
 		    gctl_t.interval_time_two_hours_stop_flag =0;
+             ActionEvent_Handler();
+            
       }
 
 	 if(gctl_t.interval_2_hous_fan_one_minute_flag ==1){
@@ -277,6 +281,12 @@ void works_run_two_hours_state(void)
 	  }
 	 
 
+    }
+    else{
+        if(gctl_t.gTimer_senddata_panel >1 ){ //300ms
+             gctl_t.gTimer_senddata_panel=0;
+               ActionEvent_Handler();
+         }
     }
 
 }
