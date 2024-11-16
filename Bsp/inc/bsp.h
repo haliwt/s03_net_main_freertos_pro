@@ -88,12 +88,14 @@ typedef struct PROCESS_T{
 
 
    uint8_t get_beijing_flag;
+   volatile uint8_t stopTwoHours_flag;
 
    uint8_t process_run_step;
   
    uint8_t wifi_led_fast_blink_flag;
    uint8_t get_beijing_time_success;
    uint8_t link_net_step;
+
    
    uint8_t disp_works_hours ;    
    uint8_t disp_works_minutes ;

@@ -78,7 +78,7 @@ typedef struct _RUN_T{
 
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
-	uint8_t interval_time_two_hours_stop_flag ;
+	volatile  uint8_t stopHours_flag ;
     uint8_t power_off_ref_value_flag;
     
 
@@ -123,7 +123,7 @@ typedef struct _RUN_T{
 
 	//fan:
 	uint8_t gFan_pwm_duty_level;
-	uint8_t interval_2_hous_fan_one_minute_flag;
+
 	uint8_t gTimer_fan_run_one_minute;
 	uint8_t  gFan;
     //ptc:
@@ -179,10 +179,10 @@ typedef struct _RUN_T{
 	
 	 uint16_t ptc_temp_voltage;
      uint8_t  gTimer_read_beijing_time;
-	 uint8_t gTimer_linking_tencen_total_counter;
+	 uint8_t gTimer_linkTencentCounter;
 	
 	uint8_t gTimer_usart2_error;
-	uint8_t gTimer_continuce_works_time;
+
     
 	uint32_t randomName[1];
 	

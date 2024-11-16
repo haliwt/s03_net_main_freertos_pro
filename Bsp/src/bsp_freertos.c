@@ -99,12 +99,9 @@ static void vTaskMsgPro(void *pvParameters)
         power_on_handler();
         works_run_two_hours_state();
         link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
-
- 
-
-
     }
     else{
+      
         power_off_handler();
     }
 

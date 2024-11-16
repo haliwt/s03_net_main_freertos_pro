@@ -52,19 +52,38 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pins : PAPin PAPin PAPin */
   GPIO_InitStruct.Pin = PLASMA_Pin|FAN_CCW_Pin|WIFI_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;//NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PBPin PBPin */
   GPIO_InitStruct.Pin = RELAY_Pin;              //|TEMP_SENSOR_Pin
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;//GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 2 */
+void MX_GPIO_PTC_Init(void)
+{
+   
+   GPIO_InitTypeDef GPIO_InitStruct = {0};
+   
+    /* GPIO Ports Clock Enable */
+  
+    __HAL_RCC_GPIOB_CLK_ENABLE();
 
+
+   HAL_GPIO_WritePin(GPIOB, RELAY_Pin, GPIO_PIN_SET);//|TEMP_SENSOR_Pin
+   /*Configure GPIO pins : PBPin PBPin */
+    GPIO_InitStruct.Pin = RELAY_Pin;              //|TEMP_SENSOR_Pin
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;//NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+
+}
 /* USER CODE END 2 */

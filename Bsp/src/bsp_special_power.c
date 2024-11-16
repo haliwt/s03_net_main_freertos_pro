@@ -95,7 +95,7 @@ void SetPowerOff_ForDoing(void)
 {
    
 
-	gctl_t.interval_2_hous_fan_one_minute_flag =1; //the fan still run 60s
+	
 	
 
     gctl_t.set_wind_speed_value =10;
@@ -125,18 +125,32 @@ void Single_Usart_RxData(void(*rxHandler)(uint8_t dat))
 
 void ActionEvent_Handler(void)
 {
-     
-  if(gctl_t.gDry == 1 && gctl_t.ptc_warning ==0){
 
-	   PTC_SetHigh();
 
-	}
-	else{
-		   PTC_SetLow();
+  switch(gctl_t.gDry ){
+
+   case 1:
+
+      if(gctl_t.ptc_warning ==0){
+      
+       
+           PTC_SetHigh();
+        
+
+	  }
+   break;
+
+   case 0 :
+   
+         PTC_SetLow();
+
+      
 		  
-		   
-	}
-	//kill
+      break;
+
+    }
+
+  
 	if(gctl_t.gPlasma == 1){
 		
 	     PLASMA_SetHigh();
@@ -153,6 +167,77 @@ void ActionEvent_Handler(void)
 	}
 	else{
 	  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
+
+	}
+
+	Fan_RunSpeed_Fun();
+		
+ }
+
+
+
+void updateMainboard_fun(void)
+{
+
+ static uint8_t ptc_on,ptc_off,ptc_on_default=0xff,ptc_off_default=0xff;
+ static uint8_t mouse_on,mouse_off,mouse_on_default=0xff,mouse_off_default=0xff;
+  switch(gctl_t.gDry ){
+
+   case 1:
+      
+      if(gctl_t.ptc_warning ==0){
+
+       if(ptc_on_default != ptc_on){
+           ptc_on_default = ptc_on;
+           ptc_off++;
+           PTC_SetHigh();
+
+        }
+
+	  }
+   break;
+
+   case 0 :
+      if(ptc_off_default != ptc_off){
+         ptc_off_default = ptc_off;
+         ptc_on++;
+         PTC_SetLow();
+
+      }
+		  
+      break;
+
+    }
+
+  
+	if(gctl_t.gPlasma == 1){
+		
+	     PLASMA_SetHigh();
+	}
+	else{
+
+		PLASMA_SetLow();
+	}
+	//driver bug
+	if(gctl_t.gUlransonic ==1){
+	
+	    if(mouse_on_default != mouse_on){
+
+           mouse_on_default = mouse_on;
+           mouse_off++;
+		    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
+
+        }
+	}
+	else{
+
+     if(mouse_off_default != mouse_off){
+
+           mouse_off_default = mouse_off;
+           mouse_on++;
+	      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
+
+        }
 
 	}
 

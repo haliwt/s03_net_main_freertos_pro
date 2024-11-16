@@ -32,7 +32,7 @@ void link_wifi_to_tencent_handler(uint8_t data)
 
     
     if(data == 1){//if(gpro_t.wifi_led_fast_blink_flag==1){
-        if(gctl_t.gTimer_linking_tencen_total_counter  > 119){
+        if(gctl_t.gTimer_linkTencentCounter  > 119){
 
            gpro_t.wifi_led_fast_blink_flag =0;//gpro_t.wifi_led_fast_blink_flag =0;
            if(wifi_link_net_state()==0){
@@ -133,7 +133,7 @@ void receive_data_fromm_display(uint8_t *pdata)
           buzzer_sound();
          gctl_t.gDry = 1;
 
-      if(gctl_t.interval_time_two_hours_stop_flag ==0){
+      if(gpro_t.stopTwoHours_flag==0){
            PTC_SetHigh();
           if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x01);
@@ -204,7 +204,7 @@ void receive_data_fromm_display(uint8_t *pdata)
           gctl_t.wifi_config_net_lable=wifi_set_restor;
 		  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
 		  
-          gctl_t.gTimer_linking_tencen_total_counter=0; //total times is 120s
+          gctl_t.gTimer_linkTencentCounter=0; //total times is 120s
 
         }
         else if(pdata[3] == 0x0){ //don't link wifi 
@@ -278,7 +278,7 @@ void receive_data_fromm_display(uint8_t *pdata)
         
 
          gctl_t.gDry = 1;
-        if(gctl_t.interval_time_two_hours_stop_flag ==0){
+        if(gpro_t.stopTwoHours_flag ==0){
               PTC_SetHigh();
              if(wifi_link_net_state()==1){
                   MqttData_Publish_SetPtc(0x01);
@@ -728,7 +728,7 @@ void adc_detected_hundler(void)
 {
    
 
-   if(gctl_t.gTimer_ptc_adc_times > 10 && gctl_t.interval_time_two_hours_stop_flag ==0){ //65s//3 minutes 120s
+   if(gctl_t.gTimer_ptc_adc_times > 10 && gpro_t.stopTwoHours_flag==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
        Get_Ptc_ADC_Fun(ADC_CHANNEL_1,20);
@@ -736,7 +736,7 @@ void adc_detected_hundler(void)
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 21 && gctl_t.interval_time_two_hours_stop_flag ==0){ //2 minute 180s
+    if(gctl_t.gTimer_fan_adc_times > 21 && gpro_t.stopTwoHours_flag ==0){ //2 minute 180s
         gctl_t.gTimer_fan_adc_times =0;
         Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         

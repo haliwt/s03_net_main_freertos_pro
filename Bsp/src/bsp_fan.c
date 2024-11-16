@@ -78,21 +78,31 @@ void ultrasonic_fun(uint8_t sel)
 
 }
 
-void Dry_Function(uint8_t sel)
+void Dry_Function(void)
 {
-   if(sel ==0){
+ 
+  switch(gctl_t.gDry ){
 
+   case 1:
+
+      if(gctl_t.ptc_warning ==0){
   
-		//FAN_CCW_RUN();
-		PTC_SetHigh();
-
-   }
-   else{
-
-       PTC_SetLow();
-
-   }
-
+    
+     
+          
+              PTC_SetHigh();
+           
+        }
+         
+      break;
+    
+      case 0 :
+       
+            PTC_SetLow();
+    
+      }
+             
+      
 }
 
 
@@ -126,6 +136,48 @@ void Fan_RunSpeed_Fun(void)
 
 
 }
+
+
+void updateFan_RunSpeed_Fun(void)
+{
+
+    static uint8_t fan_1,fan_2,fan_3,fan_1_default=0xff,fan_2_default=0xff,fan_3_default=0xff;
+
+
+
+         if(gctl_t.set_wind_speed_value < 34 ){
+              if(fan_1_default != fan_1){
+                 fan_1_default = fan_1;
+                 fan_2++;
+                 fan_3++;
+              Fan_One_Speed();
+
+               }
+		 }
+		 else if(gctl_t.set_wind_speed_value > 33  && gctl_t.set_wind_speed_value < 67 ){
+             if(fan_2_default != fan_2){
+                  fan_2_default = fan_2;
+                  fan_1++;
+                  fan_3++;
+
+                    Fan_Two_Speed();
+              }
+
+		 }
+		 else if(gctl_t.set_wind_speed_value > 66){
+            if(fan_3_default != fan_3){
+                 fan_3_default = fan_3;
+                 fan_2++;
+                 fan_1++;
+		 	    Fan_Full_Speed();
+             }
+
+
+          }
+
+
+}
+
 /********************************************************
 *
 *Function Name:void SetLevel_Fan_PWMA(uint8_t levelval)

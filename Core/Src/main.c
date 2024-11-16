@@ -88,6 +88,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM1_Init();
   MX_TIM16_Init();
+  MX_TIM14_Init();
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
@@ -95,6 +96,7 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
    bsp_init();
+   HAL_TIM_Base_Start_IT(&htim14);
 
    HAL_TIM_Base_Start_IT(&htim17);
    UART_Start_Receive_IT(&huart1,inputBuf,1);

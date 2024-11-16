@@ -159,14 +159,13 @@ void power_on_handler(void)
 
          
 
-         gctl_t.interval_2_hous_fan_one_minute_flag =0;
     
         
          gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
          
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
 		
-	    gctl_t.gTimer_continuce_works_time=0;
+
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
 		 gctl_t.fan_warning =0;
@@ -177,6 +176,9 @@ void power_on_handler(void)
 
         gctl_t.power_off_ref_value_flag=1;
         gctl_t.first_link_tencent_cloud_flag=1;
+        check_time=0;
+        gpro_t.stopTwoHours_flag =0;
+        gctl_t.stopHours_flag =0;
       
 
          Update_DHT11_Value();
@@ -236,34 +238,38 @@ void power_on_handler(void)
 ************************************************************************/
 void works_run_two_hours_state(void)
 {
+   static uint8_t timer_fan_flag;
 
-	if(gctl_t.gTimer_continuce_works_time > 119){//119
-	
-	     gctl_t.gTimer_continuce_works_time =0;
-         gctl_t.interval_time_two_hours_stop_flag =1;
-	     gctl_t.interval_2_hous_fan_one_minute_flag =1;
-		 gctl_t.gTimer_fan_run_one_minute=0;
+   if(gctl_t.stopHours_flag ==1){
+
+    gctl_t.stopHours_flag++;
+   
+    check_time=0;
+    PLASMA_SetLow(); //
+    HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
+	PTC_SetLow();
+     gctl_t.gTimer_fan_run_one_minute=0;
+     gpro_t.stopTwoHours_flag = 1;
+     timer_fan_flag=1;
+
+
     }
 
+  
     
-    if(gctl_t.interval_time_two_hours_stop_flag ==1){
+    if(gpro_t.stopTwoHours_flag ==1){
 
-	
-	 	
-		PLASMA_SetLow(); //
-		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
-		PTC_SetLow();
-
-	
-	  if(gctl_t.gTimer_continuce_works_time > 10){ //10
-             gctl_t.gTimer_continuce_works_time=0;
+	    
+	 if(check_time  > 10){ //10
+           
+             check_time=0;
              gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
-		    gctl_t.interval_time_two_hours_stop_flag =0;
-             ActionEvent_Handler();
+		     gctl_t.stopHours_flag=0;
+             gpro_t.stopTwoHours_flag=0;
             
       }
 
-	 if(gctl_t.interval_2_hous_fan_one_minute_flag ==1){
+	 if(timer_fan_flag ==1){
 
 	      if(gctl_t.gTimer_fan_run_one_minute < 60){
 	  
@@ -274,25 +280,38 @@ void works_run_two_hours_state(void)
 	           
 			   gctl_t.gTimer_fan_run_one_minute=0;
 			
-			   gctl_t.interval_2_hous_fan_one_minute_flag=0;
+			  timer_fan_flag=0;
 			   FAN_Stop();
 	       }
 
 	  }
 	 
 
-    }
-    else{
-        if(gctl_t.gTimer_senddata_panel >1 ){ //300ms
+   
+     }
+     else{
+
+        if(gctl_t.gTimer_senddata_panel >4 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
+             if(check_time > 0  && check_time  < 118){
+                gctl_t.stopHours_flag =0;
+                gpro_t.stopTwoHours_flag=0;
+              }
                ActionEvent_Handler();
          }
+    
+
     }
-
-}
  
-
-
+}
+/**********************************************************************
+    *
+    *Functin Name: void power_off_handler(void)
+    *Function : 
+    *Input Ref:  key of value
+    *Return Ref: NO
+    *
+************************************************************************/
 void power_off_handler(void)
 {
 
@@ -308,9 +327,9 @@ void power_off_handler(void)
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;
 		
-		gctl_t.interval_time_two_hours_stop_flag =0;
-		gctl_t.gTimer_continuce_works_time=0;
-	
+		gctl_t.stopHours_flag =0;
+	    check_time =0;
+	    gpro_t.stopTwoHours_flag=0;
 
 		  gctl_t.ptc_warning =0;
 		 gctl_t.fan_warning =0;
@@ -363,11 +382,20 @@ void power_off_handler(void)
 	  
 }
 
+/**********************************************************************
+    *
+    *Functin Name: void main_function_detected_handler(uint8_t cmd)
+    *Function : 
+    *Input Ref:  key of value
+    *Return Ref: NO
+    *
+************************************************************************/
 void main_function_detected_handler(uint8_t cmd)
 {
 
 if(gctl_t.gTimer_senddata_panel >1  &&  cmd ==0){ //300ms
          gctl_t.gTimer_senddata_panel=0;
+         
            ActionEvent_Handler();
      }
 
