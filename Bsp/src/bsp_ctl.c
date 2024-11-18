@@ -3,122 +3,9 @@
 
 _run_t gctl_t; 
 
-
-//static void smartphone_app_timer_power_on_handler(void);
-
-
-/**********************************************************************
-	*
-	*Functin Name: void Single_ReceiveCmd(uint8_t cmd)
-	*Function : resolver is by usart port receive data  from display panle  
-	*Input Ref:  usart receive data
-	*Return Ref: NO
-	*
-**********************************************************************/
-#if 0
-static void Single_Command_ReceiveCmd(uint8_t cmd)
-{
-    static uint8_t no_buzzer_sound_dry_off;
-	switch(cmd){
-
-	    case DRY_ON_NO_BUZZER:
-
-	        gctl_t.noBuzzer_sound_dry_flag =1;
-
-       case DRY_ON:
-         gctl_t.gDry = 1;
-	      gctl_t.interval_2_hous_fan_one_minute_flag =0;
-	   if(gctl_t.noBuzzer_sound_dry_flag !=1){
-		     buzzer_sound();
-		 }
-		if(net_t.wifi_link_net_success==1)
-		 MqttData_Publish_SetPtc(0x01);
-		 HAL_Delay(200);
-		 
-       break;
-
-	   case DRY_OFF_NO_BUZZER :
-
-	         no_buzzer_sound_dry_off=1;
-
-	  case DRY_OFF:
- 			gctl_t.gDry = 0;
-			if( no_buzzer_sound_dry_off !=1)
-			     buzzer_sound();
-			 if(gctl_t.gPlasma ==0){ //plasma turn off flag
-			  gctl_t.gTimer_fan_run_one_minute =0;
-			   gctl_t.interval_2_hous_fan_one_minute_flag =1;
-
-		     }
-			if(net_t.wifi_link_net_success==1)
-			MqttData_Publish_SetPtc(0x0);
-			HAL_Delay(200);
-			
-       break;
-
-       case PLASMA_ON:
-       		gctl_t.gPlasma=1;
-       		gctl_t.gUlransonic =1;
-	         buzzer_sound();
-	   if(net_t.wifi_link_net_success==1){
-	        MqttData_Publish_SetPlasma(1) ;//杀菌
-	        HAL_Delay(200);
-	        MqttData_Publish_SetUltrasonic(1); //超声波
-	        HAL_Delay(200);
-	   	}
-	   
-       break;
-
-       case PLASMA_OFF:
-           gctl_t.gPlasma=0;
-           gctl_t.gUlransonic =0;
-	       buzzer_sound();
-	   if(net_t.wifi_link_net_success==1){
-	       MqttData_Publish_SetPlasma(0) ;//杀菌
-	        HAL_Delay(200);
-	        MqttData_Publish_SetUltrasonic(0); //超声波
-	        HAL_Delay(200);
-	   	}
-	   
-       break;
-
-	   case MODE_AI_NO_BUZZER :
-	   	  gctl_t.gModel =1;  //AI_Works_Model 
-		  MqttData_Publish_SetState(0x1); //Ai model->beijing_time
-		  HAL_Delay(200);
-
-	   break;
-
-	   case WIFI_CONNECT_FAIL:
-
-	       gctl_t.dp_link_wifi_fail =1;
+void power_off_stop_fun(void);
 
 
-	   break;
-
-	   case DISPLAY_PANNEL_CONNECT_WIFI_SUCCESS:
-
-	      
-	        gctl_t.dp_link_wifi_fail =0;
-
-
-	   break;
-
-
-
-
-      default :
-        cmd =0;
-
-      break; 
-
-
-    }
-
-
-
-}
-#endif 
 /**********************************************************************
 	*
 	*Functin Name: void Single_ReceiveCmd(uint8_t cmd)
@@ -160,7 +47,7 @@ void power_on_handler(void)
          
 
     
-        
+         gpro_t.fanRunOneMinute=1;
          gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
          
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
@@ -315,14 +202,14 @@ void works_run_two_hours_state(void)
 void power_off_handler(void)
 {
 
-    static uint8_t fan_run_one_minute_flag;
+   // static uint8_t fan_run_one_minute_flag;
 
 
       if(gctl_t.power_off_ref_value_flag==1){
 
           gctl_t.power_off_ref_value_flag ++;
           gctl_t.gTimer_fan_run_one_minute=0;
-          fan_run_one_minute_flag=1;
+      
           gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;
@@ -366,19 +253,24 @@ void power_off_handler(void)
        
         gpro_t.process_run_step=0;//gpro_t.process_run_step
 	   
-		if(gctl_t.gTimer_fan_run_one_minute < 60 &&  fan_run_one_minute_flag==1){
+		if(gctl_t.gTimer_fan_run_one_minute < 60 && gpro_t.fanRunOneMinute==1){
           
                    
 			Fan_One_Power_Off_Speed();
                   
         }       
-        else if(fan_run_one_minute_flag==1){
+        else if(gpro_t.fanRunOneMinute==1){
 		   
-			       fan_run_one_minute_flag++;
+			      gpro_t.fanRunOneMinute++;
 				   FAN_Stop();
                   
 				  
 	    }
+
+
+        power_off_stop_fun();
+
+      
 	  
 }
 
@@ -403,5 +295,14 @@ if(gctl_t.gTimer_senddata_panel >1  &&  cmd ==0){ //300ms
 }
 
 
+void power_off_stop_fun(void)
+{
+      
+      PLASMA_SetLow(); //
+      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
+      PTC_SetLow();
+      
+
+}
 
     

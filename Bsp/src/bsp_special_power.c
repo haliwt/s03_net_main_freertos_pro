@@ -94,11 +94,7 @@ void smartphone_timer_power_on_and_normal_handler(void)
 void SetPowerOff_ForDoing(void)
 {
    
-
-	
-	
-
-    gctl_t.set_wind_speed_value =10;
+     gctl_t.set_wind_speed_value =10;
  
     gctl_t.gFan = 0;
     gctl_t.gDry = 0;
