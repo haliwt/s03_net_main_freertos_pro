@@ -45,9 +45,6 @@ void power_on_handler(void)
          smartphone_timer_power_on_and_normal_handler();
 
          
-
-    
-         gpro_t.fanRunOneMinute=1;
          gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
          
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
@@ -60,8 +57,10 @@ void power_on_handler(void)
 		 gctl_t.gTimer_fan_adc_times=0;
 		
 		 gctl_t.set_wind_speed_value= 100;
-
+        //POWER OFF REF 
+        gpro_t.fanRunOneMinute=0;
         gctl_t.power_off_ref_value_flag=1;
+        //
         gctl_t.first_link_tencent_cloud_flag=1;
         check_time=0;
         gpro_t.stopTwoHours_flag =0;
@@ -209,6 +208,7 @@ void power_off_handler(void)
 
           gctl_t.power_off_ref_value_flag ++;
           gctl_t.gTimer_fan_run_one_minute=0;
+          gpro_t.fanRunOneMinute=1;
       
           gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;
@@ -243,7 +243,7 @@ void power_off_handler(void)
           }
 
            Subscriber_Data_FromCloud_Handler();
-		  osDelay(200);
+		   osDelay(200);
 		 
            gctl_t.power_off_ref_value_flag ++;
 
@@ -259,14 +259,12 @@ void power_off_handler(void)
 			Fan_One_Power_Off_Speed();
                   
         }       
-        else if(gpro_t.fanRunOneMinute==1){
+        else if(gctl_t.gTimer_fan_run_one_minute > 59 && (gpro_t.fanRunOneMinute > 0 && gpro_t.fanRunOneMinute <200)){ //WT.EDTI 2024.11.19
 		   
 			      gpro_t.fanRunOneMinute++;
 				   FAN_Stop();
-                  
-				  
-	    }
-
+         }
+       
 
         power_off_stop_fun();
 
