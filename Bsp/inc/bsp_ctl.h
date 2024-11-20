@@ -78,8 +78,8 @@ typedef struct _RUN_T{
 
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
-	volatile  uint8_t stopHours_flag ;
-    uint8_t power_off_ref_value_flag;
+
+
     
 
 
@@ -196,7 +196,13 @@ typedef struct _RUN_T{
 extern uint8_t ReceiveBuffer[1];
 extern _run_t gctl_t; 
 
+extern uint8_t powerOffFanRun_flag ;
 
+extern uint8_t powerOffTunrOff_flag;
+
+extern uint8_t gTimer_powerOffRunFan;
+
+extern uint8_t stopHours_flag;
 
 void power_on_handler(void);
 

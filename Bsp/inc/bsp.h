@@ -89,7 +89,7 @@ typedef struct PROCESS_T{
 
    uint8_t get_beijing_flag;
    volatile uint8_t stopTwoHours_flag;
-    uint8_t fanRunOneMinute;
+   
 
    uint8_t process_run_step;
   

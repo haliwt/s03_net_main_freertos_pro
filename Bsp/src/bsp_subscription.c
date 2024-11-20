@@ -548,7 +548,7 @@ void Json_Parse_Command_Fun(void)
 		gctl_t.fan_warning =0;
 		gctl_t.ptc_remove_warning_send_data =0;
 		gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
-		gctl_t.power_off_ref_value_flag=1; // app power on 
+		//powerOffTunrOff_flag=1; // app power off
 	    SendWifiData_To_Cmd(0x31,0x01); //smart phone is power on
 		HAL_Delay(5);
        
@@ -777,7 +777,8 @@ void Json_Parse_Command_Fun(void)
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
 			  gctl_t.app_timer_power_on_flag = 1;
-              gctl_t.power_off_ref_value_flag=1; // app power on 
+              powerOffTunrOff_flag=1; // app power on 
+              powerOffFanRun_flag = 1;
 		
 			   MqttData_Publish_SetOpen(1);  
 			   osDelay(100);//HAL_Delay(350);

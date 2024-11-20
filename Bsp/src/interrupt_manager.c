@@ -60,18 +60,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
          tm1++;
       if(tm1 > 99){//10ms *100 = 1000ms =1s
         tm1 =0;
-      
+      gTimer_powerOffRunFan++;
       stopHoursCounter++;
 
       if(stopHoursCounter> 59){ //one minute
           stopHoursCounter =0;
        
-         
+          
           check_time ++;
-          if(check_time >119  && gctl_t.stopHours_flag ==0){ //119
+          if(check_time >5  && stopHours_flag ==0){ //119
              check_time=0;
           
-             gctl_t.stopHours_flag =1;
+             stopHours_flag =1;
               
           }
        

@@ -2,6 +2,12 @@
 
 
 _run_t gctl_t; 
+uint8_t powerOffFanRun_flag ;
+uint8_t powerOffTunrOff_flag;
+uint8_t gTimer_powerOffRunFan;
+uint8_t stopHours_flag;
+
+
 
 void power_off_stop_fun(void);
 
@@ -58,13 +64,14 @@ void power_on_handler(void)
 		
 		 gctl_t.set_wind_speed_value= 100;
         //POWER OFF REF 
-        gpro_t.fanRunOneMinute=0;
-        gctl_t.power_off_ref_value_flag=1;
+     
+        powerOffTunrOff_flag = 1;
+        powerOffFanRun_flag =1;
         //
         gctl_t.first_link_tencent_cloud_flag=1;
         check_time=0;
         gpro_t.stopTwoHours_flag =0;
-        gctl_t.stopHours_flag =0;
+        stopHours_flag =0;
       
 
          Update_DHT11_Value();
@@ -126,9 +133,9 @@ void works_run_two_hours_state(void)
 {
    static uint8_t timer_fan_flag;
 
-   if(gctl_t.stopHours_flag ==1){
+   if(stopHours_flag ==1){
 
-    gctl_t.stopHours_flag++;
+    stopHours_flag++;
    
     check_time=0;
     PLASMA_SetLow(); //
@@ -146,11 +153,11 @@ void works_run_two_hours_state(void)
     if(gpro_t.stopTwoHours_flag ==1){
 
 	    
-	 if(check_time  > 10){ //10
+	 if(check_time  > 3){ //10
            
              check_time=0;
              gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
-		     gctl_t.stopHours_flag=0;
+		     stopHours_flag=0;
              gpro_t.stopTwoHours_flag=0;
             
       }
@@ -177,12 +184,8 @@ void works_run_two_hours_state(void)
      }
      else{
 
-        if(gctl_t.gTimer_senddata_panel >4 ){ //300ms
+        if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
-             if(check_time > 0  && check_time  < 118){
-                gctl_t.stopHours_flag =0;
-                gpro_t.stopTwoHours_flag=0;
-              }
                ActionEvent_Handler();
          }
     
@@ -204,31 +207,35 @@ void power_off_handler(void)
    // static uint8_t fan_run_one_minute_flag;
 
 
-      if(gctl_t.power_off_ref_value_flag==1){
+      if(powerOffTunrOff_flag==1){
 
-          gctl_t.power_off_ref_value_flag ++;
+          powerOffTunrOff_flag++;
+          gTimer_powerOffRunFan=0;
           gctl_t.gTimer_fan_run_one_minute=0;
-          gpro_t.fanRunOneMinute=1;
+       
       
           gctl_t.set_wind_speed_value=10;
 		 gctl_t.gModel =1;
 		gctl_t.app_timer_power_on_flag =0;
 		
-		gctl_t.stopHours_flag =0;
+		stopHours_flag =0;
 	    check_time =0;
+        
 	    gpro_t.stopTwoHours_flag=0;
 
 		  gctl_t.ptc_warning =0;
 		 gctl_t.fan_warning =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
+
+         
 		
           SetPowerOff_ForDoing();
 		
          }
         
       /**************************************************************/
-       if(wifi_link_net_state() == 1 && gctl_t.power_off_ref_value_flag == 2){
+       if(wifi_link_net_state() == 1 &&    powerOffTunrOff_flag== 2){
 
           MqttData_Publish_PowerOff_Ref(); 
           osDelay(200);//HAL_Delay(200);
@@ -245,7 +252,7 @@ void power_off_handler(void)
            Subscriber_Data_FromCloud_Handler();
 		   osDelay(200);
 		 
-           gctl_t.power_off_ref_value_flag ++;
+           powerOffTunrOff_flag++;
 
 
        }
@@ -253,18 +260,26 @@ void power_off_handler(void)
        
         gpro_t.process_run_step=0;//gpro_t.process_run_step
 	   
-		if(gctl_t.gTimer_fan_run_one_minute < 60 && gpro_t.fanRunOneMinute==1){
+		if(gTimer_powerOffRunFan < 60 && powerOffFanRun_flag ==1){
           
                    
 			Fan_One_Power_Off_Speed();
                   
         }       
-        else if(gctl_t.gTimer_fan_run_one_minute > 59 && (gpro_t.fanRunOneMinute > 0 && gpro_t.fanRunOneMinute <200)){ //WT.EDTI 2024.11.19
+        else if(gTimer_powerOffRunFan > 59   ){ //WT.EDTI 2024.11.19
 		   
-			      gpro_t.fanRunOneMinute++;
+			       powerOffFanRun_flag=2;
 				   FAN_Stop();
          }
-       
+
+        if(gTimer_powerOffRunFan > 61){
+              gTimer_powerOffRunFan =0;
+
+              powerOffFanRun_flag=2;
+              FAN_Stop();
+
+
+        }
 
         power_off_stop_fun();
 
