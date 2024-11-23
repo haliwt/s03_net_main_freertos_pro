@@ -39,7 +39,7 @@ typedef struct Msg
 {
 	uint8_t  ucMessageID;
 	uint8_t usData[12];
-	//uint8_t ulData[1];
+	uint8_t link_wifi_net_flag;
 }MSG_T;
 
 MSG_T   gl_tMsg; /* 定义丢�个结构体用于消息队列 */
@@ -99,9 +99,15 @@ static void vTaskMsgPro(void *pvParameters)
         power_on_handler();
         works_run_two_hours_state();
         link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
+        if(wifi_link_net_state() ==1 && gl_tMsg.link_wifi_net_flag ==0){
+          gl_tMsg.link_wifi_net_flag ++;
+          Update_Dht11_Totencent_Value();
+          osDelay(100);//HAL_Delay(200) //WT.EDIT 2024.08.10
+         }
     }
     else{
-      
+        gpro_t.process_run_step=0;
+        gl_tMsg.link_wifi_net_flag=0;
         power_off_handler();
     }
 

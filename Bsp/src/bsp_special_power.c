@@ -16,24 +16,26 @@ void smartphone_timer_power_on_and_normal_handler(void)
 		gctl_t.gUlransonic = 1; // "驱虫"
 	    gctl_t.gTimer_fan_run_one_minute=0;
 
-         if(wifi_link_net_state() ==1){
-    
-		   MqttData_Publish_SetOpen(1);  
-			HAL_Delay(200);
-		     Update_DHT11_Value();
-			 HAL_Delay(200);
-	         gctl_t.set_wind_speed_value =100;
-		
-			MqttData_Publish_Update_Data();
-			 HAL_Delay(200);
-
-         }
+   
        	
 			
 	    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
 	    PLASMA_SetHigh();
 	    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 	    PTC_SetHigh();
+
+        if(wifi_link_net_state() ==1){
+    
+		     MqttData_Publish_SetOpen(1);  
+			 HAL_Delay(200);
+		     Update_DHT11_Value();
+			 HAL_Delay(200);
+	         gctl_t.set_wind_speed_value =100;
+		
+			 MqttData_Publish_Update_Data();
+			 HAL_Delay(200);
+
+         }
   
 	break;
 
@@ -235,4 +237,27 @@ void updateMainboard_fun(void)
 		
  }
 
+
+void every_power_on_run(void)
+{
+ if(gctl_t.app_timer_power_on_flag==0){
+     
+      gctl_t.gModel=1;
+      gctl_t.gFan = 1;
+      gctl_t.gDry = 1;
+      g_dry_open_flag =1;
+      gctl_t.gPlasma =1;       //"杀菌"
+      gctl_t.gUlransonic = 1; // "驱虫"
+      gctl_t.gTimer_fan_run_one_minute=0;
+
+ 
+      
+          
+      Fan_RunSpeed_Fun();//FAN_CCW_RUN();
+      PLASMA_SetHigh();
+      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
+      PTC_SetHigh();
+
+    }
+}
 

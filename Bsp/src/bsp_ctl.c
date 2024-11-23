@@ -74,11 +74,16 @@ void power_on_handler(void)
         gpro_t.stopTwoHours_flag =0;
         stopHours_flag =0;
       
-
+       
          Update_DHT11_Value();
 	    gpro_t.process_run_step= UPDATE_TO_PANEL_DATA;
 
-        
+        every_power_on_run();
+        if(wifi_link_net_state() ==1){
+
+          Update_Dht11_Totencent_Value();
+          osDelay(50);//HAL_Delay(200) //WT.EDIT 2024.08.10
+        }
 	   
     
 	break;
@@ -116,6 +121,14 @@ void power_on_handler(void)
            Update_DHT11_Value();
            osDelay(20);
       }
+
+      if(wifi_link_net_state() ==1 && gpro_t.gTimer_publis_dht11_data > 10){
+
+        Update_Dht11_Totencent_Value();
+        osDelay(50);//HAL_Delay(200) //WT.EDIT 2024.08.10
+        }
+
+      
      }
 
      break;
@@ -282,7 +295,6 @@ void power_off_handler(void)
 
 
         }
-        gpro_t.gpower_on = power_off;
         gpro_t.stopTwoHours_flag =0;
         check_time=0;
         power_off_stop_fun();

@@ -394,7 +394,7 @@ void wifi_get_beijing_time_handler(void)
             flag_switch=0;
             wifi_t.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
-            osDelay(50);//HAL_Delay(200) //WT.EDIT 2024.08.10
+            osDelay(100);//HAL_Delay(200) //WT.EDIT 2024.08.10
             
              gpro_t.get_beijing_flag = 1;
 

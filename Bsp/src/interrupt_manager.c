@@ -118,6 +118,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        wifi_t.gTimer_auto_detected_net_state_times ++;
        wifi_t.gTimer_auto_link_net_time++ ;
 
+       gpro_t.gTimer_publis_dht11_data++ ;
+
 
 //      
 	 
