@@ -82,7 +82,7 @@ void power_on_handler(void)
         if(wifi_link_net_state() ==1){
 
           Update_Dht11_Totencent_Value();
-          osDelay(50);//HAL_Delay(200) //WT.EDIT 2024.08.10
+          osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
         }
 	   
     
@@ -122,11 +122,7 @@ void power_on_handler(void)
            osDelay(20);
       }
 
-      if(wifi_link_net_state() ==1 && gpro_t.gTimer_publis_dht11_data > 10){
-
-        Update_Dht11_Totencent_Value();
-        osDelay(50);//HAL_Delay(200) //WT.EDIT 2024.08.10
-        }
+      
 
       
      }

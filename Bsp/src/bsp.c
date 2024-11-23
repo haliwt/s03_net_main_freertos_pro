@@ -54,7 +54,13 @@ void link_wifi_to_tencent_handler(uint8_t data)
     else{
        send_data_to_disp();
        adc_detected_hundler();
-    }
+       if(wifi_link_net_state() ==1 && gpro_t.gTimer_publis_dht11_data > 59){
+        gpro_t.gTimer_publis_dht11_data=0;
+
+        Update_Dht11_Totencent_Value();
+        osDelay(10);//HAL_Delay(200) //WT.EDIT 2024.08.10
+        }
+      }
        
 
 }
@@ -498,6 +504,7 @@ void wifi_get_beijing_time_handler(void)
     		
     		Get_BeiJing_Time_Cmd();
     	    osDelay(100);//HAL_Delay(20); //WT.EDIT .2024.08.10//HAL_Delay(20);
+    	   
     		//wifi_t.gTimer_read_beijing_time=0;
     
             
@@ -517,7 +524,7 @@ void wifi_get_beijing_time_handler(void)
         		gpro_t.wifi_rx_data_counter =0;
         		Get_Beijing_Time();
               
-        	     osDelay(100);//HAL_Delay(20); //WT.EDIT .2024.08.10
+        	    osDelay(100);//HAL_Delay(20); //WT.EDIT .2024.08.10
                 
         		wifi_t.gTimer_read_beijing_time=0;
                 beijing_step =2;

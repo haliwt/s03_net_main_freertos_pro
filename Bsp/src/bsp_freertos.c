@@ -102,7 +102,7 @@ static void vTaskMsgPro(void *pvParameters)
         if(wifi_link_net_state() ==1 && gl_tMsg.link_wifi_net_flag ==0){
           gl_tMsg.link_wifi_net_flag ++;
           Update_Dht11_Totencent_Value();
-          osDelay(100);//HAL_Delay(200) //WT.EDIT 2024.08.10
+          osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
          }
     }
     else{
