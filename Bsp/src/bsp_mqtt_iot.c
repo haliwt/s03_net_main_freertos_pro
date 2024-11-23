@@ -78,6 +78,7 @@ static void Mqtt_Value_update_data(void)
 	if(gctl_t.gModel==0)gctl_t.gModel =1;
 	sg_info.state = gctl_t.gModel;
 	sg_info.ptc  = gctl_t.gDry;
+    sg_info.ptc = g_dry_open_flag;
 	sg_info.anion = gctl_t.gPlasma;
 	sg_info.sonic = gctl_t.gUlransonic ;
     sg_info.find = gctl_t.set_wind_speed_value;

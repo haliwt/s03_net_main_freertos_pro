@@ -11,6 +11,7 @@ void smartphone_timer_power_on_and_normal_handler(void)
         gctl_t.gModel=1;
 	    gctl_t.gFan = 1;
 		gctl_t.gDry = 1;
+        g_dry_open_flag =1;
 		gctl_t.gPlasma =1;       //"杀菌"
 		gctl_t.gUlransonic = 1; // "驱虫"
 	    gctl_t.gTimer_fan_run_one_minute=0;
@@ -68,13 +69,14 @@ void smartphone_timer_power_on_and_normal_handler(void)
 
 
 
-			if(gctl_t.gDry==1){
+			if(gctl_t.gDry==1 ||g_dry_open_flag ==1){
 
 				SendWifiData_To_Cmd(0x02,0x01);
 				 osDelay(100);
 			}
 			else{
 					gctl_t.gDry=0;
+                    g_dry_open_flag =0;
 					SendWifiData_To_Cmd(0x02,0x0);
 					 osDelay(100);
 
@@ -98,6 +100,7 @@ void SetPowerOff_ForDoing(void)
  
     gctl_t.gFan = 0;
     gctl_t.gDry = 0;
+    g_dry_open_flag =0;
 	gctl_t.gPlasma =0;       //"杀菌"
 	gctl_t.gUlransonic = 0; // "驱虫"
 	gctl_t.gModel =1;
@@ -123,9 +126,9 @@ void ActionEvent_Handler(void)
 {
 
 
-  switch(gctl_t.gDry ){
+   if(g_dry_open_flag == 1 || gctl_t.gDry==1){
 
-   case 1:
+ 
 
       if(gctl_t.ptc_warning ==0){
       
@@ -134,17 +137,11 @@ void ActionEvent_Handler(void)
         
 
 	  }
-   break;
-
-   case 0 :
+    }
+    else{
    
          PTC_SetLow();
-
-      
-		  
-      break;
-
-    }
+   }
 
   
 	if(gctl_t.gPlasma == 1){
@@ -177,10 +174,8 @@ void updateMainboard_fun(void)
 
  static uint8_t ptc_on,ptc_off,ptc_on_default=0xff,ptc_off_default=0xff;
  static uint8_t mouse_on,mouse_off,mouse_on_default=0xff,mouse_off_default=0xff;
-  switch(gctl_t.gDry ){
+   if(gctl_t.gDry ==1 || g_dry_open_flag ==1){
 
-   case 1:
-      
       if(gctl_t.ptc_warning ==0){
 
        if(ptc_on_default != ptc_on){
@@ -191,17 +186,16 @@ void updateMainboard_fun(void)
         }
 
 	  }
-   break;
-
-   case 0 :
-      if(ptc_off_default != ptc_off){
+    }
+    else {
+       if(ptc_off_default != ptc_off){
          ptc_off_default = ptc_off;
          ptc_on++;
          PTC_SetLow();
 
       }
 		  
-      break;
+ 
 
     }
 

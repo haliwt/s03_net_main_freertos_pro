@@ -204,6 +204,9 @@ extern uint8_t gTimer_powerOffRunFan;
 
 extern uint8_t stopHours_flag;
 
+extern uint8_t g_dry_open_flag;
+
+
 void power_on_handler(void);
 
 

@@ -6,6 +6,7 @@ uint8_t powerOffFanRun_flag ;
 uint8_t powerOffTunrOff_flag;
 uint8_t gTimer_powerOffRunFan;
 uint8_t stopHours_flag;
+uint8_t g_dry_open_flag;
 
 
 
@@ -153,12 +154,13 @@ void works_run_two_hours_state(void)
     if(gpro_t.stopTwoHours_flag ==1){
 
 	    
-	 if(check_time  > 3){ //10
+	 if(check_time  > 2){ //10
            
              check_time=0;
              gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
 		     stopHours_flag=0;
              gpro_t.stopTwoHours_flag=0;
+             ActionEvent_Handler();
             
       }
 
@@ -280,7 +282,9 @@ void power_off_handler(void)
 
 
         }
-
+        gpro_t.gpower_on = power_off;
+        gpro_t.stopTwoHours_flag =0;
+        check_time=0;
         power_off_stop_fun();
 
       

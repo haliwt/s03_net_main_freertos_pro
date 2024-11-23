@@ -440,6 +440,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	if(strstr((char *)gpro_t.wifi_rx_data_array,"ptc\":0")){
             if(gpro_t.gpower_on ==power_on){
 				  gctl_t.gDry=0;
+                  g_dry_open_flag =0;
 	           gctl_t.response_wifi_signal_label = PTC_OFF_ITEM;
 	         
              }
@@ -448,6 +449,7 @@ void Tencent_Cloud_Rx_Handler(void)
     else if(strstr((char *)gpro_t.wifi_rx_data_array,"ptc\":1")){
             if(gpro_t.gpower_on ==power_on){
 	          gctl_t.gDry=1;
+              g_dry_open_flag =1;
 			  gctl_t.response_wifi_signal_label = PTC_ON_ITEM;
 				
             }
@@ -583,6 +585,7 @@ void Json_Parse_Command_Fun(void)
 
          if(gpro_t.stopTwoHours_flag ==0){
 	       gctl_t.gDry=1;
+           g_dry_open_flag =1;
          }
 		
 		 SendWifiData_To_Cmd(0x02,0x01);
@@ -591,6 +594,7 @@ void Json_Parse_Command_Fun(void)
 	     }
 		 else{
 			gctl_t.gDry=0;
+            g_dry_open_flag =0;
 			MqttData_Publish_SetPtc(0);
 		    osDelay(100); //HAL_Delay(350);
 			SendWifiData_To_Cmd(0x02,0x0);
@@ -609,6 +613,7 @@ void Json_Parse_Command_Fun(void)
          MqttData_Publish_SetPtc(0);
 		 osDelay(100);//HAL_Delay(350);
 	     gctl_t.gDry=0;
+         g_dry_open_flag =0;
 		
 		 SendWifiData_To_Cmd(0x02,0x0);
          HAL_Delay(5);
@@ -852,11 +857,13 @@ void Parse_Json_Statement(void)
      if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 				
 			gctl_t.gDry=0;
+            g_dry_open_flag =0;
 				  
 		}
 		else if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
 				
 				    gctl_t.gDry=1;
+                   g_dry_open_flag =0;
 				  
 					
 		}

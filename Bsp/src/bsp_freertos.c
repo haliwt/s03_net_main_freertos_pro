@@ -128,7 +128,7 @@ static void vTaskStart(void *pvParameters)
 {
   
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(200); /* 1.测试设定的-设置最大等待时间为50ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(500); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
 
 	

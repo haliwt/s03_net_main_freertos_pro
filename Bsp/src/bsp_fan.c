@@ -81,7 +81,7 @@ void ultrasonic_fun(uint8_t sel)
 void Dry_Function(void)
 {
  
-  switch(gctl_t.gDry ){
+  switch(g_dry_open_flag ){
 
    case 1:
 

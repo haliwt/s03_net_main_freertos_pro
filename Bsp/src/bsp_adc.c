@@ -227,6 +227,7 @@ static void Judge_PTC_Temperature_Value(void)
     if(ptc_detect_voltage < 331 || ptc_detect_voltage ==331){ //95 degree
 
         gctl_t.gDry = 0;
+        g_dry_open_flag =0;
         PTC_SetLow(); //ptc turn off
         gctl_t.ptc_warning =1;
 
