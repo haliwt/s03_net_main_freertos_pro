@@ -38,6 +38,7 @@ void Fan_Two_Speed(void)
 
  void Fan_Full_Speed(void)
 {
+    
     SetLevel_Fan_PWMA(10);
 
 }
@@ -87,10 +88,7 @@ void Dry_Function(void)
 
       if(gctl_t.ptc_warning ==0){
   
-    
-     
-          
-              PTC_SetHigh();
+          PTC_SetHigh();
            
         }
          
@@ -123,7 +121,21 @@ void plasma_fun(uint8_t sel)
 
 void Fan_RunSpeed_Fun(void)
 {
-         if(gctl_t.set_wind_speed_value < 34 ){
+
+
+      if(gctl_t.fan_stop_flag == 1){
+          gctl_t.fan_stop_flag++;
+
+          fan_start_fun();
+
+
+
+      }
+       
+
+
+
+       if(gctl_t.set_wind_speed_value < 34 ){
               Fan_One_Speed();
 		 }
 		 else if(gctl_t.set_wind_speed_value > 33  && gctl_t.set_wind_speed_value < 67 ){
@@ -131,52 +143,20 @@ void Fan_RunSpeed_Fun(void)
              Fan_Two_Speed();
 
 		 }
-		 else if(gctl_t.set_wind_speed_value > 66)
-		 	Fan_Full_Speed();
-
-
-}
-
-
-void updateFan_RunSpeed_Fun(void)
-{
-
-    static uint8_t fan_1,fan_2,fan_3,fan_1_default=0xff,fan_2_default=0xff,fan_3_default=0xff;
-
-
-
-         if(gctl_t.set_wind_speed_value < 34 ){
-              if(fan_1_default != fan_1){
-                 fan_1_default = fan_1;
-                 fan_2++;
-                 fan_3++;
-              Fan_One_Speed();
-
-               }
-		 }
-		 else if(gctl_t.set_wind_speed_value > 33  && gctl_t.set_wind_speed_value < 67 ){
-             if(fan_2_default != fan_2){
-                  fan_2_default = fan_2;
-                  fan_1++;
-                  fan_3++;
-
-                    Fan_Two_Speed();
-              }
-
-		 }
 		 else if(gctl_t.set_wind_speed_value > 66){
-            if(fan_3_default != fan_3){
-                 fan_3_default = fan_3;
-                 fan_2++;
-                 fan_1++;
-		 	    Fan_Full_Speed();
-             }
 
+         
+
+		 	Fan_Full_Speed();
 
           }
 
+      
 
 }
+
+
+
 
 /********************************************************
 *
@@ -191,6 +171,23 @@ static void SetLevel_Fan_PWMA(uint8_t levelval)
      FAN_CW_SetLow();
 	 MX_TIM16_Init();
 	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+}
+
+
+
+void fan_start_fun(void)
+{
+
+   SetLevel_Fan_PWMA(10);
+   osDelay(100);
+   FAN_Stop();
+   SetLevel_Fan_PWMA(10);
+   osDelay(100);
+   FAN_Stop();
+   SetLevel_Fan_PWMA(10);
+   osDelay(200);
+
+
 }
 
 

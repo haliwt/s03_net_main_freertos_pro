@@ -61,7 +61,9 @@ void Fan_Full_Speed(void);
 void ultrasonic_fun(uint8_t sel);
 void plasma_fun(uint8_t sel);
 
-void updateFan_RunSpeed_Fun(void);
+
+
+void fan_start_fun(void);
 
 
 #endif 

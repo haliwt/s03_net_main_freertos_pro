@@ -5,6 +5,10 @@
 #define WIFI_TUYA      1  //
 #define AI_ENABLE      1
 
+
+#define  TEST_UNIT     1
+
+
 typedef enum {                   /* enumeration for CProcess signals */
     kill =1,notkill,dry,notdry,ai,notai
 }Signal;
@@ -92,6 +96,7 @@ typedef struct _RUN_T{
 	uint8_t power_off_fan_state ;
 
     uint8_t process_run_step;
+    uint8_t fan_stop_flag ;
    
 
 	

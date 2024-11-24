@@ -114,7 +114,7 @@ void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 63;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 250;// buzzer of sound f = 4KHZ
+  htim3.Init.Period = 249;// buzzer of sound f= 1MHZ/(249+1) = 4KHZ
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
@@ -213,7 +213,7 @@ void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 63;// //F = 64/(31+1)=2MHZ
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 9999; //Fhz = 1MHZ/(9999+1)= 0.0002MHz= 0.1KHz; T= 1/Fhz=(1/0.1khz)ms = 10ms
+  htim14.Init.Period = 9999; //Fhz = 1MHZ/(9999+1)= 0.0001MHz= 0.1KHz; T= 1/Fhz=(1/0.1khz)ms = 10ms
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
