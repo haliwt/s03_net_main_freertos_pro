@@ -23,6 +23,7 @@ static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times);
 static uint16_t Get_Fan_Adc_Channel_0(uint32_t ch);
 static uint16_t Get_Ptc_Adc_Channel_1(uint32_t ch);
 
+uint8_t detect_error_times,recoder_error_times;
 
 
 /*****************************************************************
@@ -133,7 +134,7 @@ static uint16_t Get_Ptc_Adc_Average(uint32_t ch,uint8_t times)
 void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 {
 	
-   static uint8_t detect_error_times;
+ //  static uint8_t detect_error_times,recoder_error_times;
    uint16_t adc_fan_hex;
    
  
@@ -142,17 +143,30 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
    fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
 
-  
+   
     if(fan_detect_voltage < 350 ){ //500  now and then is bug false alarm rate  .
        detect_error_times++;
-       if(detect_error_times >2){
+
+       if(detect_error_times==1 && recoder_error_times == 0){
+             
+               recoder_error_times ++;
+               gpro_t.gTimer_detect_fan_error = 0;
+
+       }
+       
+      
+    }
+
+    if( gpro_t.gTimer_detect_fan_error > 45   && recoder_error_times==1){
+
+         recoder_error_times=0;
+
+         if(detect_error_times >2){
 	   	
-		  detect_error_times= 3;
+		  detect_error_times= 0;
 		  gctl_t.fan_warning = 1;
 		   
 		
-          MqttData_Publis_SetFan(0);
-	      HAL_Delay(350);
 
            buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
@@ -169,17 +183,58 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 
 	       if(wifi_link_net_state()==1){
 
-    		   Publish_Data_Warning(fan_warning,warning);
+               MqttData_Publis_SetFan(0);
+	           HAL_Delay(350);
+               Publish_Data_Warning(fan_warning,warning);
     	       HAL_Delay(200);
 
            }
 		}
-    }
-    else{
+        else{
 
-        gctl_t.fan_warning = 0;
+            gctl_t.fan_warning = 0;
+            detect_error_times=0;
+
+
+        }
 
     }
+}
+
+
+void fan_warning_sound(void)
+{
+   if(gctl_t.fan_warning == 1 && gpro_t.gTimer_detect_fan_error > 9){
+        gpro_t.gTimer_detect_fan_error =0;
+
+
+         buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+			osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+		   buzzer_sound();//Buzzer_KeySound();
+		   osDelay(100);
+          
+           SendWifiData_To_Cmd(0x09, 0x01);
+
+	       if(wifi_link_net_state()==1){
+
+               MqttData_Publis_SetFan(0);
+	            HAL_Delay(350);
+
+    		   Publish_Data_Warning(fan_warning,warning);
+    	       HAL_Delay(200);
+
+           }
+
+    }
+
+
+
 }
 /*****************************************************************
 	*

@@ -68,7 +68,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        
           
           check_time ++;
-          if(check_time >3  && stopHours_flag ==0){ //119
+          if(check_time >119  && stopHours_flag ==0){ //119
              check_time=0;
           
              stopHours_flag =1;
@@ -119,6 +119,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        wifi_t.gTimer_auto_link_net_time++ ;
 
        gpro_t.gTimer_publis_dht11_data++ ;
+       gpro_t.gTimer_detect_fan_error++;
 
 
 //      

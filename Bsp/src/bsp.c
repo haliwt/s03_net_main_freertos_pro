@@ -44,10 +44,11 @@ void link_wifi_to_tencent_handler(uint8_t data)
 
            }
 
-        }
-        else{
-         link_wifi_net_handler();
-        }
+    }
+    else{
+
+       link_wifi_net_handler();
+    }
         
 
     }
@@ -750,11 +751,13 @@ void adc_detected_hundler(void)
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 21 && gpro_t.stopTwoHours_flag ==0){ //2 minute 180s
+    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && gctl_t.fan_warning == 0){ //detected 3 times is 60s 
         gctl_t.gTimer_fan_adc_times =0;
         Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         
     }
+
+    fan_warning_sound();
 
 }
 

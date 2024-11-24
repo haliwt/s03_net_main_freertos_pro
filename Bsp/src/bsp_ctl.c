@@ -73,6 +73,7 @@ void power_on_handler(void)
         check_time=0;
         gpro_t.stopTwoHours_flag =0;
         stopHours_flag =0;
+        gpro_t.gTimer_detect_fan_error=0;
       
        
          Update_DHT11_Value();
@@ -163,7 +164,7 @@ void works_run_two_hours_state(void)
     if(gpro_t.stopTwoHours_flag ==1){
 
 	    
-	 if(check_time  > 2){ //10
+	 if(check_time  > 10){ //10
            
              check_time=0;
              gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
