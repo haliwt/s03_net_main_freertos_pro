@@ -6,7 +6,7 @@
 #define AI_ENABLE      1
 
 
-#define  TEST_UNIT     0
+
 
 
 typedef enum {                   /* enumeration for CProcess signals */

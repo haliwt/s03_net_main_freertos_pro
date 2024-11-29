@@ -131,10 +131,6 @@ void Fan_RunSpeed_Fun(void)
 
 
       }
-       
-
-
-
        if(gctl_t.set_wind_speed_value < 34 ){
               Fan_One_Speed();
 		 }

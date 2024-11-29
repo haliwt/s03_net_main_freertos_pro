@@ -68,14 +68,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        
           
           check_time ++;
-         #if TEST_UNIT
-          if(check_time >3  && stopHours_flag ==0){ //119
-             check_time=0;
-          
-             stopHours_flag =1;
-              
-          }
-         #else 
+      
            if(check_time >119  && stopHours_flag ==0){ //119
                    check_time=0;
                 
@@ -84,7 +77,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
            }
 
 
-         #endif 
+      
        }
 
 
