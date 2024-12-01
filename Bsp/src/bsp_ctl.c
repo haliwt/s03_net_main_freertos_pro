@@ -363,7 +363,9 @@ void compare_temp_value(void)
                  PTC_SetLow();
                 g_dry_open_flag = 0;
                 gctl_t.gDry=0;
+               if(gpro_t.wifi_led_fast_blink_flag==0){
                 SendWifiData_To_Cmd(0x02, 0);
+                }
 
       }
       else if(gctl_t.gDht11_temperature >  gctl_t.set_temperature_value){
@@ -371,7 +373,9 @@ void compare_temp_value(void)
                PTC_SetLow();
                g_dry_open_flag = 0;
                gctl_t.gDry=0;
+              if(gpro_t.wifi_led_fast_blink_flag==0){
                SendWifiData_To_Cmd(0x02, 0);
+               }
 
        }
   }
@@ -381,7 +385,10 @@ void compare_temp_value(void)
               PTC_SetHigh();       //PTC ON
               g_dry_open_flag = 1;
                gctl_t.gDry=1;
+              if(gpro_t.wifi_led_fast_blink_flag==0){
               SendWifiData_To_Cmd(0x02,0x01);
+
+              }
 
    }
 }
