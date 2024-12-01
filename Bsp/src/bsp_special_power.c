@@ -12,8 +12,8 @@ void smartphone_timer_power_on_and_normal_handler(void)
 	    gctl_t.gFan = 1;
 		gctl_t.gDry = 1;
         g_dry_open_flag =1;
-		gctl_t.gPlasma =1;       //"杀菌"
-		gctl_t.gUlransonic = 1; // "驱虫"
+		g_plasma[0]=1;//gctl_t.gPlasma =1;       //"杀菌"
+		g_ultra[0] = 1; // "驱虫"
 	    gctl_t.gTimer_fan_run_one_minute=0;
         gctl_t.set_temperature_value=40;
 
@@ -45,7 +45,7 @@ void smartphone_timer_power_on_and_normal_handler(void)
 
           Parse_Json_Statement();
 		  
-           if( gctl_t.gPlasma==1){ //Anion
+           if(g_plasma[0]==1){//if( gctl_t.gPlasma==1){ //Anion
 			
 
 				SendWifiData_To_Cmd(0x03,0x01);
@@ -53,19 +53,19 @@ void smartphone_timer_power_on_and_normal_handler(void)
 			
 			}
 			else{
-				gctl_t.gPlasma =0;
+				g_plasma[0]=0;//gctl_t.gPlasma =0;
 				SendWifiData_To_Cmd(0x03,0x0);
 				 osDelay(100);
 			}
 
 
-			if(gctl_t.gUlransonic==1){
+			if(g_ultra[0]==1){
 
 					SendWifiData_To_Cmd(0x04,0x01);
 					 osDelay(100);
 			}
 			else {
-					gctl_t.gUlransonic=0;
+					g_ultra[0]=0;
 					SendWifiData_To_Cmd(0x04,0x0);
 					 osDelay(100);
 			}
@@ -104,8 +104,8 @@ void SetPowerOff_ForDoing(void)
     gctl_t.gFan = 0;
     gctl_t.gDry = 0;
     g_dry_open_flag =0;
-	gctl_t.gPlasma =0;       //"杀菌"
-	gctl_t.gUlransonic = 0; // "驱虫"
+	g_plasma[0]=0;//gctl_t.gPlasma =0;       //"杀菌"
+	g_ultra[0] = 0; // "驱虫"
 	gctl_t.gModel =1;
 
 
@@ -145,7 +145,7 @@ void ActionEvent_Handler(void)
    #endif 
  
   
-	if(gctl_t.gPlasma == 1){
+	if(g_plasma[0]==1){
 		
 	     PLASMA_SetHigh();
 	}
@@ -154,7 +154,7 @@ void ActionEvent_Handler(void)
 		PLASMA_SetLow();
 	}
 	//driver bug
-	if(gctl_t.gUlransonic ==1){
+	if(g_ultra[0] ==1){
 	
 	 
 		HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
@@ -201,7 +201,7 @@ void updateMainboard_fun(void)
     }
 
   
-	if(gctl_t.gPlasma == 1){
+	if(g_plasma[0] == 1){
 		
 	     PLASMA_SetHigh();
 	}
@@ -210,7 +210,7 @@ void updateMainboard_fun(void)
 		PLASMA_SetLow();
 	}
 	//driver bug
-	if(gctl_t.gUlransonic ==1){
+	if(g_ultra[0] ==1){
 	
 	    if(mouse_on_default != mouse_on){
 
@@ -245,8 +245,8 @@ void every_power_on_run(void)
       gctl_t.gFan = 1;
       gctl_t.gDry = 1;
       g_dry_open_flag =1;
-      gctl_t.gPlasma =1;       //"杀菌"
-      gctl_t.gUlransonic = 1; // "驱虫"
+      g_plasma[0]=1;//gctl_t.gPlasma =1;       //"杀菌"
+      g_ultra[0] = 1; // "驱虫"
       gctl_t.gTimer_fan_run_one_minute=0;
 
  

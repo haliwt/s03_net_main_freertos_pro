@@ -8,7 +8,12 @@ uint8_t gTimer_powerOffRunFan;
 uint8_t stopHours_flag;
 uint8_t g_dry_open_flag;
 
+uint8_t timer_fan_flag;
 
+uint8_t warning_array[2];
+
+uint8_t g_plasma[1];
+uint8_t g_ultra[1];
 
 void power_off_stop_fun(void);
 
@@ -60,7 +65,7 @@ void power_on_handler(void)
 
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
-		 gctl_t.fan_warning =0;
+		 warning_array[1] =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 		
@@ -143,7 +148,7 @@ void power_on_handler(void)
 ************************************************************************/
 void works_run_two_hours_state(void)
 {
-   static uint8_t timer_fan_flag;
+   //static uint8_t timer_fan_flag;
 
    if(stopHours_flag ==1){
 
@@ -243,7 +248,7 @@ void power_off_handler(void)
 	    gpro_t.stopTwoHours_flag=0;
 
 		  gctl_t.ptc_warning =0;
-		 gctl_t.fan_warning =0;
+		 warning_array[1] =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 
@@ -346,9 +351,10 @@ void compare_temp_value(void)
   static uint8_t default_tem_value ;
 
   if(gctl_t.app_timer_power_on_flag > 1)gctl_t.app_timer_power_on_flag =0;
-  if(gctl_t.ptc_warning  >1) gctl_t.ptc_warning =0;
+  if(gctl_t.ptc_warning  >0) gctl_t.ptc_warning =0;
+
   
-  if(save_set_temp[0] ==   gctl_t.set_temperature_value){
+  if(save_set_temp[0] ==   gctl_t.set_temperature_value ){
            
      if(gctl_t.set_temperature_value==40)default_tem_value=39;
 
@@ -369,8 +375,8 @@ void compare_temp_value(void)
 
        }
   }
-  if((gctl_t.gDht11_temperature <   save_set_temp[0]  || gctl_t.gDht11_temperature==gctl_t.set_temperature_value)
-                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0){
+  if((gctl_t.gDht11_temperature <   save_set_temp[0]  || gctl_t.gDht11_temperature==save_set_temp[0])
+                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0) {
 
               PTC_SetHigh();       //PTC ON
               g_dry_open_flag = 1;

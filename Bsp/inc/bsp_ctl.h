@@ -6,7 +6,9 @@
 #define AI_ENABLE      1
 
 
-
+extern uint8_t warning_array[2]; //wrray_array[0] = PTC ,warning_array[1]= fan warning.
+extern uint8_t g_plasma[1];
+extern uint8_t g_ultra[1];
 
 
 typedef enum {                   /* enumeration for CProcess signals */
@@ -74,7 +76,7 @@ typedef enum{
 typedef struct _RUN_T{
     
 	uint8_t gPower_On;
-
+    uint8_t gDry;
 
 
 	uint8_t gDht11_flag;
@@ -131,10 +133,10 @@ typedef struct _RUN_T{
       
 
       volatile  uint8_t  gAi;
-      volatile uint8_t  gPlasma;
-      volatile uint8_t  gDry;
+     // volatile uint8_t  gPlasma;
+   
 
-	  volatile uint8_t  gUlransonic;
+
 	  volatile uint8_t  gModel;
     
 
@@ -172,7 +174,7 @@ typedef struct _RUN_T{
 
 	  uint8_t gTimer_fan_adc_times;
 	  uint8_t gTimer_ptc_adc_times;
-      uint8_t fan_warning;
+     
 	
 
 	 uint8_t gTimer_senddata_panel;

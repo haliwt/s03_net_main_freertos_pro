@@ -1,7 +1,7 @@
 #include "bsp.h"
 
 
-static void SetLevel_Fan_PWMA(uint8_t levelval);
+
 
 
 
@@ -10,14 +10,15 @@ static void SetLevel_Fan_PWMA(uint8_t levelval);
 void FAN_Stop(void)
 {
    FAN_CW_SetLow(); //brake
-   SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
+   //SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
+   FAN_RUN_SetLow();
 }
 
 void Fan_One_Power_Off_Speed(void)
 {
 	
-	SetLevel_Fan_PWMA(10);
-	
+	//SetLevel_Fan_PWMA(10);
+	FAN_Stop();
 
 
 }
@@ -25,21 +26,26 @@ void Fan_One_Power_Off_Speed(void)
 void Fan_One_Speed(void)
 {
 
-	SetLevel_Fan_PWMA(8);
+	//SetLevel_Fan_PWMA(8);
+    FAN_CW_SetLow(); //brake
+    FAN_RUN_SetHigh();
 
 
 }
 
 void Fan_Two_Speed(void)
 {
-	SetLevel_Fan_PWMA(9);
+	//SetLevel_Fan_PWMA(9);
+	 FAN_CW_SetLow(); //brake
+    FAN_RUN_SetHigh();
 
 }
 
  void Fan_Full_Speed(void)
 {
     
-    SetLevel_Fan_PWMA(10);
+    FAN_CW_SetLow(); //brake
+    FAN_RUN_SetHigh();
 
 }
 
@@ -123,14 +129,14 @@ void Fan_RunSpeed_Fun(void)
 {
 
 
-      if(gctl_t.fan_stop_flag == 1){
-          gctl_t.fan_stop_flag++;
-
-          fan_start_fun();
-
-
-
-      }
+//      if(gctl_t.fan_stop_flag == 1){
+//          gctl_t.fan_stop_flag++;
+//
+//          fan_start_fun();
+//
+//
+//
+//      }
        if(gctl_t.set_wind_speed_value < 34 ){
               Fan_One_Speed();
 		 }
@@ -165,25 +171,26 @@ static void SetLevel_Fan_PWMA(uint8_t levelval)
 {
      gctl_t.gFan_pwm_duty_level = levelval;
      FAN_CW_SetLow();
-	 MX_TIM16_Init();
-	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+	// MX_TIM16_Init();
+	// HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+	 FAN_RUN_SetHigh();
 }
 
 
 
-void fan_start_fun(void)
-{
-
-   SetLevel_Fan_PWMA(10);
-   osDelay(100);
-   FAN_Stop();
-   SetLevel_Fan_PWMA(10);
-   osDelay(100);
-   FAN_Stop();
-   SetLevel_Fan_PWMA(10);
-   osDelay(200);
-
-
-}
+//void fan_start_fun(void)
+//{
+//
+//   SetLevel_Fan_PWMA(10);
+//   osDelay(100);
+//   FAN_Stop();
+//   SetLevel_Fan_PWMA(10);
+//   osDelay(100);
+//   FAN_Stop();
+//   SetLevel_Fan_PWMA(10);
+//   osDelay(200);
+//
+//
+//}
 
 

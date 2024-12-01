@@ -121,8 +121,8 @@ void receive_data_fromm_display(uint8_t *pdata)
     	    gctl_t.gFan = 1;
     		gctl_t.gDry = 1;
             g_dry_open_flag = 1;
-    		gctl_t.gPlasma =1;       //"杀菌"
-    		gctl_t.gUlransonic = 1; // "驱虫"
+    		g_plasma[0]=1;//gctl_t.gPlasma =1;       //"杀菌"
+    		g_ultra[0] = 1; // "驱虫"
     	    gctl_t.gTimer_fan_run_one_minute=0;
             
 
@@ -140,9 +140,14 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x02: //PTC打开关闭指令
 
      if(pdata[3] == 0x01){
-          buzzer_sound();
+
+        if(save_set_temp[0]==gctl_t.set_temperature_value){
+             buzzer_sound();
+        
          gctl_t.gDry = 1;
          g_dry_open_flag=1;
+
+         }
 
       if(gpro_t.stopTwoHours_flag==0){
            PTC_SetHigh();
@@ -154,10 +159,14 @@ void receive_data_fromm_display(uint8_t *pdata)
        }
        }
        else if(pdata[3] == 0x0){
+
+        if(save_set_temp[0]==gctl_t.set_temperature_value){
           buzzer_sound();
+         
           gctl_t.gDry =0;
           g_dry_open_flag=0;
          PTC_SetLow();
+          }
          if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(100);//HAL_Delay(350);
@@ -173,14 +182,14 @@ void receive_data_fromm_display(uint8_t *pdata)
            
             buzzer_sound();
            
-           gctl_t.gPlasma = 1;
+           g_plasma[0]=1; //gctl_t.gPlasma = 1;
           
            PLASMA_SetHigh();
         }
         else if(pdata[3] == 0x0){
            buzzer_sound();
            
-          gctl_t.gPlasma = 0;
+          g_plasma[0]=0;//gctl_t.gPlasma = 0;
         
           PLASMA_SetLow();
 
@@ -194,12 +203,12 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){  //open 
           
-           gctl_t.gUlransonic =1;
+           g_ultra[0] =1;
 
         }
         else if(pdata[3] == 0x0){ //close 
 
-           gctl_t.gUlransonic = 0;
+           g_ultra[0] = 0;
 
         }
 
@@ -249,11 +258,11 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(pdata[3] == 0x0F){ //数据
 
           gctl_t.set_temperature_value = pdata[5] ;
-          save_set_temp[0] =  pdata[5] ;
+          save_set_temp[0] =  pdata[5] ; //WT.EDIT 2024.12.01
 
         if(wifi_link_net_state()==1){
 
-          MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
+          MqttData_Publis_SetTemp(save_set_temp[0]);
 		  osDelay(20);//HAL_Delay(350);
 
          }
@@ -644,7 +653,7 @@ void wifi_get_beijing_time_handler(void)
            net_t.linking_tencent_cloud_doing =1;
         
 
-            WIFI_IC_ENABLE();
+           // WIFI_IC_ENABLE();
        
     		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
             HAL_Delay(1000);
@@ -752,7 +761,7 @@ void wifi_get_beijing_time_handler(void)
 void adc_detected_hundler(void)
 {
    
-
+  #if 0
    if(gctl_t.gTimer_ptc_adc_times > 10 && gpro_t.stopTwoHours_flag==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
@@ -761,7 +770,9 @@ void adc_detected_hundler(void)
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && gctl_t.fan_warning == 0){ //detected 3 times is 60s 
+   #endif 
+   
+    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && warning_array[1] == 0){ //detected 3 times is 60s 
         gctl_t.gTimer_fan_adc_times =0;
         Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         
@@ -831,7 +842,7 @@ void wifi_auto_detected_link_state(void)
 static void Auto_InitWifiModule_Hardware(void)
 {
   
-	WIFI_IC_ENABLE();
+	//WIFI_IC_ENABLE();
 	if(power_on_login_tencent_cloud_flag ==0){
 	   power_on_login_tencent_cloud_flag=1;
 	   gpro_t.gTimer_power_on_first_link_tencent=0;

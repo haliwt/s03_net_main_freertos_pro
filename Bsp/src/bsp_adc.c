@@ -144,7 +144,7 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 
 
    
-    if(fan_detect_voltage < 350 ){ //500  now and then is bug false alarm rate  .
+    if(fan_detect_voltage < 450 ){ //500  now and then is bug false alarm rate  .
        detect_error_times++;
 
        if(detect_error_times==1 && recoder_error_times == 0){
@@ -164,7 +164,7 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
          if(detect_error_times >2){
 	   	
 		  detect_error_times= 0;
-		  gctl_t.fan_warning = 1;
+		  warning_array[1] = 1;
 		   
 		
 
@@ -192,7 +192,7 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 		}
         else{
 
-            gctl_t.fan_warning = 0;
+             warning_array[1] = 0;
             detect_error_times=0;
 
 
@@ -204,7 +204,7 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 
 void fan_warning_sound(void)
 {
-   if(gctl_t.fan_warning == 1 && gpro_t.gTimer_detect_fan_error > 9){
+   if(warning_array[1] == 1 && gpro_t.gTimer_detect_fan_error > 9){
         gpro_t.gTimer_detect_fan_error =0;
 
 
