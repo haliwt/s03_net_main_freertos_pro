@@ -2,6 +2,8 @@
 
 process_t gpro_t;
 
+volatile uint8_t save_set_temp[1] ;
+
 
 static void Auto_InitWifiModule_Hardware(void);
 static void Auto_SmartPhone_TryToLink_TencentCloud(void);
@@ -246,10 +248,15 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x0F){ //数据
 
-            gctl_t.set_temperature_value = pdata[5] ;
+          gctl_t.set_temperature_value = pdata[5] ;
+          save_set_temp[0] =  pdata[5] ;
+
+        if(wifi_link_net_state()==1){
 
           MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
 		  osDelay(20);//HAL_Delay(350);
+
+         }
 
         }
       break;
@@ -319,17 +326,20 @@ void receive_data_fromm_display(uint8_t *pdata)
       if(pdata[3] == 0x02){
        
          gctl_t.gModel=2;
+         if(wifi_link_net_state()==1){
          MqttData_Publish_SetState(2);
 	     osDelay(100);//HAL_Delay(350);
-        
+         }
         
           
        }
        else if(pdata[3] == 0x01){ //AI mode 
        
          gctl_t.gModel=1;
+        if(wifi_link_net_state()==1){
          MqttData_Publish_SetState(1);
 	     osDelay(100);//HAL_Delay(350);
+         }
        }
 
 

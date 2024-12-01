@@ -84,12 +84,6 @@ typedef struct _RUN_T{
 	uint8_t gDht11_temperature;
 
 
-    
-
-
-	uint8_t dp_link_wifi_fail;
-	uint8_t wifi_set_temperature_value_flag;
-
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
 	uint8_t usart2_error_falg ;
@@ -107,8 +101,8 @@ typedef struct _RUN_T{
    
 	uint8_t gTimer_usart_error;
     //app timer
-	//uint8_t app_timer_power_on_ref;
-	uint8_t app_timer_power_on_flag ;
+
+	volatile uint8_t app_timer_power_on_flag ;
 
 
     
@@ -116,7 +110,7 @@ typedef struct _RUN_T{
 	uint8_t sendtimes;
     uint8_t setup_timer_flag;
 
-    uint8_t gTimer_send_0xaa;
+    
 	uint8_t response_wifi_signal_label;
     uint8_t flash_write_data_error;
 	uint8_t flash_write_data_flag;
@@ -136,12 +130,12 @@ typedef struct _RUN_T{
   
       
 
-      uint8_t  gAi;
-      uint8_t  gPlasma;
-      uint8_t  gDry;
+      volatile  uint8_t  gAi;
+      volatile uint8_t  gPlasma;
+      volatile uint8_t  gDry;
 
-	  uint8_t  gUlransonic;
-	  uint8_t  gModel;
+	  volatile uint8_t  gUlransonic;
+	  volatile uint8_t  gModel;
     
 
 	  
@@ -152,7 +146,8 @@ typedef struct _RUN_T{
 	
 	  uint8_t noBuzzer_sound_dry_flag;
 	  
-	  uint8_t  set_temperature_value;
+	  volatile uint8_t  set_temperature_value;
+      
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;
@@ -236,6 +231,7 @@ void works_run_two_hours_state(void);
 
 void main_function_detected_handler(uint8_t cmd);
 
+void compare_temp_value(void);
 
 
 #endif 

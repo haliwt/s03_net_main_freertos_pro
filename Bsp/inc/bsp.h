@@ -67,6 +67,7 @@
 
 extern uint8_t wifi_rx_inputBuf[WIFI_RX_NUMBERS];
 
+extern volatile uint8_t save_set_temp[1] ;
 
 
 typedef enum _power_state{

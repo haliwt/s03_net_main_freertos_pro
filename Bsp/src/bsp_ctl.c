@@ -55,7 +55,8 @@ void power_on_handler(void)
          gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
          
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
-		
+		 gctl_t.set_temperature_value=40; //WT.EDIT 2024.11.30
+		 save_set_temp[0] =40;           //WT.EDIT 2024.12.01
 
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
@@ -172,6 +173,7 @@ void works_run_two_hours_state(void)
          stopHours_flag=0;
          gpro_t.stopTwoHours_flag=0;
          ActionEvent_Handler();
+        
                 
         }
 
@@ -203,6 +205,7 @@ void works_run_two_hours_state(void)
         if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
                ActionEvent_Handler();
+              compare_temp_value();
          }
     
 
@@ -335,5 +338,49 @@ void power_off_stop_fun(void)
       
 
 }
+
+
+void compare_temp_value(void)
+{
+
+  static uint8_t default_tem_value ;
+
+  if(gctl_t.app_timer_power_on_flag > 1)gctl_t.app_timer_power_on_flag =0;
+  if(gctl_t.ptc_warning  >1) gctl_t.ptc_warning =0;
+  
+  if(save_set_temp[0] ==   gctl_t.set_temperature_value){
+           
+     if(gctl_t.set_temperature_value==40)default_tem_value=39;
+
+
+      if(gctl_t.gDht11_temperature >  default_tem_value){
+                 PTC_SetLow();
+                g_dry_open_flag = 0;
+                gctl_t.gDry=0;
+                SendWifiData_To_Cmd(0x02, 0);
+
+      }
+      else if(gctl_t.gDht11_temperature >  gctl_t.set_temperature_value){
+                        //ptc off
+               PTC_SetLow();
+               g_dry_open_flag = 0;
+               gctl_t.gDry=0;
+               SendWifiData_To_Cmd(0x02, 0);
+
+       }
+  }
+  if((gctl_t.gDht11_temperature <   save_set_temp[0]  || gctl_t.gDht11_temperature==gctl_t.set_temperature_value)
+                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0){
+
+              PTC_SetHigh();       //PTC ON
+              g_dry_open_flag = 1;
+               gctl_t.gDry=1;
+              SendWifiData_To_Cmd(0x02,0x01);
+
+   }
+}
+
+
+
 
     

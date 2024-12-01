@@ -15,6 +15,7 @@ void smartphone_timer_power_on_and_normal_handler(void)
 		gctl_t.gPlasma =1;       //"杀菌"
 		gctl_t.gUlransonic = 1; // "驱虫"
 	    gctl_t.gTimer_fan_run_one_minute=0;
+        gctl_t.set_temperature_value=40;
 
    
        	
@@ -127,24 +128,22 @@ void Single_Usart_RxData(void(*rxHandler)(uint8_t dat))
 void ActionEvent_Handler(void)
 {
 
-
+#if 0
    if(g_dry_open_flag == 1 || gctl_t.gDry==1){
 
  
 
       if(gctl_t.ptc_warning ==0){
-      
-       
            PTC_SetHigh();
-        
-
-	  }
+      
+        }
     }
     else{
    
          PTC_SetLow();
    }
-
+   #endif 
+ 
   
 	if(gctl_t.gPlasma == 1){
 		
