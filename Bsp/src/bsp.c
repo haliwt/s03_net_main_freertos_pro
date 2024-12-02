@@ -927,7 +927,7 @@ void works_normal_time_data(void)
 
        }
 
-        SendWifiData_To_PanelTime(disp_hours,disp_minutes,disp_seconds);
+      SendWifiData_To_worksTime_noNetTime(disp_hours,disp_minutes,disp_seconds);
         osDelay(20);
    
      }
