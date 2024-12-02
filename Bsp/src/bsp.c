@@ -10,6 +10,8 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 
 uint8_t  disp_hours,disp_minutes,disp_seconds;
 
+uint8_t  send_time_counter;
+
  
 
 void bsp_init(void)
@@ -891,7 +893,20 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
         SendWifiData_To_Cmd(0x1F,0x00);
     }
 
-    if( gpro_t.get_beijing_time_success ==0){
+   
+
+}
+
+
+void works_normal_time_data(void)
+{
+
+  
+  if(send_time_counter > 10){
+
+      send_time_counter=0;
+
+   if( gpro_t.get_beijing_time_success ==0){
         if(disp_seconds > 59){
 
            disp_seconds=0;
@@ -916,6 +931,6 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
         osDelay(20);
    
      }
+   }
 
 }
-

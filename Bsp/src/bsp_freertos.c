@@ -104,6 +104,7 @@ static void vTaskMsgPro(void *pvParameters)
           Update_Dht11_Totencent_Value();
           osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
          }
+       works_normal_time_data();
     }
     else{
         gpro_t.process_run_step=0;

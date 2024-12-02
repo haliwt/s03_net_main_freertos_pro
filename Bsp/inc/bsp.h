@@ -118,6 +118,8 @@ typedef struct PROCESS_T{
 
 extern process_t gpro_t;
 
+extern uint8_t  send_time_counter;
+
 
 void bsp_init(void);
 
@@ -140,6 +142,8 @@ void adc_detected_hundler(void);
 void wifi_auto_detected_link_state(void);
 
 void link_wifi_to_tencent_handler(uint8_t data);
+
+void works_normal_time_data(void);
 
 
 

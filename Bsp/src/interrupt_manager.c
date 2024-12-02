@@ -125,6 +125,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        gpro_t.gTimer_detect_fan_error++;
 
        disp_seconds++ ;
+       send_time_counter++;
 
 
 //      
