@@ -8,6 +8,7 @@ volatile uint8_t save_set_temp[1] ;
 static void Auto_InitWifiModule_Hardware(void);
 static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 
+uint8_t  disp_hours,disp_minutes,disp_seconds;
 
  
 
@@ -889,7 +890,32 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
        power_on_login_tencent_cloud_flag++;
         SendWifiData_To_Cmd(0x1F,0x00);
     }
+
+    if( gpro_t.get_beijing_time_success ==0){
+        if(disp_seconds > 59){
+
+           disp_seconds=0;
+           disp_minutes ++;
+
+
+        }
+        if(disp_minutes > 59){
+            disp_minutes=0;
+
+            disp_hours ++;
+
+
+        }
+       if(disp_hours >24){
+
+            disp_hours=0;
+
+       }
+
+        SendWifiData_To_PanelTime(disp_hours,disp_minutes,disp_seconds);
+        osDelay(20);
+   
+     }
+
 }
-
-
 

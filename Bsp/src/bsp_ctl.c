@@ -80,6 +80,10 @@ void power_on_handler(void)
         gpro_t.stopTwoHours_flag =0;
         stopHours_flag =0;
         gpro_t.gTimer_detect_fan_error=0;
+
+        disp_seconds=0;
+        disp_minutes=0;
+        disp_seconds = 0;
       
        
          Update_DHT11_Value();
