@@ -291,7 +291,7 @@ void power_off_handler(void)
 		if(gTimer_powerOffRunFan < 60 && powerOffFanRun_flag ==1){
           
                    
-			Fan_One_Power_Off_Speed();
+			Fan_One_Speed();
                   
         }       
         else if(gTimer_powerOffRunFan > 59   ){ //WT.EDTI 2024.11.19
