@@ -109,6 +109,9 @@ static void vTaskMsgPro(void *pvParameters)
     else{
         gpro_t.process_run_step=0; 
         gl_tMsg.link_wifi_net_flag=0;
+          disp_minutes=0;
+          disp_minutes=0;
+          disp_hours=0;
         power_off_handler();
     }
 

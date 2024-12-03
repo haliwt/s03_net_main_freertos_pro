@@ -62,6 +62,9 @@ void power_on_handler(void)
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
 		 gctl_t.set_temperature_value=40; //WT.EDIT 2024.11.30
 		 save_set_temp[0] =40;           //WT.EDIT 2024.12.01
+         disp_minutes=0;
+          disp_minutes=0;
+           disp_hours=0;
 
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
