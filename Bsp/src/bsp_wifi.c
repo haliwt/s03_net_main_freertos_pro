@@ -25,7 +25,7 @@ void wifi_link_net_handler(uint8_t (wifi_link_net_state_handler)(void))
 
 static uint8_t wifi_link_net_fun(void)
 {
-     if(net_t.wifi_link_net_success ==1) return 1;
+     if(wifi_link_net_success==1) return 1;
      else 
         return 0;
 
@@ -161,7 +161,7 @@ void link_wifi_net_handler(void)
 
             if( gpro_t.gTimer_link_net_timer_time  > 6){
 
-             if(net_t.wifi_link_net_success==1){
+             if(wifi_link_net_success==1){
 			
 			
 				gctl_t.first_link_tencent_cloud_flag =1;

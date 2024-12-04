@@ -212,7 +212,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
      
       case 11:
-		 net_t.wifi_link_net_success =0; //wifi_t.esp8266_login_cloud_success =0;
+		 wifi_link_net_success=0; //wifi_t.esp8266_login_cloud_success =0;
          gpro_t.get_beijing_time_success = 0;
          net_t.rx_data_state =0;
          net_t.rx_counter=0;
@@ -255,14 +255,14 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 	  case 15:
 		if(wifi_rx_inputBuf[0]== '0'){   //hex :4B - "K" -fixed
-            net_t.wifi_link_net_success = 0;//wifi_t.esp8266_login_cloud_success =0;
+            wifi_link_net_success= 0;//wifi_t.esp8266_login_cloud_success =0;
             gpro_t.get_beijing_time_success = 0;
             net_t.rx_data_state =0;
             net_t.rx_counter=0;
         }
         else if(wifi_rx_inputBuf[0]== '1'){
 
-            net_t.wifi_link_net_success = 1;//net_t.esp8266_login_cloud_success =1;
+            wifi_link_net_success= 1;//net_t.esp8266_login_cloud_success =1;
        
              net_t.rx_data_state =0;
              net_t.rx_counter=0;
@@ -303,7 +303,7 @@ void Wifi_Rx_InputInfo_Handler(void)
   }
 
   if(strstr((const char*)gpro_t.wifi_rx_data_array,"+TCMQTTCONN:OK")){
-    net_t.wifi_link_net_success=1;
+    wifi_link_net_success=1;
     net_t.linking_tencent_cloud_doing=0;
     gctl_t.auto_link_cloud_flag=0xff;
 
@@ -313,7 +313,7 @@ void Wifi_Rx_InputInfo_Handler(void)
 
     net_t.linking_tencent_cloud_doing=0; //release this flag. usart
 
-    net_t.wifi_link_net_success=0;
+    wifi_link_net_success=0;
 
     wifi_t.gTimer_auto_detected_net_state_times=0;
 
@@ -328,7 +328,7 @@ void Wifi_Rx_InputInfo_Handler(void)
   else  if(strstr((char*)gpro_t.wifi_rx_data_array,"+TCMQTTCONN:FAIL,202")){
 
     //  wifi_t.esp8266_login_cloud_success =0;
-    net_t.wifi_link_net_success=0;
+    wifi_link_net_success=0;
     gpro_t.wifi_led_fast_blink_flag=0;   //WT.EDIT .2024.07.31
 
     //wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
@@ -336,7 +336,7 @@ void Wifi_Rx_InputInfo_Handler(void)
     wifi_t.get_rx_beijing_time_enable=0;
   }
   else if(strstr((const char*)gpro_t.wifi_rx_data_array,"+TCMQTTCONN:OK")){
-    net_t.wifi_link_net_success=1;
+    wifi_link_net_success=1;
     net_t.linking_tencent_cloud_doing=0;
     gctl_t.auto_link_cloud_flag=0xff;
 
@@ -345,14 +345,14 @@ void Wifi_Rx_InputInfo_Handler(void)
   else if(strstr((char*)gpro_t.wifi_rx_data_array,"+CME ERROR:208")){
 
 
-    net_t.wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
+    wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
     net_t.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
     wifi_t.get_rx_beijing_time_enable=0;
 
   }
   else if(strstr((char*)gpro_t.wifi_rx_data_array,"+TCMQTTCONN:FAIL,202")){
 
-    net_t.wifi_link_net_success=0; //wifi_t.esp8266_login_cloud_success =0;
+    wifi_link_net_success=0; //wifi_t.esp8266_login_cloud_success =0;
     gpro_t.wifi_led_fast_blink_flag=0;   //WT.EDIT .2024.07.31
 
     net_t.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
@@ -361,13 +361,13 @@ void Wifi_Rx_InputInfo_Handler(void)
   }
   else if(strstr((char*)gpro_t.wifi_rx_data_array,"+TCMQTTDISCON")){
 
-    net_t.wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
+    wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
     wifi_t.get_rx_beijing_time_enable=0;
     net_t.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
   }
   else if(strstr((char*)gpro_t.wifi_rx_data_array,"+TCSAP:WIFI_CONNECT_FAILED")){
 
-    net_t.wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
+    wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
     wifi_t.get_rx_beijing_time_enable=0;
     net_t.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
     }
@@ -740,7 +740,7 @@ void Json_Parse_Command_Fun(void)
 	  break;
 
 	  case FAN_ITEM:
-	    if(gpro_t.gpower_on ==power_on){
+	    if(gpro_t.gpower_on ==power_on && wifi_link_net_success== 1){
 
 		     if(warning_array[1] ==0){
 

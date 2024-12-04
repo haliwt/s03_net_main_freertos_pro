@@ -12,7 +12,8 @@ uint8_t  disp_hours,disp_minutes,disp_seconds;
 
 uint8_t  send_time_counter;
 
- 
+uint8_t wifi_link_net_success;
+
 
 void bsp_init(void)
 {
@@ -147,8 +148,8 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(save_set_temp[0]==gctl_t.set_temperature_value){
              buzzer_sound();
         
-         gctl_t.gDry = 1;
-         g_dry_open_flag=1;
+            gctl_t.gDry = 1;
+            g_dry_open_flag=1;
 
          }
 
@@ -166,10 +167,10 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(save_set_temp[0]==gctl_t.set_temperature_value){
           buzzer_sound();
          
-          gctl_t.gDry =0;
-          g_dry_open_flag=0;
-         PTC_SetLow();
-          }
+           gctl_t.gDry =0;
+           g_dry_open_flag=0;
+           PTC_SetLow();
+         }
          if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(100);//HAL_Delay(350);
@@ -223,7 +224,7 @@ void receive_data_fromm_display(uint8_t *pdata)
        if(pdata[3] == 0x01){  // link wifi 
          //  buzzer_sound();
            gpro_t.link_net_step =0;
-	      net_t.wifi_link_net_success=0;
+	      wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
           gctl_t.wifi_config_net_lable=wifi_set_restor;
 		  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
@@ -906,7 +907,7 @@ void works_normal_time_data(void)
 
       send_time_counter=0;
 
-   if( gpro_t.get_beijing_time_success ==0){
+   if(gpro_t.get_beijing_time_success ==0){
         if(disp_seconds > 59){
 
            disp_seconds=0;
@@ -931,6 +932,14 @@ void works_normal_time_data(void)
         osDelay(20);
    
      }
+
+      if(wifi_link_net_success== 0){ //WT.EDIT 2024.12.04
+
+         SendWifiData_To_Data(0x1F,0x00); //link wifi order 1 --link wifi net isn't netware
+         osDelay(5);
+
+
+      }
    }
 
 }
