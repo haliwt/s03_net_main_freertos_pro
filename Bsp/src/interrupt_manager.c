@@ -1,5 +1,6 @@
 #include "bsp.h"
 volatile uint8_t check_time;
+
 volatile uint8_t stopHoursCounter;
 
 
@@ -61,12 +62,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       if(tm1 > 99){//10ms *100 = 1000ms =1s
         tm1 =0;
       gTimer_powerOffRunFan++;
+
+      disp_seconds++ ;
+      send_time_counter++;
       stopHoursCounter++;
 
-      if(stopHoursCounter> 59){ //one minute
+       if(stopHoursCounter> 59){ //one minute
           stopHoursCounter =0;
-       
-          
+          disp_seconds=0;
+          disp_minutes ++;
           check_time ++;
       
            if(check_time >119  && stopHours_flag ==0){ //119
@@ -80,8 +84,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       
        }
 
+     
 
-      }
+       }
   
     }
     else if(htim->Instance==TIM17){
@@ -124,8 +129,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        gpro_t.gTimer_publis_dht11_data++ ;
        gpro_t.gTimer_detect_fan_error++;
 
-       disp_seconds++ ;
-       send_time_counter++;
+       
 
 
 //      

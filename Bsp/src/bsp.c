@@ -908,14 +908,10 @@ void works_normal_time_data(void)
       send_time_counter=0;
 
    if(gpro_t.get_beijing_time_success ==0){
-        if(disp_seconds > 59){
+     
+      
 
-           disp_seconds=0;
-           disp_minutes ++;
-
-
-        }
-        if(disp_minutes > 59){
+       if(disp_minutes > 59){
             disp_minutes=0;
 
             disp_hours ++;
@@ -933,7 +929,7 @@ void works_normal_time_data(void)
    
      }
 
-      if(wifi_link_net_success== 0){ //WT.EDIT 2024.12.04
+      if(wifi_link_net_success== 0 && gpro_t.wifi_led_fast_blink_flag==0){ //WT.EDIT 2024.12.04
 
          SendWifiData_To_Data(0x1F,0x00); //link wifi order 1 --link wifi net isn't netware
          osDelay(5);

@@ -62,9 +62,7 @@ void power_on_handler(void)
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
 		 gctl_t.set_temperature_value=40; //WT.EDIT 2024.11.30
 		 save_set_temp[0] =40;           //WT.EDIT 2024.12.01
-         disp_minutes=0;
-          disp_minutes=0;
-           disp_hours=0;
+
 
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
@@ -178,7 +176,7 @@ void works_run_two_hours_state(void)
 
 	
 
-      if(check_time  > 10){ //10
+      if(check_time  > 10){ //10 minutes = 600 seconds
                
          check_time=0;
          gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
@@ -387,7 +385,7 @@ void compare_temp_value(void)
        }
   }
   if((gctl_t.gDht11_temperature <   save_set_temp[0]  || gctl_t.gDht11_temperature==save_set_temp[0])
-                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0) {
+                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0){
 
               PTC_SetHigh();       //PTC ON
               g_dry_open_flag = 1;
