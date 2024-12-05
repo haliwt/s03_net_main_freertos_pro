@@ -235,6 +235,7 @@ void main_function_detected_handler(uint8_t cmd);
 
 void compare_temp_value(void);
 
+void compare_temp_value_link_net(void);
 
 #endif 
 

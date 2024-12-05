@@ -586,6 +586,7 @@ void Json_Parse_Command_Fun(void)
          if(gpro_t.stopTwoHours_flag ==0){
 	       gctl_t.gDry=1;
            g_dry_open_flag =1;
+           gpro_t.ptc_manual_turn_off_flag =0;
          }
 		
 		 SendWifiData_To_Cmd(0x02,0x01);
@@ -595,6 +596,7 @@ void Json_Parse_Command_Fun(void)
 		 else{
 			gctl_t.gDry=0;
             g_dry_open_flag =0;
+            gpro_t.ptc_manual_turn_off_flag=1;
 			MqttData_Publish_SetPtc(0);
 		    osDelay(100); //HAL_Delay(350);
 			SendWifiData_To_Cmd(0x02,0x0);
@@ -617,6 +619,7 @@ void Json_Parse_Command_Fun(void)
 		
 		 SendWifiData_To_Cmd(0x02,0x0);
          HAL_Delay(5);
+         gpro_t.ptc_manual_turn_off_flag=1;
 	 
 		buzzer_temp_on=0;
 	     gctl_t.response_wifi_signal_label = 0xff;
@@ -722,12 +725,13 @@ void Json_Parse_Command_Fun(void)
 	  case TEMPERATURE_ITEM:
 	   if(gpro_t.gpower_on ==power_on){
 		
-
+            gpro_t.ptc_manual_turn_off_flag =0;
             temp_decade=gpro_t.wifi_rx_data_array[14]-0x30;
             temp_unit=gpro_t.wifi_rx_data_array[15]-0x30;
             gctl_t.set_temperature_value = temp_decade*10 +  temp_unit;
             if( gctl_t.set_temperature_value > 40)  gctl_t.set_temperature_value=40;
             if( gctl_t.set_temperature_value <20 )  gctl_t.set_temperature_value=20;
+            save_set_temp[0] =gctl_t.set_temperature_value;
             MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
 			osDelay(100);//HAL_Delay(350);
 			SendWifiData_To_Data(0x3A, gctl_t.set_temperature_value); //smart phone set temperature value .
@@ -860,12 +864,13 @@ void Parse_Json_Statement(void)
 				
 			gctl_t.gDry=0;
             g_dry_open_flag =0;
-				  
-		}
+     
+       }
 		else if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
 				
 				    gctl_t.gDry=1;
                    g_dry_open_flag =0;
+                   
 				  
 					
 		}
