@@ -193,7 +193,7 @@ void works_run_two_hours_state(void)
 
 	      if(gctl_t.gTimer_fan_run_one_minute < 60){
 	  
-	              Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
+	             Fan_Two_Speed(); //Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
 	          }       
 
 	       if(gctl_t.gTimer_fan_run_one_minute > 59){

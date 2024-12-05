@@ -14,14 +14,6 @@ void FAN_Stop(void)
    FAN_RUN_SetLow();
 }
 
-void Fan_One_Power_Off_Speed(void)
-{
-	
-	//SetLevel_Fan_PWMA(10);
-	FAN_Stop();
-
-
-}
 
 void Fan_One_Speed(void)
 {

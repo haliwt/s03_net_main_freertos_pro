@@ -52,7 +52,7 @@ void Fan_One_Speed(void);
 
 
 void Fan_Two_Speed(void);
-void Fan_One_Power_Off_Speed(void);
+
 
 
 void Fan_RunSpeed_Fun(void);
