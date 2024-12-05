@@ -828,7 +828,9 @@ void Json_Parse_Command_Fun(void)
         
         if(buzzer_temp_on ==0){
 			buzzer_temp_on++;
-   	        buzzer_sound();
+   	        //buzzer_sound();
+   	         buzzer_gpio_output_init();
+             buzzer_sound_fun();
         }
          
 		

@@ -207,16 +207,16 @@ void fan_warning_sound(void)
    if(warning_array[1] == 1 && gpro_t.gTimer_detect_fan_error > 9){
         gpro_t.gTimer_detect_fan_error =0;
 
-
-         buzzer_sound();//Buzzer_KeySound();
+         buzzer_gpio_output_init();
+         buzzer_sound_fun();//buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
-		   buzzer_sound();//Buzzer_KeySound();
+		  buzzer_sound_fun();// buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
-		   buzzer_sound();//Buzzer_KeySound();
+		   buzzer_sound_fun();//buzzer_sound();//Buzzer_KeySound();
 			osDelay(100);
-		   buzzer_sound();//Buzzer_KeySound();
+		   buzzer_sound_fun();//buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
-		   buzzer_sound();//Buzzer_KeySound();
+		   buzzer_sound_fun();//buzzer_sound();//Buzzer_KeySound();
 		   osDelay(100);
           
            SendWifiData_To_Cmd(0x09, 0x01);

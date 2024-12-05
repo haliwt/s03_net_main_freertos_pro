@@ -119,6 +119,7 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(pdata[3] == 0x01){ //open
 
            if(gpro_t.gpower_on == power_off){ //WT.EDIT 2024.12.05
+                 buzzer_gpio_output_init();
                  buzzer_sound_fun();
            }
            
@@ -136,6 +137,7 @@ void receive_data_fromm_display(uint8_t *pdata)
         }
         else if(pdata[3] == 0x0){ //close 
            if(gpro_t.gpower_on == power_on){
+              buzzer_gpio_output_init();
               buzzer_sound_fun();//buzzer_sound();
            }
            SendWifiData_Answer_Cmd(0x01,0x02); //power off .
@@ -151,6 +153,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      if(pdata[3] == 0x01){
 
         if((save_set_temp[0]==gctl_t.set_temperature_value) && gpro_t.gpower_on == power_on){
+             buzzer_gpio_output_init();
              buzzer_sound_fun();//buzzer_sound();
         
             gctl_t.gDry = 1;
@@ -170,6 +173,8 @@ void receive_data_fromm_display(uint8_t *pdata)
        else if(pdata[3] == 0x0){
 
         if(save_set_temp[0]==gctl_t.set_temperature_value){
+
+          buzzer_gpio_output_init();
           buzzer_sound_fun();//buzzer_sound();
          
            gctl_t.gDry =0;
@@ -188,7 +193,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x03: //PLASMA 打开关闭指令
 
         if(pdata[3] == 0x01){
-           
+            buzzer_gpio_output_init();
             buzzer_sound_fun();//buzzer_sound();
            
            g_plasma[0]=1; //gctl_t.gPlasma = 1;
@@ -196,6 +201,7 @@ void receive_data_fromm_display(uint8_t *pdata)
            PLASMA_SetHigh();
         }
         else if(pdata[3] == 0x0){
+            buzzer_gpio_output_init();
            buzzer_sound_fun();//buzzer_sound();
            
           g_plasma[0]=0;//gctl_t.gPlasma = 0;
@@ -227,7 +233,7 @@ void receive_data_fromm_display(uint8_t *pdata)
       case 0x05: // link wifi command
 
        if(pdata[3] == 0x01){  // link wifi 
-         //  buzzer_sound();
+         
            gpro_t.link_net_step =0;
 	      wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
@@ -247,7 +253,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x06: //buzzer sound command
 
         if(pdata[3] == 0x01){  //buzzer sound 
-            
+            buzzer_gpio_output_init();
             buzzer_sound_fun();//buzzer_sound();
 
 
@@ -941,6 +947,7 @@ void works_normal_time_data(void)
 
 
       }
+      buzzer_gpio_input_init();
    }
 
 }

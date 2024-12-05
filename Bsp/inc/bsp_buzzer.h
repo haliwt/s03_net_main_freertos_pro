@@ -14,6 +14,9 @@ void buzzer_sound_handler(void(*buzzer_hanlder)(void));
 
 void buzzer_sound_fun(void);
 
+void buzzer_gpio_output_init(void);
 
+
+void buzzer_gpio_input_init(void);
 
 #endif 
