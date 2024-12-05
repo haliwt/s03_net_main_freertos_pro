@@ -160,6 +160,12 @@ static void vTaskStart(void *pvParameters)
            if(check_code == bcc_check_code ){
            
               receive_data_fromm_display(gl_tMsg.usData);
+              gl_tMsg.usData[0]= 0;
+              gl_tMsg.usData[1]= 0;
+              gl_tMsg.usData[2]= 0;
+              gl_tMsg.usData[3]= 0;
+              gl_tMsg.usData[4]= 0;
+           
               
             }
             

@@ -150,7 +150,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      if(pdata[3] == 0x01){
 
-        if(save_set_temp[0]==gctl_t.set_temperature_value){
+        if((save_set_temp[0]==gctl_t.set_temperature_value) && gpro_t.gpower_on == power_on){
              buzzer_sound_fun();//buzzer_sound();
         
             gctl_t.gDry = 1;
@@ -247,9 +247,9 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x06: //buzzer sound command
 
         if(pdata[3] == 0x01){  //buzzer sound 
+            
             buzzer_sound_fun();//buzzer_sound();
-            pdata[2] =0xff;
-            *pdata = 0xff;
+
 
         }
         else if(pdata[3] == 0x0){ // don't buzzer sound .
