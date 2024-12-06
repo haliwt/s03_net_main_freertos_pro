@@ -102,6 +102,7 @@ typedef struct PROCESS_T{
    uint8_t get_beijing_time_success;
    uint8_t link_net_step;
    uint8_t ptc_manual_turn_off_flag;
+   uint8_t theFirst_PtcOff;
 
    
    uint8_t disp_works_hours ;    

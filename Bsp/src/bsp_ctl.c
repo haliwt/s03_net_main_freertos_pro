@@ -86,6 +86,7 @@ void power_on_handler(void)
         disp_minutes=0;
         disp_seconds = 0;
         gpro_t.ptc_manual_turn_off_flag =0;
+        gpro_t.theFirst_PtcOff=0;
       
        
          Update_DHT11_Value();
@@ -227,6 +228,7 @@ void works_run_two_hours_state(void)
 
 
               }
+              buzzer_gpio_input_init();
          }
     
 
@@ -364,18 +366,13 @@ void power_off_stop_fun(void)
 void compare_temp_value(void)
 {
 
-  static uint8_t default_tem_value ;
 
   if(gctl_t.app_timer_power_on_flag > 1)gctl_t.app_timer_power_on_flag =0;
   if(gctl_t.ptc_warning  >0) gctl_t.ptc_warning =0;
 
-  
-  if(save_set_temp[0] ==   gctl_t.set_temperature_value ){
-           
-     if(gctl_t.set_temperature_value==40)default_tem_value=39;
-
-
-      if(gctl_t.gDht11_temperature >  default_tem_value){
+ 
+    if(gctl_t.gDht11_temperature >  39 && (save_set_temp[0] ==   gctl_t.set_temperature_value)){
+                 gpro_t.theFirst_PtcOff =1;
                  PTC_SetLow();
                 g_dry_open_flag = 0;
                 gctl_t.gDry=0;
@@ -384,7 +381,7 @@ void compare_temp_value(void)
                 }
 
       }
-      else if(gctl_t.gDht11_temperature >  gctl_t.set_temperature_value){
+      else if(gctl_t.gDht11_temperature >  gctl_t.set_temperature_value && (save_set_temp[0] ==   gctl_t.set_temperature_value)){
                         //ptc off
                PTC_SetLow();
                g_dry_open_flag = 0;
@@ -393,10 +390,24 @@ void compare_temp_value(void)
                SendWifiData_To_Cmd(0x02, 0);
                }
 
-       }
-  }
-  if((gctl_t.gDht11_temperature <   save_set_temp[0]  || gctl_t.gDht11_temperature==save_set_temp[0])
-                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0){
+      }
+      else if(gpro_t.theFirst_PtcOff ==1){
+                  
+              if(gctl_t.gDht11_temperature <  39){
+
+                  PTC_SetHigh();       //PTC ON
+                   g_dry_open_flag = 1;
+                    gctl_t.gDry=1;
+                   if(gpro_t.wifi_led_fast_blink_flag==0){
+                   SendWifiData_To_Cmd(0x02,0x01);
+  
+                   }
+              }
+
+                
+      }
+     else if(((gctl_t.gDht11_temperature <   save_set_temp[0])  || (gctl_t.gDht11_temperature==save_set_temp[0]))
+                           && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0){
 
               PTC_SetHigh();       //PTC ON
               g_dry_open_flag = 1;
@@ -413,18 +424,18 @@ void compare_temp_value(void)
 void compare_temp_value_link_net(void)
 {
 
-  static uint8_t default_tem_value ;
+
+
 
   if(gctl_t.app_timer_power_on_flag > 1)gctl_t.app_timer_power_on_flag =0;
   if(gctl_t.ptc_warning  >0) gctl_t.ptc_warning =0;
 
   
-  if(save_set_temp[0] ==   gctl_t.set_temperature_value ){
+  
            
-     if(gctl_t.set_temperature_value==40)default_tem_value=39;
-
-
-      if(gctl_t.gDht11_temperature >  default_tem_value ){
+     
+    if(gctl_t.gDht11_temperature > 39 && (save_set_temp[0] == gctl_t.set_temperature_value)){
+                 gpro_t.theFirst_PtcOff = 1;
                  PTC_SetLow();
                 g_dry_open_flag = 0;
                 gctl_t.gDry=0;
@@ -435,8 +446,9 @@ void compare_temp_value_link_net(void)
 	  	         osDelay(100);//HAL_Delay(350);
 
       }
-      else if(gctl_t.gDht11_temperature >  gctl_t.set_temperature_value){
-                        //ptc off
+      else if((gctl_t.gDht11_temperature >  gctl_t.set_temperature_value) ||(gctl_t.gDht11_temperature == gctl_t.set_temperature_value)
+               && (save_set_temp[0] ==   gctl_t.set_temperature_value) && gpro_t.theFirst_PtcOff ==0){
+                     
                PTC_SetLow();
                g_dry_open_flag = 0;
                gctl_t.gDry=0;
@@ -446,12 +458,34 @@ void compare_temp_value_link_net(void)
                 MqttData_Publish_SetPtc(0);
 	  	        osDelay(100);//HAL_Delay(350);
 
+      }
+      else if(gpro_t.theFirst_PtcOff ==1 && gpro_t.ptc_manual_turn_off_flag == 0){
+                  
+              if(gctl_t.gDht11_temperature <  39){
+
+                  PTC_SetHigh();       //PTC ON
+                   g_dry_open_flag = 1;
+                    gctl_t.gDry=1;
+                   if(gpro_t.wifi_led_fast_blink_flag==0){
+                   SendWifiData_To_Cmd(0x02,0x01);
+  
+                   }
+                   MqttData_Publish_SetPtc(0x01);
+                   osDelay(100);//HAL_Delay(350);
+
+
+              }
+
+                
+                  
        }
-  }
-  if((gctl_t.gDht11_temperature <   save_set_temp[0]  || gctl_t.gDht11_temperature==save_set_temp[0])
+      else if((gctl_t.gDht11_temperature <   save_set_temp[0]  || (gctl_t.gDht11_temperature==save_set_temp[0]))
                                      && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0){
 
-             if(gpro_t.ptc_manual_turn_off_flag == 0){
+          
+
+               if(gpro_t.ptc_manual_turn_off_flag == 0){
+
 
                   PTC_SetHigh();       //PTC ON
                   g_dry_open_flag = 1;
