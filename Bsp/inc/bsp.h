@@ -73,13 +73,13 @@ extern uint8_t  disp_hours,disp_minutes,disp_seconds;
 
 extern uint8_t wifi_link_net_success;
 
-extern uint8_t power_on_switch_flag ;
+extern uint8_t power_on_switch_flag, dsipPowerOn_sound;
 
 
 typedef enum _power_state{
 
-  power_off,
-  power_on,
+  power_off=2,
+  power_on=1,
 
 
 }power_state;
@@ -117,6 +117,7 @@ typedef struct PROCESS_T{
    uint8_t gTimer_dc_power_on_auto_link_net;
    uint8_t gTimer_publis_dht11_data;
    uint8_t gTimer_detect_fan_error;
+   uint8_t gTimer_power_off_time;
 
 
 

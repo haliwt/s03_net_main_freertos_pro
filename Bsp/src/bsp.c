@@ -14,7 +14,7 @@ uint8_t  send_time_counter;
 
 uint8_t wifi_link_net_success;
 
-uint8_t power_on_switch_flag;
+uint8_t power_on_switch_flag,dsipPowerOn_sound;
 
 
 
@@ -24,6 +24,8 @@ void bsp_init(void)
     dht11_init();
    buzzer_init();
    wifi_init();
+    gpro_t.gpower_on = power_off;
+    power_on_switch_flag=2;
 
 }
 
@@ -107,7 +109,7 @@ void send_data_to_disp(void)
 **********************************************************************/
 void receive_data_fromm_display(uint8_t *pdata)
 {
-
+   
    if(pdata[1] == 0x01){
 
     switch(pdata[2]){
@@ -120,15 +122,25 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x01: //表示开机指令
 
         if(pdata[3] == 0x01){ //open
+        
+         
 
-          
-          buzzer_gpio_output_init();
-          buzzer_sound_fun();
-          
+            gpro_t.gpower_on = power_on;
+            power_on_switch_flag =  1;
+           if(gpro_t.gpower_on == power_on && power_on_switch_flag ==  1 ){
+               dsipPowerOn_sound =1;
+               
+
+            }
            
-          SendWifiData_Answer_Cmd(0x01,0x01);
-           gpro_t.gpower_on = power_on;
-           power_on_switch_flag =  1;
+           gpro_t.gTimer_power_off_time =0;
+            
+
+            SendWifiData_Answer_Cmd(0x01,0x01);
+            gpro_t.gTimer_power_off_time =0;
+           
+            
+            gpro_t.gTimer_power_off_time =0;
             gctl_t.gModel=1;
     	    gctl_t.gFan = 1;
     		gctl_t.gDry = 1;
@@ -136,17 +148,35 @@ void receive_data_fromm_display(uint8_t *pdata)
     		g_plasma[0]=1;//gctl_t.gPlasma =1;       //"杀菌"
     		g_ultra[0] = 1; // "驱虫"
     	    gctl_t.gTimer_fan_run_one_minute=0;
+            gpro_t.gTimer_power_off_time =0;
+
+          
+//            else if(gpro_t.gpower_on != power_on && power_on_switch_flag !=  1){
+//              buzzer_gpio_input_init();
+//              SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
+//	          HAL_Delay(5);
+//
+//            }
             
 
         }
         else if(pdata[3] == 0x0){ //close 
          
-           buzzer_gpio_output_init();
-           buzzer_sound_fun();//buzzer_sound();
-         
-           SendWifiData_Answer_Cmd(0x01,0x02); //power off .
+         //  buzzer_gpio_output_init();
+          /// buzzer_sound_fun();//buzzer_sound();
            gpro_t.gpower_on = power_off;
-           power_on_switch_flag=0;
+           power_on_switch_flag=2;
+
+           if(gpro_t.gpower_on == power_off && power_on_switch_flag==2){
+
+
+                   dsipPowerOn_sound =3;
+                  
+
+            }
+         
+          SendWifiData_Answer_Cmd(0x01,0x02); //power off .
+           
 
 
         }
@@ -378,7 +408,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      }
 
    }
-
+    
 }
 /**********************************************************************
     *

@@ -91,10 +91,21 @@ static void vTaskMsgPro(void *pvParameters)
     if(power_on_sound_flag == 0){
         power_on_sound_flag ++;
         buzzer_sound();
+       
 
     }
      
-    if( gpro_t.gpower_on == power_on && power_on_switch_flag == 1){
+    if(gpro_t.gpower_on == power_on && power_on_switch_flag == 1){
+
+       if(dsipPowerOn_sound ==1){
+         dsipPowerOn_sound ++;
+         gpro_t.gTimer_power_off_time =0;
+
+         buzzer_gpio_output_init();
+         buzzer_sound_fun();
+         
+        
+       }
 
         power_on_handler();
         works_run_two_hours_state();
@@ -107,19 +118,40 @@ static void vTaskMsgPro(void *pvParameters)
          works_normal_time_data();
         
     }
-    else if(power_on_switch_flag==0){
+    else if(power_on_switch_flag==2 && gpro_t.gpower_on == power_off){
+
+       if(dsipPowerOn_sound ==3){
+         dsipPowerOn_sound ++;
+         buzzer_gpio_output_init();
+         buzzer_sound_fun();
+         
+        
+       }
+    
         gpro_t.process_run_step=0; 
         gl_tMsg.link_wifi_net_flag=0;
-          disp_minutes=0;
+          disp_minutes=0 ;
           disp_minutes=0;
           disp_hours=0;
         power_off_handler();
         buzzer_gpio_input_init(); //WT.EDIT 2024.12.11
+        if(gpro_t.gTimer_power_off_time > 0 ){ //if(gpro_t.gpower_on != power_on && gpro_t.gTimer_power_off_time > 0 ){
+            gpro_t.gTimer_power_off_time =0;
+            SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
+	        HAL_Delay(10);
+        }
     }
 
     if(gpro_t.wifi_led_fast_blink_flag==0 ){
          wifi_get_beijing_time_handler();
          wifi_auto_detected_link_state();
+      }
+
+     if(gpro_t.gpower_on != power_on_switch_flag ){
+
+            gpro_t.gpower_on = power_off;
+            power_on_switch_flag=2;  
+            dsipPowerOn_sound =5;       
       }
      
     // clear_rx_copy_data();
@@ -162,11 +194,12 @@ static void vTaskStart(void *pvParameters)
            if(check_code == bcc_check_code  && bcc_check_code !=0 && check_code !=0){
            
               receive_data_fromm_display(gl_tMsg.usData);
-//              gl_tMsg.usData[0]= 0;
-//              gl_tMsg.usData[1]= 0;
-//              gl_tMsg.usData[2]= 0;
-//              gl_tMsg.usData[3]= 0;
-//              gl_tMsg.usData[4]= 0;
+              gl_tMsg.usData[0]= 0;
+              gl_tMsg.usData[1]= 0;
+              gl_tMsg.usData[2]= 0;
+              gl_tMsg.usData[3]= 0;
+              gl_tMsg.usData[4]= 0;
+              check_code= 0xff;
            
               
             }

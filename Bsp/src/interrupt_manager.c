@@ -54,13 +54,26 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 *******************************************************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-   static  uint16_t tm0, tm1;
+   static  uint16_t tm0, tm1,tm2;
   
 
     if(htim->Instance==TIM14){ //timer number14 is 100ms.
          tm1++;
+         tm2++;
+
+        if(tm2>49){
+            tm2= 0;
+           gpro_t.gTimer_power_off_time++; 
+
+        }
+ 
+         
       if(tm1 > 99){//10ms *100 = 1000ms =1s
         tm1 =0;
+
+
+        
+      
       gTimer_powerOffRunFan++;
 
       disp_seconds++ ;
