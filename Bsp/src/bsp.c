@@ -14,6 +14,9 @@ uint8_t  send_time_counter;
 
 uint8_t wifi_link_net_success;
 
+uint8_t power_on_switch_flag;
+
+
 
 void bsp_init(void)
 {
@@ -118,13 +121,14 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){ //open
 
-           if(gpro_t.gpower_on == power_off){ //WT.EDIT 2024.12.05
-                 buzzer_gpio_output_init();
-                 buzzer_sound_fun();
-           }
+          
+          buzzer_gpio_output_init();
+          buzzer_sound_fun();
+          
            
           SendWifiData_Answer_Cmd(0x01,0x01);
            gpro_t.gpower_on = power_on;
+           power_on_switch_flag =  1;
             gctl_t.gModel=1;
     	    gctl_t.gFan = 1;
     		gctl_t.gDry = 1;
@@ -136,12 +140,13 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         }
         else if(pdata[3] == 0x0){ //close 
-           if(gpro_t.gpower_on == power_on){
-              buzzer_gpio_output_init();
-              buzzer_sound_fun();//buzzer_sound();
-           }
+         
+           buzzer_gpio_output_init();
+           buzzer_sound_fun();//buzzer_sound();
+         
            SendWifiData_Answer_Cmd(0x01,0x02); //power off .
            gpro_t.gpower_on = power_off;
+           power_on_switch_flag=0;
 
 
         }

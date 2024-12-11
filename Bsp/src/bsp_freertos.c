@@ -94,7 +94,7 @@ static void vTaskMsgPro(void *pvParameters)
 
     }
      
-    if( gpro_t.gpower_on == power_on){
+    if( gpro_t.gpower_on == power_on && power_on_switch_flag == 1){
 
         power_on_handler();
         works_run_two_hours_state();
@@ -107,13 +107,14 @@ static void vTaskMsgPro(void *pvParameters)
          works_normal_time_data();
         
     }
-    else{
+    else if(power_on_switch_flag==0){
         gpro_t.process_run_step=0; 
         gl_tMsg.link_wifi_net_flag=0;
           disp_minutes=0;
           disp_minutes=0;
           disp_hours=0;
         power_off_handler();
+        buzzer_gpio_input_init(); //WT.EDIT 2024.12.11
     }
 
     if(gpro_t.wifi_led_fast_blink_flag==0 ){
@@ -158,14 +159,14 @@ static void vTaskStart(void *pvParameters)
 
             check_code =  bcc_check(gl_tMsg.usData,uid);
 
-           if(check_code == bcc_check_code ){
+           if(check_code == bcc_check_code  && bcc_check_code !=0 && check_code !=0){
            
               receive_data_fromm_display(gl_tMsg.usData);
-              gl_tMsg.usData[0]= 0;
-              gl_tMsg.usData[1]= 0;
-              gl_tMsg.usData[2]= 0;
-              gl_tMsg.usData[3]= 0;
-              gl_tMsg.usData[4]= 0;
+//              gl_tMsg.usData[0]= 0;
+//              gl_tMsg.usData[1]= 0;
+//              gl_tMsg.usData[2]= 0;
+//              gl_tMsg.usData[3]= 0;
+//              gl_tMsg.usData[4]= 0;
            
               
             }

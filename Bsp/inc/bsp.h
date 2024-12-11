@@ -73,6 +73,8 @@ extern uint8_t  disp_hours,disp_minutes,disp_seconds;
 
 extern uint8_t wifi_link_net_success;
 
+extern uint8_t power_on_switch_flag ;
+
 
 typedef enum _power_state{
 
