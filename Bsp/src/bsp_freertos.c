@@ -151,7 +151,9 @@ static void vTaskMsgPro(void *pvParameters)
 
             gpro_t.gpower_on = power_off;
             power_on_switch_flag=2;  
-            dsipPowerOn_sound =5;       
+            dsipPowerOn_sound =5; 
+            SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
+            HAL_Delay(10);
       }
      
     // clear_rx_copy_data();
