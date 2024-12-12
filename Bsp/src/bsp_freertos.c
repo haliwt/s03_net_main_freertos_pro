@@ -98,6 +98,7 @@ static void vTaskMsgPro(void *pvParameters)
     if(gpro_t.gpower_on == power_on && power_on_switch_flag == 1){
 
        if(dsipPowerOn_sound ==1){
+         gpro_t.gTimer_power_off_time =0;
          dsipPowerOn_sound ++;
          gpro_t.gTimer_power_off_time =0;
 
@@ -127,7 +128,7 @@ static void vTaskMsgPro(void *pvParameters)
          
         
        }
-    
+       
         gpro_t.process_run_step=0; 
         gl_tMsg.link_wifi_net_flag=0;
           disp_minutes=0 ;
@@ -137,8 +138,12 @@ static void vTaskMsgPro(void *pvParameters)
         buzzer_gpio_input_init(); //WT.EDIT 2024.12.11
         if(gpro_t.gTimer_power_off_time > 0 ){ //if(gpro_t.gpower_on != power_on && gpro_t.gTimer_power_off_time > 0 ){
             gpro_t.gTimer_power_off_time =0;
-            SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
-	        HAL_Delay(10);
+            if(gpro_t.power_on_real_flag ==0){
+               SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
+            }
+            gpro_t.gpower_on = power_off;
+            gpro_t.power_on_real_flag=0;
+	       // HAL_Delay(5);
         }
     }
 
@@ -153,7 +158,8 @@ static void vTaskMsgPro(void *pvParameters)
             power_on_switch_flag=2;  
             dsipPowerOn_sound =5; 
             SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
-            HAL_Delay(10);
+            HAL_Delay(5);
+           
       }
      
     // clear_rx_copy_data();

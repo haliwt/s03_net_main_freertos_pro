@@ -123,12 +123,28 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){ //open
         
-         
+     
+           if( dsipPowerOn_sound==2){
 
-            gpro_t.gpower_on = power_on;
-            power_on_switch_flag =  1;
-           if(gpro_t.gpower_on == power_on && power_on_switch_flag ==  1 ){
+
+
+           }
+           else{
+
+
+                  gpro_t.gTimer_power_off_time =0;
+                  gpro_t.power_on_real_flag = 1;
+                  power_on_switch_flag=1;
+                  gpro_t.gpower_on = power_on;
+
+
+
+            if(gpro_t.gpower_on == power_on && power_on_switch_flag ==  1 &&  gpro_t.power_on_real_flag ==1){
+               gpro_t.gTimer_power_off_time =0;
                dsipPowerOn_sound =1;
+           
+               gpro_t.power_on_real_flag=1;
+               
                
 
             }
@@ -136,11 +152,12 @@ void receive_data_fromm_display(uint8_t *pdata)
            gpro_t.gTimer_power_off_time =0;
             
 
-         //  SendWifiData_Answer_Cmd(0x01,0x01);
+            SendWifiData_Answer_Cmd(0x01,0x01);
             gpro_t.gTimer_power_off_time =0;
            
             if(dsipPowerOn_sound ==1){
                 gpro_t.gTimer_power_off_time =0;
+                gpro_t.power_on_real_flag = 1;
                 gctl_t.gModel=1;
         	    gctl_t.gFan = 1;
         		gctl_t.gDry = 1;
@@ -150,15 +167,9 @@ void receive_data_fromm_display(uint8_t *pdata)
         	    gctl_t.gTimer_fan_run_one_minute=0;
                 gpro_t.gTimer_power_off_time =0;
               }
-          
-//            else if(gpro_t.gpower_on != power_on && power_on_switch_flag !=  1){
-//              buzzer_gpio_input_init();
-//              SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off,WT.EDIT 2024.12.10
-//	          HAL_Delay(5);
-//
-//            }
             
 
+        }
         }
         else if(pdata[3] == 0x0){ //close 
          
