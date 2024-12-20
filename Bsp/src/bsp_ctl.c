@@ -8,12 +8,7 @@ uint8_t gTimer_powerOffRunFan;
 uint8_t stopHours_flag;
 uint8_t g_dry_open_flag;
 
-uint8_t timer_fan_flag;
 
-uint8_t warning_array[2];
-
-uint8_t g_plasma[1];
-uint8_t g_ultra[1];
 
 void power_off_stop_fun(void);
 
@@ -60,13 +55,11 @@ void power_on_handler(void)
          gctl_t.gTImer_send_data_to_disp=0; //temp and humidity data of times
          
 	     gctl_t.gTimer_senddata_panel=0; //main board function run action.
-		 gctl_t.set_temperature_value=40; //WT.EDIT 2024.11.30
-		 save_set_temp[0] =40;           //WT.EDIT 2024.12.01
-
+		
 
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
-		 warning_array[1] =0;
+		 gctl_t.fan_warning =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 		
@@ -81,12 +74,6 @@ void power_on_handler(void)
         gpro_t.stopTwoHours_flag =0;
         stopHours_flag =0;
         gpro_t.gTimer_detect_fan_error=0;
-
-        disp_seconds=0;
-        disp_minutes=0;
-        disp_seconds = 0;
-        gpro_t.ptc_manual_turn_off_flag =0;
-        gpro_t.theFirst_PtcOff=0;
       
        
          Update_DHT11_Value();
@@ -155,7 +142,7 @@ void power_on_handler(void)
 ************************************************************************/
 void works_run_two_hours_state(void)
 {
-   //static uint8_t timer_fan_flag;
+   static uint8_t timer_fan_flag;
 
    if(stopHours_flag ==1){
 
@@ -176,26 +163,35 @@ void works_run_two_hours_state(void)
     
     if(gpro_t.stopTwoHours_flag ==1){
 
-	
+	  #if TEST_UNIT 
+	 if(check_time  > 2){ //10
+           
+             check_time=0;
+             gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
+		     stopHours_flag=0;
+             gpro_t.stopTwoHours_flag=0;
+             ActionEvent_Handler();
+            
+      }
+     #else 
 
-      if(check_time  > 10){ //10 minutes = 600 seconds
+      if(check_time  > 10){ //10
                
          check_time=0;
          gctl_t.gTimer_fan_adc_times =0; //ADC be detected must be run 60s,after be detected ADC
          stopHours_flag=0;
          gpro_t.stopTwoHours_flag=0;
          ActionEvent_Handler();
-        
                 
         }
 
-    
+      #endif 
 
 	 if(timer_fan_flag ==1){
 
 	      if(gctl_t.gTimer_fan_run_one_minute < 60){
 	  
-	             Fan_Two_Speed(); //Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
+	              Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
 	          }       
 
 	       if(gctl_t.gTimer_fan_run_one_minute > 59){
@@ -216,19 +212,7 @@ void works_run_two_hours_state(void)
 
         if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
-
-              if(wifi_link_net_success==0){
-                  ActionEvent_Handler();
-                  compare_temp_value();
-              }
-              else{
-
-                 ActionEvent_Handler();
-                 compare_temp_value_link_net();
-
-
-              }
-              buzzer_gpio_input_init();
+               ActionEvent_Handler();
          }
     
 
@@ -266,7 +250,7 @@ void power_off_handler(void)
 	    gpro_t.stopTwoHours_flag=0;
 
 		  gctl_t.ptc_warning =0;
-		 warning_array[1] =0;
+		 gctl_t.fan_warning =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 
@@ -305,7 +289,7 @@ void power_off_handler(void)
 		if(gTimer_powerOffRunFan < 60 && powerOffFanRun_flag ==1){
           
                    
-			Fan_One_Speed();
+			Fan_One_Power_Off_Speed();
                   
         }       
         else if(gTimer_powerOffRunFan > 59   ){ //WT.EDTI 2024.11.19
@@ -361,157 +345,5 @@ void power_off_stop_fun(void)
       
 
 }
-
-
-void compare_temp_value(void)
-{
-
-
-  if(gctl_t.app_timer_power_on_flag > 1)gctl_t.app_timer_power_on_flag =0;
-  if(gctl_t.ptc_warning  >0) gctl_t.ptc_warning =0;
-
- 
-    if(gctl_t.gDht11_temperature >  39 && (save_set_temp[0] ==   gctl_t.set_temperature_value)){
-                 gpro_t.theFirst_PtcOff =1;
-                 PTC_SetLow();
-                g_dry_open_flag = 0;
-                gctl_t.gDry=0;
-               if(gpro_t.wifi_led_fast_blink_flag==0){
-                SendWifiData_To_Cmd(0x02, 0);
-                }
-
-      }
-      else if(gctl_t.gDht11_temperature >  gctl_t.set_temperature_value && (save_set_temp[0] ==   gctl_t.set_temperature_value)){
-                        //ptc off
-               PTC_SetLow();
-               g_dry_open_flag = 0;
-               gctl_t.gDry=0;
-              if(gpro_t.wifi_led_fast_blink_flag==0){
-               SendWifiData_To_Cmd(0x02, 0);
-               }
-
-      }
-      else if(gpro_t.theFirst_PtcOff ==1){
-                  
-              if(gctl_t.gDht11_temperature <  39){
-
-                  PTC_SetHigh();       //PTC ON
-                   g_dry_open_flag = 1;
-                    gctl_t.gDry=1;
-                   if(gpro_t.wifi_led_fast_blink_flag==0){
-                   SendWifiData_To_Cmd(0x02,0x01);
-  
-                   }
-              }
-
-                
-      }
-     else if(((gctl_t.gDht11_temperature <   save_set_temp[0])  || (gctl_t.gDht11_temperature==save_set_temp[0]))
-                           && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0){
-
-              PTC_SetHigh();       //PTC ON
-              g_dry_open_flag = 1;
-               gctl_t.gDry=1;
-              if(gpro_t.wifi_led_fast_blink_flag==0){
-              SendWifiData_To_Cmd(0x02,0x01);
-
-              }
-
-   }
-}
-
-
-void compare_temp_value_link_net(void)
-{
-
-
-
-
-  if(gctl_t.app_timer_power_on_flag > 1)gctl_t.app_timer_power_on_flag =0;
-  if(gctl_t.ptc_warning  >0) gctl_t.ptc_warning =0;
-
-  
-  
-           
-     
-    if(gctl_t.gDht11_temperature > 39 && (save_set_temp[0] == gctl_t.set_temperature_value)){
-                 gpro_t.theFirst_PtcOff = 1;
-                 PTC_SetLow();
-                g_dry_open_flag = 0;
-                gctl_t.gDry=0;
-               if(gpro_t.wifi_led_fast_blink_flag==0){
-                SendWifiData_To_Cmd(0x02, 0);
-                }
-                MqttData_Publish_SetPtc(0);
-	  	         osDelay(100);//HAL_Delay(350);
-
-      }
-      else if((gctl_t.gDht11_temperature >  gctl_t.set_temperature_value) ||(gctl_t.gDht11_temperature == gctl_t.set_temperature_value)
-               && (save_set_temp[0] ==   gctl_t.set_temperature_value) && gpro_t.theFirst_PtcOff ==0){
-                     
-               PTC_SetLow();
-               g_dry_open_flag = 0;
-               gctl_t.gDry=0;
-              if(gpro_t.wifi_led_fast_blink_flag==0){
-               SendWifiData_To_Cmd(0x02, 0);
-               }
-                MqttData_Publish_SetPtc(0);
-	  	        osDelay(100);//HAL_Delay(350);
-
-      }
-      else if(gpro_t.theFirst_PtcOff ==1 && gpro_t.ptc_manual_turn_off_flag == 0){
-                  
-              if(gctl_t.gDht11_temperature <  39){
-
-                  PTC_SetHigh();       //PTC ON
-                   g_dry_open_flag = 1;
-                    gctl_t.gDry=1;
-                   if(gpro_t.wifi_led_fast_blink_flag==0){
-                   SendWifiData_To_Cmd(0x02,0x01);
-  
-                   }
-                   MqttData_Publish_SetPtc(0x01);
-                   osDelay(100);//HAL_Delay(350);
-
-
-              }
-
-                
-                  
-       }
-      else if((gctl_t.gDht11_temperature <   save_set_temp[0]  || (gctl_t.gDht11_temperature==save_set_temp[0]))
-                                     && gctl_t.app_timer_power_on_flag==0 && gctl_t.ptc_warning ==0 && warning_array[1]==0){
-
-          
-
-               if(gpro_t.ptc_manual_turn_off_flag == 0){
-
-
-                  PTC_SetHigh();       //PTC ON
-                  g_dry_open_flag = 1;
-                   gctl_t.gDry=1;
-                  if(gpro_t.wifi_led_fast_blink_flag==0){
-                  SendWifiData_To_Cmd(0x02,0x01);
-
-                  }
-                  MqttData_Publish_SetPtc(0x01);
-	  	          osDelay(100);//HAL_Delay(350);
-              }
-              else{
-
-                    PTC_SetLow();
-                    g_dry_open_flag = 0;
-                    gctl_t.gDry=0;
-                   if(gpro_t.wifi_led_fast_blink_flag==0){
-                    SendWifiData_To_Cmd(0x02, 0);
-                    }
-
-                    MqttData_Publish_SetPtc(0);
-	  	            osDelay(100);//HAL_Delay(350);
-              }
-
-   }
-}
-
 
     

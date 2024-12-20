@@ -6,12 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
+  *  hardware : normal hardware 
+  *  software : version 1.0 DATA.2024.11.24.
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * 
+  * 
+  * 
   *
   ******************************************************************************
   */
@@ -87,12 +87,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM1_Init();
- // MX_TIM16_Init();
+  MX_TIM16_Init();
   MX_TIM14_Init();
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-  //MX_TIM3_Init();
+  MX_TIM3_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
    bsp_init();

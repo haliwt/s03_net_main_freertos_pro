@@ -2,21 +2,12 @@
 
 process_t gpro_t;
 
-volatile uint8_t save_set_temp[1] ;
-
 
 static void Auto_InitWifiModule_Hardware(void);
 static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 
-uint8_t  disp_hours,disp_minutes,disp_seconds;
 
-uint8_t  send_time_counter;
-
-uint8_t wifi_link_net_success;
-
-uint8_t power_on_switch_flag,dsipPowerOn_sound;
-
-
+ 
 
 void bsp_init(void)
 {
@@ -24,8 +15,6 @@ void bsp_init(void)
     dht11_init();
    buzzer_init();
    wifi_init();
-    gpro_t.gpower_on = power_off;
-    power_on_switch_flag=2;
 
 }
 
@@ -109,7 +98,7 @@ void send_data_to_disp(void)
 **********************************************************************/
 void receive_data_fromm_display(uint8_t *pdata)
 {
-   
+
    if(pdata[1] == 0x01){
 
     switch(pdata[2]){
@@ -122,72 +111,24 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x01: //表示开机指令
 
         if(pdata[3] == 0x01){ //open
-        
-     
-           if( dsipPowerOn_sound==2){
-
-
-
-           }
-           else{
-
-
-                  gpro_t.gTimer_power_off_time =0;
-                  gpro_t.power_on_real_flag = 1;
-                  power_on_switch_flag=1;
-                  gpro_t.gpower_on = power_on;
-
-
-
-            if(gpro_t.gpower_on == power_on && power_on_switch_flag ==  1 &&  gpro_t.power_on_real_flag ==1){
-               gpro_t.gTimer_power_off_time =0;
-               dsipPowerOn_sound =1;
+           buzzer_sound_fun();
            
-               gpro_t.power_on_real_flag=1;
-               
-               
-
-            }
-           
-           gpro_t.gTimer_power_off_time =0;
+          SendWifiData_Answer_Cmd(0x01,0x01);
+           gpro_t.gpower_on = power_on;
+            gctl_t.gModel=1;
+    	    gctl_t.gFan = 1;
+    		gctl_t.gDry = 1;
+            g_dry_open_flag = 1;
+    		gctl_t.gPlasma =1;       //"杀菌"
+    		gctl_t.gUlransonic = 1; // "驱虫"
+    	    gctl_t.gTimer_fan_run_one_minute=0;
             
 
-            SendWifiData_Answer_Cmd(0x01,0x01);
-            gpro_t.gTimer_power_off_time =0;
-           
-            if(dsipPowerOn_sound ==1){
-                gpro_t.gTimer_power_off_time =0;
-                gpro_t.power_on_real_flag = 1;
-                gctl_t.gModel=1;
-        	    gctl_t.gFan = 1;
-        		gctl_t.gDry = 1;
-                g_dry_open_flag = 1;
-        		g_plasma[0]=1;//gctl_t.gPlasma =1;       //"杀菌"
-        		g_ultra[0] = 1; // "驱虫"
-        	    gctl_t.gTimer_fan_run_one_minute=0;
-                gpro_t.gTimer_power_off_time =0;
-              }
-            
-
-        }
         }
         else if(pdata[3] == 0x0){ //close 
-         
-         //  buzzer_gpio_output_init();
-          /// buzzer_sound_fun();//buzzer_sound();
+           buzzer_sound();
+           SendWifiData_Answer_Cmd(0x01,0x02); //power off .
            gpro_t.gpower_on = power_off;
-           power_on_switch_flag=2;
-
-           if(gpro_t.gpower_on == power_off && power_on_switch_flag==2){
-
-
-                   dsipPowerOn_sound =3;
-                  
-
-            }
-         
-          SendWifiData_Answer_Cmd(0x01,0x02); //power off .
-           
 
 
         }
@@ -197,15 +138,9 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x02: //PTC打开关闭指令
 
      if(pdata[3] == 0x01){
-
-        if((save_set_temp[0]==gctl_t.set_temperature_value) && gpro_t.gpower_on == power_on){
-             buzzer_gpio_output_init();
-             buzzer_sound_fun();//buzzer_sound();
-        
-            gctl_t.gDry = 1;
-            g_dry_open_flag=1;
-
-         }
+          buzzer_sound();
+         gctl_t.gDry = 1;
+         g_dry_open_flag=1;
 
       if(gpro_t.stopTwoHours_flag==0){
            PTC_SetHigh();
@@ -217,16 +152,10 @@ void receive_data_fromm_display(uint8_t *pdata)
        }
        }
        else if(pdata[3] == 0x0){
-
-        if(save_set_temp[0]==gctl_t.set_temperature_value){
-
-          buzzer_gpio_output_init();
-          buzzer_sound_fun();//buzzer_sound();
-         
-           gctl_t.gDry =0;
-           g_dry_open_flag=0;
-           PTC_SetLow();
-         }
+          buzzer_sound();
+          gctl_t.gDry =0;
+          g_dry_open_flag=0;
+         PTC_SetLow();
          if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(100);//HAL_Delay(350);
@@ -239,18 +168,17 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x03: //PLASMA 打开关闭指令
 
         if(pdata[3] == 0x01){
-            buzzer_gpio_output_init();
-            buzzer_sound_fun();//buzzer_sound();
            
-           g_plasma[0]=1; //gctl_t.gPlasma = 1;
+            buzzer_sound();
+           
+           gctl_t.gPlasma = 1;
           
            PLASMA_SetHigh();
         }
         else if(pdata[3] == 0x0){
-            buzzer_gpio_output_init();
-           buzzer_sound_fun();//buzzer_sound();
+           buzzer_sound();
            
-          g_plasma[0]=0;//gctl_t.gPlasma = 0;
+          gctl_t.gPlasma = 0;
         
           PLASMA_SetLow();
 
@@ -264,12 +192,12 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){  //open 
           
-           g_ultra[0] =1;
+           gctl_t.gUlransonic =1;
 
         }
         else if(pdata[3] == 0x0){ //close 
 
-           g_ultra[0] = 0;
+           gctl_t.gUlransonic = 0;
 
         }
 
@@ -279,9 +207,9 @@ void receive_data_fromm_display(uint8_t *pdata)
       case 0x05: // link wifi command
 
        if(pdata[3] == 0x01){  // link wifi 
-         
+         //  buzzer_sound();
            gpro_t.link_net_step =0;
-	      wifi_link_net_success=0;
+	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
           gctl_t.wifi_config_net_lable=wifi_set_restor;
 		  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
@@ -299,9 +227,9 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x06: //buzzer sound command
 
         if(pdata[3] == 0x01){  //buzzer sound 
-            buzzer_gpio_output_init();
-            buzzer_sound_fun();//buzzer_sound();
-
+            buzzer_sound();
+            pdata[2] =0xff;
+            *pdata = 0xff;
 
         }
         else if(pdata[3] == 0x0){ // don't buzzer sound .
@@ -318,15 +246,10 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x0F){ //数据
 
-          gctl_t.set_temperature_value = pdata[5] ;
-          save_set_temp[0] =  pdata[5] ; //WT.EDIT 2024.12.01
+            gctl_t.set_temperature_value = pdata[5] ;
 
-        if(wifi_link_net_state()==1){
-
-          MqttData_Publis_SetTemp(save_set_temp[0]);
+          MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
 		  osDelay(20);//HAL_Delay(350);
-
-         }
 
         }
       break;
@@ -396,20 +319,17 @@ void receive_data_fromm_display(uint8_t *pdata)
       if(pdata[3] == 0x02){
        
          gctl_t.gModel=2;
-         if(wifi_link_net_state()==1){
          MqttData_Publish_SetState(2);
 	     osDelay(100);//HAL_Delay(350);
-         }
+        
         
           
        }
        else if(pdata[3] == 0x01){ //AI mode 
        
          gctl_t.gModel=1;
-        if(wifi_link_net_state()==1){
          MqttData_Publish_SetState(1);
 	     osDelay(100);//HAL_Delay(350);
-         }
        }
 
 
@@ -419,7 +339,7 @@ void receive_data_fromm_display(uint8_t *pdata)
      }
 
    }
-    
+
 }
 /**********************************************************************
     *
@@ -714,7 +634,7 @@ void wifi_get_beijing_time_handler(void)
            net_t.linking_tencent_cloud_doing =1;
         
 
-           // WIFI_IC_ENABLE();
+            WIFI_IC_ENABLE();
        
     		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
             HAL_Delay(1000);
@@ -822,7 +742,7 @@ void wifi_get_beijing_time_handler(void)
 void adc_detected_hundler(void)
 {
    
-  #if 0
+
    if(gctl_t.gTimer_ptc_adc_times > 10 && gpro_t.stopTwoHours_flag==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
@@ -831,9 +751,7 @@ void adc_detected_hundler(void)
         
 
     }
-   #endif 
-   
-    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && warning_array[1] == 0){ //detected 3 times is 60s 
+    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && gctl_t.fan_warning == 0){ //detected 3 times is 60s 
         gctl_t.gTimer_fan_adc_times =0;
         Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         
@@ -903,7 +821,7 @@ void wifi_auto_detected_link_state(void)
 static void Auto_InitWifiModule_Hardware(void)
 {
   
-	//WIFI_IC_ENABLE();
+	WIFI_IC_ENABLE();
 	if(power_on_login_tencent_cloud_flag ==0){
 	   power_on_login_tencent_cloud_flag=1;
 	   gpro_t.gTimer_power_on_first_link_tencent=0;
@@ -950,50 +868,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
        power_on_login_tencent_cloud_flag++;
         SendWifiData_To_Cmd(0x1F,0x00);
     }
-
-   
-
 }
 
 
-void works_normal_time_data(void)
-{
 
-  
-  if(send_time_counter > 10){
-
-      send_time_counter=0;
-
-   if(gpro_t.get_beijing_time_success ==0){
-     
-      
-
-       if(disp_minutes > 59){
-            disp_minutes=0;
-
-            disp_hours ++;
-
-
-        }
-       if(disp_hours >24){
-
-            disp_hours=0;
-
-       }
-
-      SendWifiData_To_worksTime_noNetTime(disp_hours,disp_minutes,disp_seconds);
-        osDelay(20);
-   
-     }
-
-      if(wifi_link_net_success== 0 && gpro_t.wifi_led_fast_blink_flag==0){ //WT.EDIT 2024.12.04
-
-         SendWifiData_To_Data(0x1F,0x00); //link wifi order 1 --link wifi net isn't netware
-         osDelay(5);
-
-
-      }
-      buzzer_gpio_input_init();
-   }
-
-}

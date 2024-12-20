@@ -6,9 +6,7 @@
 #define AI_ENABLE      1
 
 
-extern uint8_t warning_array[2]; //wrray_array[0] = PTC ,warning_array[1]= fan warning.
-extern uint8_t g_plasma[1];
-extern uint8_t g_ultra[1];
+#define  TEST_UNIT     1
 
 
 typedef enum {                   /* enumeration for CProcess signals */
@@ -76,7 +74,7 @@ typedef enum{
 typedef struct _RUN_T{
     
 	uint8_t gPower_On;
-    uint8_t gDry;
+
 
 
 	uint8_t gDht11_flag;
@@ -85,6 +83,12 @@ typedef struct _RUN_T{
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
 
+
+    
+
+
+	uint8_t dp_link_wifi_fail;
+	uint8_t wifi_set_temperature_value_flag;
 
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
@@ -103,8 +107,8 @@ typedef struct _RUN_T{
    
 	uint8_t gTimer_usart_error;
     //app timer
-
-	volatile uint8_t app_timer_power_on_flag ;
+	//uint8_t app_timer_power_on_ref;
+	uint8_t app_timer_power_on_flag ;
 
 
     
@@ -112,7 +116,7 @@ typedef struct _RUN_T{
 	uint8_t sendtimes;
     uint8_t setup_timer_flag;
 
-    
+    uint8_t gTimer_send_0xaa;
 	uint8_t response_wifi_signal_label;
     uint8_t flash_write_data_error;
 	uint8_t flash_write_data_flag;
@@ -132,12 +136,12 @@ typedef struct _RUN_T{
   
       
 
-      volatile  uint8_t  gAi;
-     // volatile uint8_t  gPlasma;
-   
+      uint8_t  gAi;
+      uint8_t  gPlasma;
+      uint8_t  gDry;
 
-
-	  volatile uint8_t  gModel;
+	  uint8_t  gUlransonic;
+	  uint8_t  gModel;
     
 
 	  
@@ -148,8 +152,7 @@ typedef struct _RUN_T{
 	
 	  uint8_t noBuzzer_sound_dry_flag;
 	  
-	  volatile uint8_t  set_temperature_value;
-      
+	  uint8_t  set_temperature_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;
@@ -174,7 +177,7 @@ typedef struct _RUN_T{
 
 	  uint8_t gTimer_fan_adc_times;
 	  uint8_t gTimer_ptc_adc_times;
-     
+      uint8_t fan_warning;
 	
 
 	 uint8_t gTimer_senddata_panel;
@@ -233,9 +236,7 @@ void works_run_two_hours_state(void);
 
 void main_function_detected_handler(uint8_t cmd);
 
-void compare_temp_value(void);
 
-void compare_temp_value_link_net(void);
 
 #endif 
 

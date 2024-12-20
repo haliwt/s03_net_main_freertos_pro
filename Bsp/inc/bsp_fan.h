@@ -3,15 +3,15 @@
 #include "main.h"
 
 
-//#define FAN_CCW       GPIO_PIN_6
-//#define FAN_CW        GPIO_PIN_7
-//#define FAN_GPIO      GPIOA
+#define FAN_CCW       GPIO_PIN_6
+#define FAN_CW        GPIO_PIN_7
+#define FAN_GPIO      GPIOA
 
-#define FAN_RUN_SetHigh()            HAL_GPIO_WritePin(FAN_RUN_GPIO_Port,FAN_RUN_Pin,GPIO_PIN_SET)    // output high level
-#define FAN_RUN_SetLow()             HAL_GPIO_WritePin(FAN_RUN_GPIO_Port,FAN_RUN_Pin,GPIO_PIN_RESET)    // output low level
+#define FAN_CCW_SetHigh()            HAL_GPIO_WritePin(FAN_GPIO,FAN_CCW,GPIO_PIN_SET)    // output high level
+#define FAN_CCW_SetLow()             HAL_GPIO_WritePin(FAN_GPIO,FAN_CCW,GPIO_PIN_RESET)    // output low level
 
-#define FAN_CW_SetHigh()            HAL_GPIO_WritePin(FAN_CCW_GPIO_Port,FAN_CCW_Pin,GPIO_PIN_SET)    // output high level
-#define FAN_CW_SetLow()             HAL_GPIO_WritePin(FAN_CCW_GPIO_Port,FAN_CCW_Pin,GPIO_PIN_RESET)    // output low level
+#define FAN_CW_SetHigh()            HAL_GPIO_WritePin(FAN_GPIO,FAN_CW,GPIO_PIN_SET)    // output high level
+#define FAN_CW_SetLow()             HAL_GPIO_WritePin(FAN_GPIO,FAN_CW,GPIO_PIN_RESET)    // output low level
 
 
 #define PTC_PIN     GPIO_PIN_0
@@ -52,7 +52,7 @@ void Fan_One_Speed(void);
 
 
 void Fan_Two_Speed(void);
-
+void Fan_One_Power_Off_Speed(void);
 
 
 void Fan_RunSpeed_Fun(void);
@@ -63,7 +63,7 @@ void plasma_fun(uint8_t sel);
 
 
 
-//void fan_start_fun(void);
+void fan_start_fun(void);
 
 
 #endif 

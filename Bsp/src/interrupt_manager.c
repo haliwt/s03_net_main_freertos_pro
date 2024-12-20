@@ -1,6 +1,5 @@
 #include "bsp.h"
 volatile uint8_t check_time;
-
 volatile uint8_t stopHoursCounter;
 
 
@@ -54,49 +53,42 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 *******************************************************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-   static  uint16_t tm0, tm1,tm2;
+   static  uint16_t tm0, tm1;
   
 
     if(htim->Instance==TIM14){ //timer number14 is 100ms.
          tm1++;
-         tm2++;
-         if(tm2 > 49){
-             tm2=0;
-         gpro_t.gTimer_power_off_time++; 
-         }
-
-     
- 
-         
       if(tm1 > 99){//10ms *100 = 1000ms =1s
         tm1 =0;
-     
-
       gTimer_powerOffRunFan++;
-
-      disp_seconds++ ;
-      send_time_counter++;
       stopHoursCounter++;
 
-       if(stopHoursCounter> 59){ //one minute
+      if(stopHoursCounter> 59){ //one minute
           stopHoursCounter =0;
-          disp_seconds=0;
-          disp_minutes ++;
+       
+          
           check_time ++;
-      
+         #if TEST_UNIT
+          if(check_time >3  && stopHours_flag ==0){ //119
+             check_time=0;
+          
+             stopHours_flag =1;
+              
+          }
+         #else 
            if(check_time >119  && stopHours_flag ==0){ //119
-                check_time=0;
-                stopHours_flag =1;
+                   check_time=0;
+                
+                   stopHours_flag =1;
                     
            }
 
 
-      
+         #endif 
        }
 
-     
 
-       }
+      }
   
     }
     else if(htim->Instance==TIM17){
@@ -138,8 +130,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
        gpro_t.gTimer_publis_dht11_data++ ;
        gpro_t.gTimer_detect_fan_error++;
-
-       
 
 
 //      

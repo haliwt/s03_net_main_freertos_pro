@@ -155,39 +155,6 @@ void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
 	}
 }
 
-
-/********************************************************************************
-    **
-    *Function Name:void SendWifiData_To_PanelTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
-    *Function :
-    *Input Ref: hours,minutes,seconds of beijing time 
-    *Return Ref:NO
-    *
-*******************************************************************************/
-void SendWifiData_To_worksTime_noNetTime(uint8_t hours,uint8_t minutes,uint8_t seconds)
-{
-    outputBuf[0]=0x5A; //mainboard head : displayBoard = 0xA5
-	outputBuf[1]=0x10; //mainboard device No: 01
-	outputBuf[2]=0x3C; //command : is data of hours and minutes and seconds.
-	outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
-	outputBuf[4]= 0x03; //data of length: 0x01 - 3 byte.
-	outputBuf[5]= hours; //	
-	outputBuf[6]= minutes; //	
-	outputBuf[7]= seconds; //	
-
-    outputBuf[8] = 0xFE;
-    outputBuf[9] = bcc_check(outputBuf,9);
-
-	transferSize=10;
-	if(transferSize)
-	{
-	while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
-	transOngoingFlag=1;
-	HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
-	}
-}
-
-
 /*********************************************************
  * 
  * Function Name:void SendData_Temp_Data(uint8_t tdata)

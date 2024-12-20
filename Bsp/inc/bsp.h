@@ -67,19 +67,12 @@
 
 extern uint8_t wifi_rx_inputBuf[WIFI_RX_NUMBERS];
 
-extern volatile uint8_t save_set_temp[1] ;
-
-extern uint8_t  disp_hours,disp_minutes,disp_seconds;
-
-extern uint8_t wifi_link_net_success;
-
-extern uint8_t power_on_switch_flag, dsipPowerOn_sound;
 
 
 typedef enum _power_state{
 
-  power_off=2,
-  power_on=1,
+  power_off,
+  power_on,
 
 
 }power_state;
@@ -103,9 +96,6 @@ typedef struct PROCESS_T{
    uint8_t wifi_led_fast_blink_flag;
    uint8_t get_beijing_time_success;
    uint8_t link_net_step;
-   uint8_t ptc_manual_turn_off_flag;
-   uint8_t theFirst_PtcOff;
-   uint8_t power_on_real_flag ;
 
    
    uint8_t disp_works_hours ;    
@@ -118,15 +108,12 @@ typedef struct PROCESS_T{
    uint8_t gTimer_dc_power_on_auto_link_net;
    uint8_t gTimer_publis_dht11_data;
    uint8_t gTimer_detect_fan_error;
-   uint8_t gTimer_power_off_time;
 
 
 
 }process_t;
 
 extern process_t gpro_t;
-
-extern uint8_t  send_time_counter;
 
 
 void bsp_init(void);
@@ -150,8 +137,6 @@ void adc_detected_hundler(void);
 void wifi_auto_detected_link_state(void);
 
 void link_wifi_to_tencent_handler(uint8_t data);
-
-void works_normal_time_data(void);
 
 
 

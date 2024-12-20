@@ -46,7 +46,7 @@ static void property_report_fan_warning(uint8_t warning)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up04\\\"\\,\\\"params\\\":{\\\"warning_array[1]\\\":%d}}\"\r\n",warning);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up04\\\"\\,\\\"params\\\":{\\\"fan_warning\\\":%d}}\"\r\n",warning);
 								  
 	at_send_data((uint8_t *)message, message_len);
 

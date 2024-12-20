@@ -77,9 +77,6 @@ void Error_Handler(void);
 #define FAN_CCW_Pin               GPIO_PIN_7
 #define FAN_CCW_GPIO_Port         GPIOA
 
-#define  FAN_RUN_Pin                GPIO_PIN_6
-#define  FAN_RUN_GPIO_Port         GPIOA
-
 #define RELAY_Pin GPIO_PIN_0
 #define RELAY_GPIO_Port GPIOB
 
