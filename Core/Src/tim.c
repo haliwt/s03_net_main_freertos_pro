@@ -46,7 +46,7 @@ void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 63;
+  htim1.Init.Prescaler = 23;//63;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 39; // 1/(39+1)=0.025MHz = 25KHz
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -112,7 +112,7 @@ void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 63;
+  htim3.Init.Prescaler = 23;//63;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 249;// buzzer of sound f= 1MHZ/(249+1) = 4KHZ
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -156,7 +156,7 @@ void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 63;
+  htim16.Init.Prescaler = 23; //63;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim16.Init.Period = 9; //f = 1/(1+9) =0.1MHZ = 100KHZ
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -211,7 +211,7 @@ void MX_TIM14_Init(void)
 
   /* USER CODE END TIM14_Init 1 */
   htim14.Instance = TIM14;
-  htim14.Init.Prescaler = 63;// //F = 64/(31+1)=2MHZ
+  htim14.Init.Prescaler = 23;//63;// //F = 64/(31+1)=2MHZ
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim14.Init.Period = 9999; //Fhz = 1MHZ/(9999+1)= 0.0001MHz= 0.1KHz; T= 1/Fhz=(1/0.1khz)ms = 10ms
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -238,7 +238,7 @@ void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 1 */
   htim17.Instance = TIM17;
-  htim17.Init.Prescaler = 63;
+  htim17.Init.Prescaler = 23;//63;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
   //htim17.Init.Period = 999; //Fhz= 1/(999+1)MHZ=0.001MHz=1KHz,Thz = 1/Fhz= (1/1(KHz))ms = 1ms
   htim17.Init.Period = 9999; //Fhz= 1/(9999+1)MHZ=0.0001MHz=0.1KHz,Thz = 1/Fhz= (1/0.1(KHz))ms = 10ms

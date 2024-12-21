@@ -213,6 +213,7 @@ void works_run_two_hours_state(void)
         if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
                ActionEvent_Handler();
+               Update_DHT11_Value();
          }
     
 

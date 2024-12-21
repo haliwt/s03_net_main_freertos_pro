@@ -11,8 +11,8 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 
 void bsp_init(void)
 {
-   delay_init(64);
-    dht11_init();
+   delay_init(24);
+   dht11_init();
    buzzer_init();
    wifi_init();
 
