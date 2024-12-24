@@ -1,7 +1,7 @@
 #ifndef __BSP_DHT11_H__
 #define __BSP_DHT11_H__
 #include "main.h"
-#if 0
+#if 1
 //IO·½ÏòÉèÖÃ
 #define DHT11_DATA_IO_IN()      {GPIOB->MODER&=0XFFFFFFFC;GPIOB->MODER|=0<<0;}  //0x00 input mode
 #define DHT11_DATA_IO_OUT()     {GPIOB->MODER&=0XFFFFFFFC;GPIOB->MODER|=1<<0;}   //0x01 output  mode 
@@ -51,7 +51,7 @@ void Update_DHT11_Value(void);
 
 void Update_Dht11_Totencent_Value(void);
 
-#endif
+#else 
 
 /******************************************************************************************/
 /* DHT11 å¼•è„š å®šä¹‰ */
@@ -82,7 +82,10 @@ uint8_t dht11_read_data(uint8_t *temp,uint8_t *humi);   /* è¯»å–æ¸©æ¹¿åº¦ */
 
 void Update_DHT11_Value(void);
 void Update_Dht11_Totencent_Value(void);
-
+#endif 
+                            
+                            
+                            
 
 #endif 
 

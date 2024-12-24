@@ -5,7 +5,7 @@
 
 #define ADC_CHANNEL_NUMBER    2
 
-
+extern uint8_t fan_warning_flag ;
 
 typedef enum{
 

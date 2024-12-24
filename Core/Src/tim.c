@@ -142,6 +142,7 @@ void MX_TIM3_Init(void)
 
 }
 /* TIM16 init function */
+/**********FAN PWM***************/
 void MX_TIM16_Init(void)
 {
 

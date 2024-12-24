@@ -12,7 +12,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 void bsp_init(void)
 {
    delay_init(24);
-   dht11_init();
+   Update_DHT11_Value();//dht11_init();
    buzzer_init();
    wifi_init();
 
@@ -117,11 +117,13 @@ void receive_data_fromm_display(uint8_t *pdata)
            gpro_t.gpower_on = power_on;
             gctl_t.gModel=1;
     	    gctl_t.gFan = 1;
-    		gctl_t.gDry = 1;
-            g_dry_open_flag = 1;
-    		gctl_t.gPlasma =1;       //"杀菌"
-    		gctl_t.gUlransonic = 1; // "驱虫"
+    		dry_open_flag=1;//gctl_t.gDry = 1;
+         
+    		//gctl_t.gPlasma =1;       //"杀菌"
+    		plasma_open_flag =1;
+    		ultrasonic_open_flag=1;//gctl_t.gUlransonic = 1; // "驱虫"
     	    gctl_t.gTimer_fan_run_one_minute=0;
+            fan_run_fun();//SetLevel_Fan_PWMA(10); //WT.EDIT 2024.12.24
             
 
         }
@@ -139,8 +141,8 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      if(pdata[3] == 0x01){
           buzzer_sound();
-         gctl_t.gDry = 1;
-         g_dry_open_flag=1;
+         dry_open_flag=1;//gctl_t.gDry = 1;
+       
 
       if(gpro_t.stopTwoHours_flag==0){
            PTC_SetHigh();
@@ -153,8 +155,8 @@ void receive_data_fromm_display(uint8_t *pdata)
        }
        else if(pdata[3] == 0x0){
           buzzer_sound();
-          gctl_t.gDry =0;
-          g_dry_open_flag=0;
+          dry_open_flag=0;//gctl_t.gDry =0;
+        
          PTC_SetLow();
          if(wifi_link_net_state()==1){
               MqttData_Publish_SetPtc(0x0);
@@ -171,14 +173,16 @@ void receive_data_fromm_display(uint8_t *pdata)
            
             buzzer_sound();
            
-           gctl_t.gPlasma = 1;
+           //gctl_t.gPlasma = 1;
+           plasma_open_flag=1;
           
            PLASMA_SetHigh();
         }
         else if(pdata[3] == 0x0){
            buzzer_sound();
            
-          gctl_t.gPlasma = 0;
+         // gctl_t.gPlasma = 0;
+           plasma_open_flag=0;
         
           PLASMA_SetLow();
 
@@ -192,12 +196,12 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x01){  //open 
           
-           gctl_t.gUlransonic =1;
+           ultrasonic_open_flag=1;//gctl_t.gUlransonic =1;
 
         }
         else if(pdata[3] == 0x0){ //close 
 
-           gctl_t.gUlransonic = 0;
+          ultrasonic_open_flag=0; //gctl_t.gUlransonic = 0;
 
         }
 
@@ -287,8 +291,8 @@ void receive_data_fromm_display(uint8_t *pdata)
       if(pdata[3] == 0x01){
         
 
-         gctl_t.gDry = 1;
-         g_dry_open_flag=1;
+         dry_open_flag=1;//gctl_t.gDry = 1;
+   
         if(gpro_t.stopTwoHours_flag ==0){
               PTC_SetHigh();
              if(wifi_link_net_state()==1){
@@ -300,8 +304,8 @@ void receive_data_fromm_display(uint8_t *pdata)
       }
       else if(pdata[3] == 0x0){
         
-         gctl_t.gDry =0;
-         g_dry_open_flag=0;
+         dry_open_flag=0;//gctl_t.gDry =0;
+        
       if(gpro_t.stopTwoHours_flag ==0){
         PTC_SetLow();
           if(wifi_link_net_state()==1){
@@ -751,7 +755,7 @@ void adc_detected_hundler(void)
         
 
     }
-    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && gctl_t.fan_warning == 0){ //detected 3 times is 60s 
+    if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && fan_warning_flag  == 0){ //detected 3 times is 60s 
         gctl_t.gTimer_fan_adc_times =0;
         Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);
         

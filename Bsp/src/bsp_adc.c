@@ -8,6 +8,7 @@
 
 //static uint16_t Get_Adc_Channel_0(void) ;
 //static uint16_t Get_Adc_Channel_1(void) ; 
+uint8_t fan_warning_flag ;
 
 
 
@@ -164,8 +165,8 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
          if(detect_error_times >2){
 	   	
 		  detect_error_times= 0;
-		  gctl_t.fan_warning = 1;
-		   
+		  //gctl_t.fan_warning = 1;
+		  fan_warning_flag = 1;
 		
 
            buzzer_sound();//Buzzer_KeySound();
@@ -192,7 +193,8 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 		}
         else{
 
-            gctl_t.fan_warning = 0;
+            fan_warning_flag=0;//gctl_t.fan_warning = 0;
+         
             detect_error_times=0;
 
 
@@ -204,7 +206,7 @@ void Get_Fan_ADC_Fun(uint8_t channel,uint8_t times)
 
 void fan_warning_sound(void)
 {
-   if(gctl_t.fan_warning == 1 && gpro_t.gTimer_detect_fan_error > 9){
+   if(fan_warning_flag == 1 && gpro_t.gTimer_detect_fan_error > 9){
         gpro_t.gTimer_detect_fan_error =0;
 
 
@@ -281,8 +283,8 @@ static void Judge_PTC_Temperature_Value(void)
 {
     if(ptc_detect_voltage < 331 || ptc_detect_voltage ==331){ //95 degree
 
-        gctl_t.gDry = 0;
-        g_dry_open_flag =0;
+        dry_open_flag=0;//gctl_t.gDry = 0;
+     
         PTC_SetLow(); //ptc turn off
         gctl_t.ptc_warning =1;
 

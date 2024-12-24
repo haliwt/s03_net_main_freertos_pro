@@ -4,13 +4,19 @@
 static void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
+void fan_run_fun(void)
+{
+     FAN_COM_SetLow();
+	 FAN_RUN_SetHigh();
+
+}
 
 
 
 void FAN_Stop(void)
 {
-   FAN_CW_SetLow(); //brake
-   SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
+   FAN_COM_SetLow(); //brake
+   FAN_RUN_SetLow();//SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
 }
 
 void Fan_One_Power_Off_Speed(void)
@@ -21,6 +27,7 @@ void Fan_One_Power_Off_Speed(void)
 
 
 }
+
 
 void Fan_One_Speed(void)
 {
@@ -82,7 +89,7 @@ void ultrasonic_fun(uint8_t sel)
 void Dry_Function(void)
 {
  
-  switch(g_dry_open_flag ){
+  switch(dry_open_flag ){
 
    case 1:
 
@@ -122,20 +129,7 @@ void plasma_fun(uint8_t sel)
 void Fan_RunSpeed_Fun(void)
 {
 
-
-      if(gctl_t.fan_stop_flag == 1){
-          gctl_t.fan_stop_flag++;
-
-          fan_start_fun();
-
-
-
-      }
-       
-
-
-
-       if(gctl_t.set_wind_speed_value < 34 ){
+   if(gctl_t.set_wind_speed_value < 34 ){
               Fan_One_Speed();
 		 }
 		 else if(gctl_t.set_wind_speed_value > 33  && gctl_t.set_wind_speed_value < 67 ){
@@ -168,13 +162,14 @@ void Fan_RunSpeed_Fun(void)
 static void SetLevel_Fan_PWMA(uint8_t levelval)
 {
      gctl_t.gFan_pwm_duty_level = levelval;
-     FAN_CW_SetLow();
-	 MX_TIM16_Init();
-	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+     FAN_COM_SetLow();
+	 //MX_TIM16_Init();
+	 ///HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+	 FAN_RUN_SetHigh();
 }
 
 
-
+#if 0
 void fan_start_fun(void)
 {
 
@@ -189,5 +184,5 @@ void fan_start_fun(void)
 
 
 }
-
+#endif 
 

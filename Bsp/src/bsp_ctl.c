@@ -6,7 +6,7 @@ uint8_t powerOffFanRun_flag ;
 uint8_t powerOffTunrOff_flag;
 uint8_t gTimer_powerOffRunFan;
 uint8_t stopHours_flag;
-uint8_t g_dry_open_flag;
+
 
 
 
@@ -59,7 +59,8 @@ void power_on_handler(void)
 
 		 //error detected times 
 		 gctl_t.ptc_warning =0;
-		 gctl_t.fan_warning =0;
+		// gctl_t.fan_warning =0;
+         fan_warning_flag =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 		
@@ -119,13 +120,11 @@ void power_on_handler(void)
       else if(gctl_t.first_link_tencent_cloud_flag ==1 && wifi_link_net_state() ==0){
 
            gctl_t.first_link_tencent_cloud_flag++;
-           Update_DHT11_Value();
+           //Update_DHT11_Value();
+           Update_Dht11_Totencent_Value();
            osDelay(20);
       }
 
-      
-
-      
      }
 
      break;
@@ -142,7 +141,7 @@ void power_on_handler(void)
 ************************************************************************/
 void works_run_two_hours_state(void)
 {
-   static uint8_t timer_fan_flag;
+   static uint8_t timer_fan_flag,times_flag;
 
    if(stopHours_flag ==1){
 
@@ -204,20 +203,39 @@ void works_run_two_hours_state(void)
 	       }
 
 	  }
-	 
 
+      if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
+          gctl_t.gTimer_senddata_panel=0;
+          times_flag ++;
+           if(times_flag > 2){
+               times_flag =0;
+                  Update_DHT11_Value();
+           }
+	 
+      }
    
      }
      else{
 
         if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
-               ActionEvent_Handler();
-               Update_DHT11_Value();
+             times_flag ++;
+              ActionEvent_Handler();
+
+              if(times_flag > 2){
+                  times_flag =0;
+                  Update_DHT11_Value();
+              }
          }
     
 
     }
+
+
+    
+    
+
+    
  
 }
 /**********************************************************************
@@ -251,7 +269,8 @@ void power_off_handler(void)
 	    gpro_t.stopTwoHours_flag=0;
 
 		  gctl_t.ptc_warning =0;
-		 gctl_t.fan_warning =0;
+		 //gctl_t.fan_warning =0;
+         fan_warning_flag =0;
 		 gctl_t.gTimer_ptc_adc_times=0;
 		 gctl_t.gTimer_fan_adc_times=0;
 

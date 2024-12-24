@@ -137,10 +137,10 @@ typedef struct _RUN_T{
       
 
       uint8_t  gAi;
-      uint8_t  gPlasma;
-      uint8_t  gDry;
+      //uint8_t  gPlasma;
+     // uint8_t  gDry;
 
-	  uint8_t  gUlransonic;
+	 // uint8_t  gUlransonic;
 	  uint8_t  gModel;
     
 
@@ -177,7 +177,7 @@ typedef struct _RUN_T{
 
 	  uint8_t gTimer_fan_adc_times;
 	  uint8_t gTimer_ptc_adc_times;
-      uint8_t fan_warning;
+     // uint8_t fan_warning;
 	
 
 	 uint8_t gTimer_senddata_panel;
@@ -209,7 +209,7 @@ extern uint8_t gTimer_powerOffRunFan;
 
 extern uint8_t stopHours_flag;
 
-extern uint8_t g_dry_open_flag;
+
 
 
 void power_on_handler(void);
