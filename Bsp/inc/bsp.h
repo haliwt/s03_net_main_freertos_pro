@@ -11,6 +11,7 @@
 #include "bsp_delay.h"
 
 #include "bsp_cmd_link.h"
+#include "bsp_sendack.h"
 
 #include "interrupt_manager.h"
 #include "bsp_subscription.h"
@@ -89,6 +90,9 @@ typedef struct PROCESS_T{
 
    uint8_t get_beijing_flag;
    volatile uint8_t stopTwoHours_flag;
+
+   uint8_t receive_copy_cmd ;
+   uint8_t send_ack_cmd;
    
 
    uint8_t process_run_step;
@@ -108,6 +112,7 @@ typedef struct PROCESS_T{
    uint8_t gTimer_dc_power_on_auto_link_net;
    uint8_t gTimer_publis_dht11_data;
    uint8_t gTimer_detect_fan_error;
+   uint8_t gTimer_again_send_power_on_off;
 
 
 
@@ -120,7 +125,7 @@ void bsp_init(void);
 
 
 
-void receive_data_fromm_display(uint8_t *pdata);
+
 
 
 

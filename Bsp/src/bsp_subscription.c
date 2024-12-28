@@ -551,9 +551,10 @@ void Json_Parse_Command_Fun(void)
         fan_warning_flag =0;
 		gctl_t.ptc_remove_warning_send_data =0;
 		gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
-		//powerOffTunrOff_flag=1; // app power off
+		gpro_t.send_ack_cmd = ack_app_power_on;
+        gpro_t.gTimer_again_send_power_on_off=0;
 	    SendWifiData_To_Cmd(0x31,0x01); //smart phone is power on
-		HAL_Delay(5);
+		osDelay(5);//HAL_Delay(5);
        
 		buzzer_temp_on=0;
 		gctl_t.response_wifi_signal_label = 0xff;
@@ -567,9 +568,11 @@ void Json_Parse_Command_Fun(void)
 			HAL_Delay(100);
 
             gpro_t.gpower_on = power_off;
+            gpro_t.send_ack_cmd = ack_app_power_off;
+            gpro_t.gTimer_again_send_power_on_off=0;
 	
             SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off
-			HAL_Delay(5);
+			osDelay(5);//HAL_Delay(5);
           
 			buzzer_temp_on=0;
 	
