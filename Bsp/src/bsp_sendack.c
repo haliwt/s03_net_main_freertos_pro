@@ -256,16 +256,30 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0xFE: //copy send cmd acknowlege
      //power on or power off 
         if(pdata[3]==0x31){ //smart phone normal :power on
-        if(pdata[4]==1){ //power on
+            if(pdata[4]==1){ //power on
 
-            gpro_t.receive_copy_cmd = ack_app_power_on;
+                gpro_t.receive_copy_cmd = ack_app_power_on;
+
+            }
+            else if(pdata[4]==2){ //smart phone normal :power off
+               gpro_t.receive_copy_cmd = ack_app_power_off;
+            }
 
         }
-        else if(pdata[4]==2) //smart phone normal :power off
-            gpro_t.receive_copy_cmd = ack_app_power_off;
+        else if(pdata[3]==0x21){ //smart phone of App timer power on .
+
+            if(pdata[4]==1){ //power on
+
+                gpro_t.receive_copy_cmd = ack_app_timer_power_on;
+
+            }
+            else if(pdata[4]==2){ //smart phone normal :power off
+               gpro_t.receive_copy_cmd = ack_app_power_off;
+            }
+
 
         }
-        else if(pdata[3] == 0x05){ //link wifi command .
+        else if(pdata[3] == 0x05){ //link wifi command copy command..
 
         if(pdata[4]==1){
 
@@ -334,10 +348,32 @@ void send_cmd_ack_hanlder(void)
     
     
         break;
+
+        case ack_app_timer_power_on:
+
+           if(gpro_t.receive_copy_cmd == ack_app_timer_power_on){
+             gpro_t.receive_copy_cmd =0;
+             gpro_t.send_ack_cmd = 0;
+            
+          }
+          else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
+             gpro_t.gTimer_again_send_power_on_off =0;
+              SendWifiData_To_Cmd(0x21,0x01); //smart phone is power on
+          }
+
+        break;
     
         case ack_wifi_on:
     
+          if(gpro_t.receive_copy_cmd == ack_wifi_on){
+             gpro_t.receive_copy_cmd =0;
+             gpro_t.send_ack_cmd = 0;
             
+          }
+          else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
+             gpro_t.gTimer_again_send_power_on_off =0;
+             SendWifiData_To_Data(0x1F,0x0);
+          }
     
     
         break;

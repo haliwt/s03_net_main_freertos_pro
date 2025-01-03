@@ -791,11 +791,14 @@ void Json_Parse_Command_Fun(void)
 		
 			   MqttData_Publish_SetOpen(1);  
 			   osDelay(100);//HAL_Delay(350);
-		
+
+               gpro_t.send_ack_cmd = ack_app_timer_power_on;
+               gpro_t.gTimer_again_send_power_on_off=0;
 		
 			   gpro_t.gpower_on = power_on;
-			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open 
+			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open that App timer 
 			   HAL_Delay(10);
+               
             
 			   buzzer_temp_on=0;
 		         
@@ -812,6 +815,8 @@ void Json_Parse_Command_Fun(void)
 			       osDelay(100);//HAL_Delay(350);
 	
 	            gpro_t.gpower_on = power_off;
+                gpro_t.send_ack_cmd = ack_app_power_off; //WT.EDIT 2024.12.31
+                gpro_t.gTimer_again_send_power_on_off=0;
 
 			SendWifiData_To_Cmd(0x21,0x0); //turn off power off
 			HAL_Delay(10);

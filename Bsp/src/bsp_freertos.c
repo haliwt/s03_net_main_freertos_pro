@@ -117,6 +117,8 @@ static void vTaskMsgPro(void *pvParameters)
       }
      
     // clear_rx_copy_data();
+    
+     send_cmd_ack_hanlder();
    
      vTaskDelay(30);//30
      
