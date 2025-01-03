@@ -87,7 +87,7 @@ void power_on_handler(void)
           osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
         }
 	   
-    
+       
 	break;
         
     case UPDATE_TO_PANEL_DATA: //5

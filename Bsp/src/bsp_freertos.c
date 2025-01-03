@@ -90,6 +90,7 @@ static void vTaskMsgPro(void *pvParameters)
       
     if(power_on_sound_flag == 0){
         power_on_sound_flag ++;
+        FAN_Stop();  //WT.EDIT.2025.01.03
         buzzer_sound();
 
     }

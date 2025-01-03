@@ -117,8 +117,8 @@ void SetPowerOff_ForDoing(void)
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
 	PTC_SetLow();
-	FAN_Stop();
-	HAL_Delay(10);
+	//FAN_Stop();  //WT.EDIT.2025.01.03
+	//HAL_Delay(10);
 
 }
 
@@ -245,7 +245,9 @@ void updateMainboard_fun(void)
 
 void every_power_on_run(void)
 {
- if(gctl_t.app_timer_power_on_flag==0){
+
+   Fan_Full_Speed();//WT.EDIT 2025.01.03//Fan_RunSpeed_Fun();//FAN_CCW_RUN();
+   if(gctl_t.app_timer_power_on_flag==0){
      
       gctl_t.gModel=1;
       gctl_t.gFan = 1;
@@ -256,9 +258,6 @@ void every_power_on_run(void)
       gctl_t.gTimer_fan_run_one_minute=0;
 
  
-      
-          
-      Fan_RunSpeed_Fun();//FAN_CCW_RUN();
       PLASMA_SetHigh();
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
       PTC_SetHigh();
