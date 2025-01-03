@@ -384,7 +384,7 @@ void wifi_get_beijing_time_handler(void)
            net_t.linking_tencent_cloud_doing =1;
         
 
-            WIFI_IC_ENABLE();
+          //  WIFI_IC_ENABLE();
        
     		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
             HAL_Delay(1000);
@@ -572,7 +572,7 @@ void wifi_auto_detected_link_state(void)
 static void Auto_InitWifiModule_Hardware(void)
 {
   
-	WIFI_IC_ENABLE();
+	//WIFI_IC_ENABLE();
 	if(power_on_login_tencent_cloud_flag ==0){
 	   power_on_login_tencent_cloud_flag=1;
 	   gpro_t.gTimer_power_on_first_link_tencent=0;
