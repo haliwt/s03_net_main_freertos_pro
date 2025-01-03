@@ -696,12 +696,15 @@ void Json_Parse_Command_Fun(void)
 
 	  case STATE_TIMER_MODEL_ITEM: //timer timing mode 0x0A
 	  if(gpro_t.gpower_on ==power_on){
-	         gctl_t.gModel=2;
-            MqttData_Publish_SetState(2);
-			osDelay(100);//HAL_Delay(350);
-        
-			SendWifiData_To_Cmd(0x27,0x02);
-		   HAL_Delay(5);
+
+      
+            gctl_t.gModel=2;
+             MqttData_Publish_SetState(2);
+    	     osDelay(100);//HAL_Delay(350);
+             
+    	    SendWifiData_To_Cmd(0x27,0x02);
+
+           
         }
     
 	    buzzer_temp_on=0;
@@ -711,16 +714,17 @@ void Json_Parse_Command_Fun(void)
 	  case STATE_AI_MODEL_ITEM: // beijing timing 0x09
 	  	 if(gpro_t.gpower_on ==power_on){
 		
-		    gctl_t.gModel=1;
-            MqttData_Publish_SetState(1);
-			osDelay(100);//HAL_Delay(350);
-          
-			SendWifiData_To_Cmd(0x27,0x01);
-		   HAL_Delay(5);
+              gctl_t.gModel=1;
+              MqttData_Publish_SetState(1);
+    		  osDelay(100);//HAL_Delay(350);
+            
+    		   SendWifiData_To_Cmd(0x27,0x01);
+
+            
         }
      
 		buzzer_temp_on=0;
-	   gctl_t.response_wifi_signal_label = 0xff;
+	    gctl_t.response_wifi_signal_label = 0xff;
 	  	break;
 
 	  case TEMPERATURE_ITEM:

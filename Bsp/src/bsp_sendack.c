@@ -237,6 +237,7 @@ void receive_data_fromm_display(uint8_t *pdata)
       if(pdata[3] == 0x02){
        
          gctl_t.gModel=2;
+         SendWifiData_Answer_Cmd(0x27,0x02); //don't AI mode,   WT.EDIT 2025.01.03
          MqttData_Publish_SetState(2);
 	     osDelay(100);//HAL_Delay(350);
         
@@ -246,6 +247,7 @@ void receive_data_fromm_display(uint8_t *pdata)
        else if(pdata[3] == 0x01){ //AI mode 
        
          gctl_t.gModel=1;
+         SendWifiData_Answer_Cmd(0x27,0x01); //AI mode,WT.EDIT 2025.01.03
          MqttData_Publish_SetState(1);
 	     osDelay(100);//HAL_Delay(350);
        }
