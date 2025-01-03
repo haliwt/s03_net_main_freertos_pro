@@ -796,15 +796,17 @@ void Json_Parse_Command_Fun(void)
 			   MqttData_Publish_SetOpen(1);  
 			   osDelay(100);//HAL_Delay(350);
 
-               gpro_t.send_ack_cmd = ack_app_timer_power_on;
-               gpro_t.gTimer_again_send_power_on_off=0;
+              
 		
 			   gpro_t.gpower_on = power_on;
 			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open that App timer 
-			   HAL_Delay(10);
+			   osDelay(10);//HAL_Delay(10);
                
             
 			   buzzer_temp_on=0;
+   
+               gpro_t.send_ack_cmd = ack_app_timer_power_on;
+               gpro_t.gTimer_again_send_power_on_off=0;
 		         
 
 				
@@ -867,6 +869,38 @@ void Parse_Json_Statement(void)
 
    //if(rx_app_timer_power_on_flag == 1){
     
+    if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
+			
+			     ultrasonic_open_flag=0;//gctl_t.gUlransonic=0;
+				
+			
+		}
+		else if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
+			
+				ultrasonic_open_flag=1;//gctl_t.gUlransonic=1;
+				
+		   }
+        
+           
+      if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
+			
+				   plasma_open_flag=0;//gctl_t.gPlasma=0;
+				
+				
+			 
+		}
+		else if(strstr((char *)TCMQTTRCVPUB,"Anion\":1")){
+			
+				plasma_open_flag=1;//gctl_t.gPlasma=1;
+				
+			
+				
+		}
+
+
+    
+    
+    
      if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 				
 			dry_open_flag=0;//gctl_t.gDry=0;
@@ -881,34 +915,9 @@ void Parse_Json_Statement(void)
 					
 		}
 		
-		if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
-			
-				   plasma_open_flag=0;//gctl_t.gPlasma=0;
-				
-				
-			 
-		}
-		else if(strstr((char *)TCMQTTRCVPUB,"Anion\":1")){
-			
-				plasma_open_flag=1;//gctl_t.gPlasma=1;
-				
-			
-				
-		}
 		
-		if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
-			
-			     ultrasonic_open_flag=0;//gctl_t.gUlransonic=0;
-				
-			
-		}
-		else if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
-			
-				ultrasonic_open_flag=0;//gctl_t.gUlransonic=1;
-				
-		   }
-
-
+		
+		
 
       rx_app_timer_power_on_flag ++;
 
