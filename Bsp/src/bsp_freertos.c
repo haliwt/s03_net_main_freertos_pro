@@ -52,6 +52,7 @@ uint8_t check_code;
 
 uint8_t bcc_check_code;
 
+uint16_t test_n;
 
 /**********************************************************************************************************
 *
@@ -94,7 +95,7 @@ static void vTaskMsgPro(void *pvParameters)
         buzzer_sound();
 
     }
-     
+    test_n++;
     if( gpro_t.gpower_on == power_on){
 
         power_on_handler();
@@ -106,11 +107,11 @@ static void vTaskMsgPro(void *pvParameters)
           osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
          }
     }
-    else{
-        gpro_t.process_run_step=0;
-        gl_tMsg.link_wifi_net_flag=0;
-        power_off_handler();
-    }
+//    else{
+//        gpro_t.process_run_step=0;
+//        gl_tMsg.link_wifi_net_flag=0;
+//        power_off_handler();
+//    }
 
     if(gpro_t.wifi_led_fast_blink_flag==0 ){
          wifi_get_beijing_time_handler();
@@ -137,7 +138,7 @@ static void vTaskStart(void *pvParameters)
 {
   
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(500); /* 1.测试设定的-设置最大等待时间为50ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(1000); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
 
 	
@@ -163,6 +164,14 @@ static void vTaskStart(void *pvParameters)
             }
             
         }
+        }
+        else if(gpro_t.gpower_on == power_off){
+
+               gpro_t.process_run_step=0;
+               gl_tMsg.link_wifi_net_flag=0;
+               power_off_handler();
+
+
         }
     }
 }

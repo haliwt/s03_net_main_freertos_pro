@@ -547,8 +547,10 @@ void Json_Parse_Command_Fun(void)
 	    HAL_Delay(200);
 
 		gctl_t.ptc_warning =0;
-		//gctl_t.fan_warning =0;
+		
         fan_warning_flag =0;
+        powerOffTunrOff_flag=1;
+        powerOffFanRun_flag = 1;
 		gctl_t.ptc_remove_warning_send_data =0;
 		gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
 		gpro_t.send_ack_cmd = ack_app_power_on;
@@ -565,9 +567,11 @@ void Json_Parse_Command_Fun(void)
 
       
 		 	MqttData_Publish_SetOpen(0);  
-			HAL_Delay(100);
+			osDelay(100);
 
             gpro_t.gpower_on = power_off;
+            powerOffTunrOff_flag=1; //WT.EDIT 2025.01.04
+            powerOffFanRun_flag = 1;
             gpro_t.send_ack_cmd = ack_app_power_off;
             gpro_t.gTimer_again_send_power_on_off=0;
 	
@@ -821,11 +825,13 @@ void Json_Parse_Command_Fun(void)
 			       osDelay(100);//HAL_Delay(350);
 	
 	            gpro_t.gpower_on = power_off;
+                powerOffTunrOff_flag = 1; //WT.EDIT.2025.01.04
+                powerOffFanRun_flag = 1;
                 gpro_t.send_ack_cmd = ack_app_power_off; //WT.EDIT 2024.12.31
                 gpro_t.gTimer_again_send_power_on_off=0;
 
 			SendWifiData_To_Cmd(0x21,0x0); //turn off power off
-			HAL_Delay(10);
+			osDelay(10);//HAL_Delay(10);
        
 		      buzzer_temp_on=0;
 				
