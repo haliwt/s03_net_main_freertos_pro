@@ -215,7 +215,7 @@ extern uint8_t stopHours_flag;
 void power_on_handler(void);
 
 
-void power_off_handler(void);
+
 
 
 

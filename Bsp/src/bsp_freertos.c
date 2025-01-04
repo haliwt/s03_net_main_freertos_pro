@@ -121,7 +121,7 @@ static void vTaskMsgPro(void *pvParameters)
     
      send_cmd_ack_hanlder();
    
-     vTaskDelay(30);//30
+     vTaskDelay(20);//30
      
     }
 

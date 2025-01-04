@@ -12,6 +12,7 @@
 
 #include "bsp_cmd_link.h"
 #include "bsp_sendack.h"
+#include "bsp_poweroff.h"
 
 #include "interrupt_manager.h"
 #include "bsp_subscription.h"
