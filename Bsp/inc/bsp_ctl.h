@@ -212,29 +212,9 @@ extern uint8_t stopHours_flag;
 
 
 
-void power_on_handler(void);
-
-
-
-
-
-
-
-
-
-void Single_RunCmd(uint8_t sig);
-
-void Single_Mode(void);
-
-void Single_ReceiveCmd(uint8_t cmd);
-void SystemReset(void);
-
-void works_run_two_hours_state(void);
-
-
-
 
 void main_function_detected_handler(uint8_t cmd);
+
 
 
 

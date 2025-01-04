@@ -13,6 +13,7 @@
 #include "bsp_cmd_link.h"
 #include "bsp_sendack.h"
 #include "bsp_poweroff.h"
+#include "bsp_time.h"
 
 #include "interrupt_manager.h"
 #include "bsp_subscription.h"
@@ -143,6 +144,7 @@ void adc_detected_hundler(void);
 void wifi_auto_detected_link_state(void);
 
 void link_wifi_to_tencent_handler(uint8_t data);
+
 
 
 
