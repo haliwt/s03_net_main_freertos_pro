@@ -270,6 +270,9 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
                 real_minutes =(gpro_t.wifi_rx_data_array[44]-0x30)*10 + gpro_t.wifi_rx_data_array[45]-0x30;
                 real_seconds = (gpro_t.wifi_rx_data_array[47]-0x30)*10 + gpro_t.wifi_rx_data_array[48]-0x30;
 
+                //memcpy(time_str,gpro_t.wifi_rx_data_array,sizeof(gpro_t.wifi_rx_data_array));
+                ///net_parse_beijint_time();
+
                 wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
                 gpro_t.disp_works_hours = real_hours;    
                     gpro_t.disp_works_minutes = real_minutes;

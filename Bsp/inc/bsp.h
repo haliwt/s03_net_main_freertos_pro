@@ -13,7 +13,9 @@
 #include "bsp_cmd_link.h"
 #include "bsp_sendack.h"
 #include "bsp_poweroff.h"
+#include "bsp_poweron.h"
 #include "bsp_time.h"
+#include "bsp_netparse.h"
 
 #include "interrupt_manager.h"
 #include "bsp_subscription.h"
@@ -86,7 +88,7 @@ typedef struct PROCESS_T{
 
    uint8_t gpower_on;
    uint8_t disp_rx_cmd_done_flag;
-   uint8_t wifi_rx_data_array[150];
+   uint8_t  wifi_rx_data_array[150];
    uint8_t wifi_rx_data_counter;
 
 
