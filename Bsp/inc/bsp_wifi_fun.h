@@ -54,7 +54,7 @@ typedef struct _WIFI_FUN{
 	
 
     uint8_t gTimer_auto_detected_net_state_times ;
-    uint8_t gTimer_read_beijing_time;
+  
 
     uint8_t gTimer_auto_link_net_time;
 

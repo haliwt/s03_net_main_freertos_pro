@@ -246,10 +246,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
          break;
 
          case 1:
-             //if(wifi_t.gTimer_read_beijing_time > 0 ){//
-    		
-                wifi_t.gTimer_read_beijing_time=0;
-                 //disable publish data to tencent cloud.
+                //disable publish data to tencent cloud.
                 gpro_t.gTimer_get_data_from_tencent_data=0;
                 wifi_t.get_rx_beijing_time_enable=1;
         		gpro_t.wifi_rx_data_counter =0;
@@ -257,10 +254,10 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
               
         	    osDelay(100);//HAL_Delay(20); //WT.EDIT .2024.08.10
                 
-        		wifi_t.gTimer_read_beijing_time=0;
+        	
                 beijing_step =2;
           
-          //  }
+         
 
           break; 
 

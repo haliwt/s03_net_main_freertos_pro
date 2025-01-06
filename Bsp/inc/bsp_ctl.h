@@ -183,7 +183,7 @@ typedef struct _RUN_T{
 	 uint8_t gTimer_senddata_panel;
 	
 	 uint16_t ptc_temp_voltage;
-     uint8_t  gTimer_read_beijing_time;
+   
 	 uint8_t gTimer_linkTencentCounter;
 	
 	uint8_t gTimer_usart2_error;

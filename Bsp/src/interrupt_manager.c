@@ -105,7 +105,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 	 
-	    gctl_t.gTimer_read_beijing_time++;
+
 
 
 	   gctl_t.gTimer_usart_error++;
