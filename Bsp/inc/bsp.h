@@ -135,7 +135,7 @@ uint8_t bcc_check(const unsigned char *data, int len);
 
 void send_data_to_disp(void);
 
-void wifi_get_beijing_time_handler(void);
+
 
 
 void adc_detected_hundler(void);
@@ -145,6 +145,7 @@ void wifi_auto_detected_link_state(void);
 
 void link_wifi_to_tencent_handler(uint8_t data);
 
+void wifi_communication_tnecent_handler(void);
 
 
 

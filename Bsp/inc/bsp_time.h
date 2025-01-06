@@ -7,6 +7,7 @@
 void works_run_two_hours_state(void);
 
 
+void getBeijingTime_cofirmLinkNetState_handler(void);
 
 
 
