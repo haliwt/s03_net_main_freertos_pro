@@ -108,17 +108,13 @@ static void vTaskMsgPro(void *pvParameters)
          }
     }
 
-    if(gpro_t.wifi_led_fast_blink_flag==0 ){
-         wifi_communication_tnecent_handler();//
-         getBeijingTime_cofirmLinkNetState_handler();
-         wifi_auto_detected_link_state();
-      }
+   
      
     // clear_rx_copy_data();
     
      send_cmd_ack_hanlder();
    
-     vTaskDelay(20);//30
+     vTaskDelay(40);//30
      
     }
 
@@ -134,9 +130,9 @@ static void vTaskStart(void *pvParameters)
 {
   
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(300); /* 1.测试设定的-设置最大等待时间为50ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(500); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
-
+    static uint8_t power_off_times_flag =0;
 	
     while(1)
     {
@@ -161,12 +157,21 @@ static void vTaskStart(void *pvParameters)
             
         }
         }
-        else if(gpro_t.gpower_on == power_off){
+        else{ 
 
+         if(gpro_t.gpower_on == power_off){
+               power_off_times_flag =1;
                gpro_t.process_run_step=0;
                gl_tMsg.link_wifi_net_flag=0;
                power_off_handler();
 
+
+             }
+          if(gpro_t.wifi_led_fast_blink_flag==0 ){
+             wifi_communication_tnecent_handler();//
+             getBeijingTime_cofirmLinkNetState_handler();
+             wifi_auto_detected_link_state();
+          }
 
         }
     }
@@ -191,7 +196,7 @@ void AppTaskCreate (void)
 	
 	xTaskCreate( vTaskMsgPro,     		/* 任务函数  */
                  "vTaskMsgPro",   		/* 任务各1�7    */
-                 256,             		/* 任务栈大小，单位word，也就是4字节 */
+                 128,             		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
                  1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskMsgPro );  /* 任务句柄  */

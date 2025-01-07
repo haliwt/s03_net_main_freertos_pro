@@ -133,7 +133,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
        
 
-        if(flag_switch == 1){
+        if(flag_switch > 4){
             wifi_t.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
             osDelay(30);//HAL_Delay(200)
@@ -141,7 +141,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
             
         }
-        else if(gpro_t.gpower_on == power_off){
+        else if(gpro_t.gpower_on == power_off && flag_switch > 4){
             flag_switch=0;
             wifi_t.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
@@ -151,8 +151,9 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
          }
          else{ //WT.EDIT 2024.08.10 ADD ITEM
-             
-              flag_switch=0;
+              if(flag_switch > 5){
+                 flag_switch=0;
+              }
               wifi_t.get_rx_beijing_time_enable=0; 
               gpro_t.get_beijing_flag = 1;
              
@@ -168,7 +169,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
    case 1:
 
-        if(wifi_t.gTimer_get_beijing_time > 70 ){//WT.EDIT 2025.01.06 //100
+        if(wifi_t.gTimer_get_beijing_time > 65 ){//WT.EDIT 2025.01.06 //100
 
          wifi_t.gTimer_get_beijing_time=0;
         
@@ -429,18 +430,18 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
           if(gpro_t.gpower_on == power_on){
                 MqttData_Publish_Update_Data();//Publish_Data_ToTencent_Initial_Data();
-                HAL_Delay(200);
+                osDelay(200);//HAL_Delay(200);
 
             }
             else if(gpro_t.gpower_on == power_off){
 
                MqttData_Publish_PowerOff_Ref();
-               HAL_Delay(200);
+               osDelay(200);//HAL_Delay(200);
 
 
             }
             Subscriber_Data_FromCloud_Handler();
-            HAL_Delay(200);
+            osDelay(200);//HAL_Delay(200);
 
             SendWifiData_To_Data(0x1F,0x01); //0x1F: wifi link net is succes 
 

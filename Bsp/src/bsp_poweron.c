@@ -72,13 +72,13 @@ void power_on_handler(void)
             
 
 			Publish_Data_ToTencent_Initial_Data();
-			HAL_Delay(200);
+			osDelay(100);//HAL_Delay(200);
 
             MqttData_Publish_SetOpen(0x01);
-			HAL_Delay(100);
+			osDelay(100);//HAL_Delay(100);
 
             Subscriber_Data_FromCloud_Handler();
-    		HAL_Delay(100);//HAL_Delay(350);
+    		osDelay(100);//HAL_Delay(100);//HAL_Delay(350);
 
              SendWifiData_To_Data(0x1F,0x01);
              osDelay(20);
@@ -100,5 +100,34 @@ void power_on_handler(void)
      break;
   }
 }
-      
+
+
+void power_on_first_handler(void)
+{
+
+   if(wifi_link_net_state() ==1 && gctl_t.app_timer_power_on_flag==0){
+	
+           MqttData_Publish_SetOpen(0x01);
+           osDelay(100);//HAL_Delay(100);
+
+
+           Publish_Data_ToTencent_Initial_Data();
+			osDelay(100);//HAL_Delay(200);
+
+           
+
+            Subscriber_Data_FromCloud_Handler();
+    		osDelay(30);//HAL_Delay(100);//HAL_Delay(350);
+
+             SendWifiData_To_Data(0x1F,0x01);
+             osDelay(20);
+
+             Update_DHT11_Value();
+              osDelay(20);
+	
+	  }
+
+
+
+}
 
