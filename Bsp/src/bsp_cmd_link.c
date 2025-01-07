@@ -284,7 +284,7 @@ void SendWifiData_Answer_Cmd(uint8_t cmd ,uint8_t data)
 {
         outputBuf[0]=0x5A; //head : main board 0x5A
         outputBuf[1]=0x10; //main board device No: 0x10
-        outputBuf[2]=0xFE; // answer cmd :
+        outputBuf[2]=0xFF; // answer cmd :
         outputBuf[3]= cmd; // 0x0F : is data ,don't command order.
         outputBuf[4]= data; // don't data ,onlay is command order,recieve data is 1byte .
        

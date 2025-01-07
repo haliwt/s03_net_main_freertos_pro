@@ -163,7 +163,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
       
        if(pdata[3] == 0x01){  //buzzer sound 
-            SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2024.12.28
+            SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
             buzzer_sound();
             
             pdata[2] =0xff;
@@ -184,7 +184,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
         if(pdata[3] == 0x0F){ //数据
 
-            gctl_t.set_temperature_value = pdata[5] ;
+           gctl_t.set_temperature_value = pdata[5] ;
 
           MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
 		  osDelay(20);//HAL_Delay(350);
@@ -275,7 +275,7 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      break;
 
-     case 0xFE: //copy send cmd acknowlege
+     case 0xFF: //copy send cmd acknowlege
      //power on or power off 
         if(pdata[3]==0x31){ //smart phone normal :power on
             if(pdata[4]==1){ //power on

@@ -108,7 +108,7 @@ typedef struct PROCESS_T{
    
    uint8_t disp_works_hours ;    
    uint8_t disp_works_minutes ;
-   uint8_t disp_works_time_seconds ;
+   uint8_t gTimer_works_time_seconds ;
 
    uint8_t gTimer_power_on_first_link_tencent;
    uint8_t gTimer_get_data_from_tencent_data;

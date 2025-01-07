@@ -6,15 +6,65 @@ uint8_t real_hours,real_minutes,real_seconds;
 
 uint8_t auto_link_net_flag;
 
+/**********************************************************************
+    *
+    *Functin Name: void works_times_handler(void)
+    *Function :  
+    *Input Ref: NO
+    *Return Ref: NO
+    *
+************************************************************************/
+void works_times_handler(void)
+{
+
+  static uint8_t send_flag;
+
+   if(gpro_t.gTimer_works_time_seconds > 59){
+
+       gpro_t.gTimer_works_time_seconds =0;
+
+        gpro_t.disp_works_minutes++;
+        send_flag = 1;
+        if(gpro_t.disp_works_minutes > 59){
+               gpro_t.disp_works_hours ++;   
+                    
+               if(gpro_t.disp_works_hours >23){
+                    gpro_t.disp_works_hours =0;
+                    gpro_t.disp_works_minutes=0;
+                    gpro_t.gTimer_works_time_seconds =0;
+
+
+
+               }
+                    
+
+         }
+
+
+
+   }
+
+
+   if(send_flag ==1){
+       send_flag ++ ;
+
+       SendWifiData_To_PanelTime(gpro_t.disp_works_hours,gpro_t.disp_works_minutes,gpro_t.gTimer_works_time_seconds);
+
+   }
+    
+
+
+
+}
 
 
 
 
 /**********************************************************************
     *
-    *Functin Name: 
-    *Function : be check key of value 
-    *Input Ref:  key of value
+    *Functin Name: void works_run_two_hours_state(void)
+    *Function :  
+    *Input Ref: NO
     *Return Ref: NO
     *
 ************************************************************************/
@@ -278,10 +328,10 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
                 gpro_t.disp_works_hours = real_hours;    
                     gpro_t.disp_works_minutes = real_minutes;
 
-                    gpro_t.disp_works_time_seconds = real_seconds;
+                    gpro_t.gTimer_works_time_seconds = real_seconds;
                     gpro_t.get_beijing_time_success = 1;
 
-                    SendWifiData_To_PanelTime(gpro_t.disp_works_hours,gpro_t.disp_works_minutes,gpro_t.disp_works_time_seconds);
+                    SendWifiData_To_PanelTime(gpro_t.disp_works_hours,gpro_t.disp_works_minutes,gpro_t.gTimer_works_time_seconds);
                     osDelay(50);
 
                    gpro_t.get_beijing_flag = 6; //WT.EDIT 2025.01.06
