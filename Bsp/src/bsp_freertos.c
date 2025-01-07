@@ -82,6 +82,7 @@ void freeRTOS_Handler(void)
 *	
 *   
 **********************************************************************************************************/
+#if 0
 static void vTaskMsgPro(void *pvParameters)
 {
 	
@@ -95,30 +96,21 @@ static void vTaskMsgPro(void *pvParameters)
         buzzer_sound();
 
     }
-    test_n++;
-    if( gpro_t.gpower_on == power_on){
-
-        power_on_handler();
-        works_run_two_hours_state();
-        link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
-        if(wifi_link_net_state() ==1 && gl_tMsg.link_wifi_net_flag ==0){
-          gl_tMsg.link_wifi_net_flag ++;
-          Update_Dht11_Totencent_Value();
-          osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
-         }
-    }
-
+    
+    
+   
    
      
     // clear_rx_copy_data();
     
-     send_cmd_ack_hanlder();
+     
    
-     vTaskDelay(40);//30
+     vTaskDelay(20);//30
      
     }
 
 }
+#endif 
 /**********************************************************************************************************
 *	凄1�7 敄1�7 各1�7: vTaskStart
 *	功能说明: 启动任务，也就是朢�高优先级任务，这里用作按键扫描��1�7
@@ -132,7 +124,7 @@ static void vTaskStart(void *pvParameters)
 	BaseType_t xResult;
 	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(500); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
-    static uint8_t power_off_times_flag =0;
+    static uint8_t power_on_sound_flag ;
 	
     while(1)
     {
@@ -159,8 +151,19 @@ static void vTaskStart(void *pvParameters)
         }
         else{ 
 
-         if(gpro_t.gpower_on == power_off){
-               power_off_times_flag =1;
+        if( gpro_t.gpower_on == power_on){
+
+        power_on_handler();
+        works_run_two_hours_state();
+        link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
+        if(wifi_link_net_state() ==1 && gl_tMsg.link_wifi_net_flag ==0){
+          gl_tMsg.link_wifi_net_flag ++;
+          Update_Dht11_Totencent_Value();
+          osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
+         }
+         }
+         else if(gpro_t.gpower_on == power_off){
+          
                gpro_t.process_run_step=0;
                gl_tMsg.link_wifi_net_flag=0;
                power_off_handler();
@@ -172,8 +175,17 @@ static void vTaskStart(void *pvParameters)
              getBeijingTime_cofirmLinkNetState_handler();
              wifi_auto_detected_link_state();
           }
+          send_cmd_ack_hanlder();
 
+          if(power_on_sound_flag == 0){
+            power_on_sound_flag ++;
+            FAN_Stop();  //WT.EDIT.2025.01.03
+            buzzer_sound();
+
+            }
+          test_n++;
         }
+       
     }
 }
 /*
@@ -194,19 +206,19 @@ void AppTaskCreate (void)
 //                 1,           		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
 //                 &xHandleTaskRunPro); /* 任务句柄  */
 	
-	xTaskCreate( vTaskMsgPro,     		/* 任务函数  */
-                 "vTaskMsgPro",   		/* 任务各1�7    */
-                 256,             		/* 任务栈大小，单位word，也就是4字节 */
-                 NULL,           		/* 任务参数  */
-                 1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
-                 &xHandleTaskMsgPro );  /* 任务句柄  */
+//	xTaskCreate( vTaskMsgPro,     		/* 任务函数  */
+//                 "vTaskMsgPro",   		/* 任务各1�7    */
+//                 256,             		/* 任务栈大小，单位word，也就是4字节 */
+//                 NULL,           		/* 任务参数  */
+//                 1,               		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
+//                 &xHandleTaskMsgPro );  /* 任务句柄  */
 	
 	
 	xTaskCreate( vTaskStart,     		/* 任务函数  */
                  "vTaskStart",   		/* 任务各1�7    */
                  256,            		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
-                 2,              		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
+                 1,              		/* 任务优先纄1�7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskStart );   /* 任务句柄  */
 }
 
