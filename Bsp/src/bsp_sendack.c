@@ -142,18 +142,38 @@ void receive_data_fromm_display(uint8_t *pdata)
 
      break;
 
-     case 0x06: //buzzer sound command
+     case 0x06: //buzzer sound command 
 
         if(pdata[3] == 0x01){  //buzzer sound 
             buzzer_sound();
             pdata[2] =0xff;
-            *pdata = 0xff;
+           
 
         }
         else if(pdata[3] == 0x0){ // don't buzzer sound .
 
 
 
+        }
+
+
+     break;
+
+     case 0x16 : //buzzer sound command with answer .
+
+      
+       if(pdata[3] == 0x01){  //buzzer sound 
+            SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2024.12.28
+            buzzer_sound();
+            
+            pdata[2] =0xff;
+           
+ 
+        }
+        else if(pdata[3] == 0x0){ // don't buzzer sound .
+ 
+ 
+ 
         }
 
 
