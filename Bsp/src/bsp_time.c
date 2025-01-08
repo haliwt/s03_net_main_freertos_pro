@@ -5,7 +5,7 @@ uint8_t  beijing_step;
 uint8_t real_hours,real_minutes,real_seconds;
 
 uint8_t auto_link_net_flag;
-
+#if 0
 /**********************************************************************
     *
     *Functin Name: void works_times_handler(void)
@@ -57,7 +57,7 @@ void works_times_handler(void)
 
 }
 
-
+#endif 
 
 
 /**********************************************************************

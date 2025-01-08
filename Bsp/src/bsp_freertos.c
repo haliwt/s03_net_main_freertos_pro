@@ -6,7 +6,7 @@
 											函数声明
 ***********************************************************************************************************/
 //static void vTaskRunPro(void *pvParameters);
-static void vTaskMsgPro(void *pvParameters);
+//static void vTaskMsgPro(void *pvParameters);
 static void vTaskStart(void *pvParameters);
 static void AppTaskCreate (void);
 
@@ -19,7 +19,7 @@ static void AppTaskCreate (void);
 											变量声明
 ***********************************************************************************************************/
 //static TaskHandle_t xHandleTaskRunPro = NULL;
-static TaskHandle_t xHandleTaskMsgPro = NULL;
+//static TaskHandle_t xHandleTaskMsgPro = NULL;
 static TaskHandle_t xHandleTaskStart = NULL;
 
 //static QueueHandle_t xQueue1 = NULL;
@@ -122,7 +122,7 @@ static void vTaskStart(void *pvParameters)
 {
   
 	BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(500); /* 1.测试设定的-设置最大等待时间为50ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(1000); /* 1.测试设定的-设置最大等待时间为50ms */
     uint32_t ulValue;
     static uint8_t power_on_sound_flag ;
 	
@@ -135,19 +135,19 @@ static void vTaskStart(void *pvParameters)
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
 						          xMaxBlockTime);  /* 最大允许延迟时间,等待时间-block portMAX_DELAY */
          if(xResult == pdPASS){
-         if((ulValue & DECODER_BIT_0 ) != 0)
-         {
-            gpro_t.disp_rx_cmd_done_flag = 0;
+             if((ulValue & DECODER_BIT_0 ) != 0)
+             {
+                gpro_t.disp_rx_cmd_done_flag = 0;
 
-            check_code =  bcc_check(gl_tMsg.usData,uid);
+                check_code =  bcc_check(gl_tMsg.usData,uid);
 
-           if(check_code == bcc_check_code ){
-           
-              receive_data_fromm_display(gl_tMsg.usData);
-              
+               if(check_code == bcc_check_code ){
+               
+                  receive_data_fromm_display(gl_tMsg.usData);
+                  
+                }
+                
             }
-            
-        }
         }
         else{ 
 

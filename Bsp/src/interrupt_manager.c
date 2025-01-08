@@ -62,7 +62,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         tm1 =0;
       gTimer_powerOffRunFan++;
       stopHoursCounter++;
-      gpro_t.gTimer_works_time_seconds++;
+
 
       if(stopHoursCounter> 59){ //one minute
           stopHoursCounter =0;

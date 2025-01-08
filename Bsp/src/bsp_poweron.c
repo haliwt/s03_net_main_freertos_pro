@@ -58,12 +58,7 @@ void power_on_handler(void)
           osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
         }
 
-         if(gpro_t.get_beijing_time_success ==0){
-             gpro_t.disp_works_hours =0;
-             gpro_t.disp_works_minutes=0;
-             gpro_t.gTimer_works_time_seconds =0;
-         }
-	   
+      
        
 	break;
         
@@ -105,7 +100,7 @@ void power_on_handler(void)
      }
 
 
-     works_times_handler(); //WT.EDIT 2025.01.07
+    // works_times_handler(); //WT.EDIT 2025.01.07
 
      break;
   }
