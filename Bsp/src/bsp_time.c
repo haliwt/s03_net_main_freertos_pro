@@ -183,7 +183,8 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
        
 
-        if(flag_switch > 4){
+        if(flag_switch > 4 && gpro_t.gpower_on == power_on){
+             flag_switch=0;
             wifi_t.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
             osDelay(30);//HAL_Delay(200)

@@ -151,30 +151,35 @@ static void vTaskStart(void *pvParameters)
         }
         else{ 
 
-        if( gpro_t.gpower_on == power_on){
+         switch(gpro_t.gpower_on){ 
 
-        power_on_handler();
-        works_run_two_hours_state();
-        link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
-        if(wifi_link_net_state() ==1 && gl_tMsg.link_wifi_net_flag ==0){
-          gl_tMsg.link_wifi_net_flag ++;
-          Update_Dht11_Totencent_Value();
-          osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
-         }
-         }
-         else if(gpro_t.gpower_on == power_off){
-          
-               gpro_t.process_run_step=0;
-               gl_tMsg.link_wifi_net_flag=0;
-               power_off_handler();
-
-
+            case power_on:
+            power_on_handler();
+            works_run_two_hours_state();
+            link_wifi_to_tencent_handler(gpro_t.wifi_led_fast_blink_flag); //detected ADC of value 
+            if(wifi_link_net_state() ==1 && gl_tMsg.link_wifi_net_flag ==0){
+              gl_tMsg.link_wifi_net_flag ++;
+              Update_Dht11_Totencent_Value();
+              osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
              }
+             
+               fan_run_fun();
+            break;
+
+            case power_off:
+      
+              gpro_t.process_run_step=0;
+              gl_tMsg.link_wifi_net_flag=0;
+              power_off_handler();
+             break;
+          }
+         
           if(gpro_t.wifi_led_fast_blink_flag==0 ){
              wifi_communication_tnecent_handler();//
              getBeijingTime_cofirmLinkNetState_handler();
              wifi_auto_detected_link_state();
           }
+         
           send_cmd_ack_hanlder();
 
           if(power_on_sound_flag == 0){

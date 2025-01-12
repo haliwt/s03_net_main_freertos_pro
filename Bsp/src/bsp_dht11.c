@@ -355,6 +355,16 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 #endif 
 
 
+void sensor_dht11_init(void)
+{
+
+    Dht11_Read_TempHumidity_Handler(&DHT11);
+   
+
+
+}
+
+
 void Update_DHT11_Value(void)
 {
     

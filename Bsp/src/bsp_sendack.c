@@ -23,9 +23,10 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x01: //表示开机指令
 
         if(pdata[3] == 0x01){ //open
-           buzzer_sound_fun();
+          
            
-          SendWifiData_Answer_Cmd(0x01,0x01);
+          do{
+           
            gpro_t.gpower_on = power_on;
             gctl_t.gModel=1;
     	    gctl_t.gFan = 1;
@@ -35,14 +36,28 @@ void receive_data_fromm_display(uint8_t *pdata)
     		plasma_open_flag =1;
     		ultrasonic_open_flag=1;//gctl_t.gUlransonic = 1; // "驱虫"
     	    gctl_t.gTimer_fan_run_one_minute=0;
+            gpro_t.process_run_step=0;     //WT.EDIT 2025.01.11
             fan_run_fun();//SetLevel_Fan_PWMA(10); //WT.EDIT 2024.12.24
+            PTC_SetHigh(); // the moment open ptc  //WT.EDIT 2025.01.11
+            SendWifiData_Answer_Cmd(0x01,0x01);
+            buzzer_sound();//buzzer_sound_fun();
+
+            
+            }while(0);
             
 
         }
         else if(pdata[3] == 0x0){ //close 
-           buzzer_sound();
-           SendWifiData_Answer_Cmd(0x01,0x02); //power off .
-           gpro_t.gpower_on = power_off;
+           
+           do{
+              power_off_action_fun();
+              powerOffTunrOff_flag=1;
+              gpro_t.gpower_on = power_off;
+              SendWifiData_Answer_Cmd(0x01,0x02); //power off .
+              buzzer_sound();
+              
+
+           }while(0);
 
 
         }
@@ -125,7 +140,7 @@ void receive_data_fromm_display(uint8_t *pdata)
        if(pdata[3] == 0x01){  // link wifi 
          //  buzzer_sound();
          
-           gpro_t.link_net_step =0;
+          gpro_t.link_net_step =0;
 	      net_t.wifi_link_net_success=0;
           gpro_t.wifi_led_fast_blink_flag =1;
           gctl_t.wifi_config_net_lable=wifi_set_restor;
@@ -145,8 +160,11 @@ void receive_data_fromm_display(uint8_t *pdata)
      case 0x06: //buzzer sound command 
 
         if(pdata[3] == 0x01){  //buzzer sound 
+
+         do{
             buzzer_sound();
-            pdata[2] =0xff;
+             pdata[2] =0xff;
+          }while(0);
            
 
         }
@@ -163,10 +181,14 @@ void receive_data_fromm_display(uint8_t *pdata)
 
       
        if(pdata[3] == 0x01){  //buzzer sound 
+
+           do{
             SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
             buzzer_sound();
             
             pdata[2] =0xff;
+
+            }while(0);
            
  
         }

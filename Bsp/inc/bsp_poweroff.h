@@ -6,6 +6,7 @@ void power_off_handler(void);
 
     
 
+void power_off_action_fun(void);
 
 
 

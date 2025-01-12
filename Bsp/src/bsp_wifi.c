@@ -58,7 +58,7 @@ void link_wifi_net_handler(void)
 
       
 
-        switch( gpro_t.link_net_step){
+        switch(gpro_t.link_net_step){
 
             case 0: //one step
 

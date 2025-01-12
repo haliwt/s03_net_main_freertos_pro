@@ -11,9 +11,8 @@
 **********************************************************************/
 void power_on_handler(void)
 {
-  // uint8_t i;
 
-    
+   static uint8_t send_dht11;
     switch(gpro_t.process_run_step){
 
 	case 0: //1
@@ -49,7 +48,7 @@ void power_on_handler(void)
       
        
          Update_DHT11_Value();
-	    gpro_t.process_run_step= UPDATE_TO_PANEL_DATA;
+	   
 
         every_power_on_run();
         if(wifi_link_net_state() ==1){
@@ -59,10 +58,16 @@ void power_on_handler(void)
         }
 
       
-       
+        gpro_t.process_run_step= 1;
 	break;
         
-    case UPDATE_TO_PANEL_DATA: //5
+    case 1: //5
+
+     if(send_dht11 ==0){
+       send_dht11 ++;
+       Update_DHT11_Value();
+
+     }
 
   
 	if(gpro_t.wifi_led_fast_blink_flag==0){

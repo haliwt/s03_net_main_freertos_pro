@@ -10,7 +10,7 @@
 #define FAN_RUN_SetHigh()            HAL_GPIO_WritePin(FAN_GPIO,FAN_CCW,GPIO_PIN_SET)    // output high level
 #define FAN_RUN_SetLow()             HAL_GPIO_WritePin(FAN_GPIO,FAN_CCW,GPIO_PIN_RESET)    // output low level
 
-#define FAN_CW_SetHigh()            HAL_GPIO_WritePin(FAN_GPIO,FAN_CW,GPIO_PIN_SET)    // output high level
+#define FAN_COM_SetHigh()            HAL_GPIO_WritePin(FAN_GPIO,FAN_CW,GPIO_PIN_SET)    // output high level
 #define FAN_COM_SetLow()             HAL_GPIO_WritePin(FAN_GPIO,FAN_CW,GPIO_PIN_RESET)    // output low level
 
 

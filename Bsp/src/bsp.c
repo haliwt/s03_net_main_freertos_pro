@@ -13,7 +13,7 @@ uint8_t power_on_login_tencent_cloud_flag  ;
 void bsp_init(void)
 {
    delay_init(24);
-   Update_DHT11_Value();//dht11_init();
+   sensor_dht11_init();//Update_DHT11_Value();//dht11_init();
    buzzer_init();
    wifi_init();
 

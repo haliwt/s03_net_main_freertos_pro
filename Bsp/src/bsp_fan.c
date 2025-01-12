@@ -6,8 +6,9 @@ static void SetLevel_Fan_PWMA(uint8_t levelval);
 
 void fan_run_fun(void)
 {
-     FAN_COM_SetLow();
-	 FAN_RUN_SetHigh();
+    FAN_COM_SetLow();
+	FAN_RUN_SetHigh();
+	
 
 }
 
@@ -22,7 +23,7 @@ void FAN_Stop(void)
 void Fan_One_Power_Off_Speed(void)
 {
 	
-	SetLevel_Fan_PWMA(10);
+	 fan_run_fun();//SetLevel_Fan_PWMA(10);
 	
 
 
@@ -32,21 +33,21 @@ void Fan_One_Power_Off_Speed(void)
 void Fan_One_Speed(void)
 {
 
-	SetLevel_Fan_PWMA(8);
+	 fan_run_fun();//SetLevel_Fan_PWMA(8);
 
 
 }
 
 void Fan_Two_Speed(void)
 {
-	SetLevel_Fan_PWMA(9);
+	 fan_run_fun();//SetLevel_Fan_PWMA(9);
 
 }
 
  void Fan_Full_Speed(void)
 {
     
-    SetLevel_Fan_PWMA(10);
+     fan_run_fun();//SetLevel_Fan_PWMA(10);
 
 }
 
@@ -130,18 +131,18 @@ void Fan_RunSpeed_Fun(void)
 {
 
    if(gctl_t.set_wind_speed_value < 34 ){
-              Fan_One_Speed();
+              fan_run_fun();//Fan_One_Speed();
 		 }
 		 else if(gctl_t.set_wind_speed_value > 33  && gctl_t.set_wind_speed_value < 67 ){
 
-             Fan_Two_Speed();
+             fan_run_fun();//Fan_Two_Speed();
 
 		 }
 		 else if(gctl_t.set_wind_speed_value > 66){
 
          
 
-		 	Fan_Full_Speed();
+		 	fan_run_fun();//Fan_Full_Speed();
 
           }
 
