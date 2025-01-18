@@ -22,8 +22,6 @@ void bsp_init(void)
 
 void link_wifi_to_tencent_handler(uint8_t data)
 {
-
-    
     if(data == 1){//if(gpro_t.wifi_led_fast_blink_flag==1){
         if(gctl_t.gTimer_linkTencentCounter  > 119){
 
@@ -172,9 +170,6 @@ void wifi_auto_detected_link_state(void)
       Auto_InitWifiModule_Hardware();//InitWifiModule();
       Auto_SmartPhone_TryToLink_TencentCloud();
 	 
-
-	
-       
     }
     if(wifi_link_net_state()==1    && gpro_t.gTimer_dc_power_on_auto_link_net > 1 && dc_power_on ==0 ){
               

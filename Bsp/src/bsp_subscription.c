@@ -591,28 +591,19 @@ void Json_Parse_Command_Fun(void)
          MqttData_Publish_SetPtc(0x01);
 	  	 osDelay(100);//HAL_Delay(350);
 
-         if(gpro_t.stopTwoHours_flag ==0){
-	       dry_open_flag=1;//gctl_t.gDry=1;
-           
-         }
-		
+        // if(gpro_t.stopTwoHours_flag ==0){
+	      dry_open_flag=1;//gctl_t.gDry=1;
+          gctl_t.gTimer_senddata_panel=8;   
+    
 		 SendWifiData_To_Cmd(0x02,0x01);
 		 HAL_Delay(5);
 		
-	     }
-		 else{
-			dry_open_flag=0;//gctl_t.gDry=0;
-            
-			MqttData_Publish_SetPtc(0);
-		    osDelay(100); //HAL_Delay(350);
-			SendWifiData_To_Cmd(0x02,0x0);
-            HAL_Delay(5);
-		 }
-         
-		  buzzer_temp_on=0;
-          gctl_t.response_wifi_signal_label=0xff;
-	  	}
-	    
+         }
+         }
+		 buzzer_temp_on=0;
+         gctl_t.response_wifi_signal_label=0xff;
+	  	
+       
 	   break;
 
 	  case PTC_OFF_ITEM:
@@ -621,15 +612,15 @@ void Json_Parse_Command_Fun(void)
          MqttData_Publish_SetPtc(0);
 		 osDelay(100);//HAL_Delay(350);
 	     dry_open_flag=0;//gctl_t.gDry=0;
-        
+         gctl_t.gTimer_senddata_panel=8;
 		
 		 SendWifiData_To_Cmd(0x02,0x0);
          HAL_Delay(5);
-	 
+         }
 		buzzer_temp_on=0;
 	     gctl_t.response_wifi_signal_label = 0xff;
 
-	  	}
+	  	
 	  	break;
 
 	  case ANION_OFF_ITEM: //"杀菌" //5
@@ -638,7 +629,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetPlasma(0);
 			osDelay(100);//HAL_Delay(350);
             plasma_open_flag=0;//gctl_t.gPlasma=0;
-			
+			gctl_t.gTimer_senddata_panel=8;
 			SendWifiData_To_Cmd(0x03,0x0);
 	  	   HAL_Delay(5);
 	  	}
@@ -651,9 +642,9 @@ void Json_Parse_Command_Fun(void)
 	  	if(gpro_t.gpower_on ==power_on){
             MqttData_Publish_SetPlasma(1);
 			osDelay(100);//HAL_Delay(350);
-			if(gpro_t.stopTwoHours_flag ==0){
+		
               plasma_open_flag=1;//gctl_t.gPlasma=1;
-            }
+              gctl_t.gTimer_senddata_panel=8;
 			
 			SendWifiData_To_Cmd(0x03,0x01);
 	  	   HAL_Delay(5);
@@ -670,7 +661,7 @@ void Json_Parse_Command_Fun(void)
 			osDelay(100);	//HAL_Delay(350);
 			
              ultrasonic_open_flag=0;// gctl_t.gUlransonic=0;
-            
+             gctl_t.gTimer_senddata_panel=8; 
 	
 			SendWifiData_To_Cmd(0x04,0x0);
 			HAL_Delay(5);
@@ -685,10 +676,10 @@ void Json_Parse_Command_Fun(void)
              MqttData_Publish_SetUltrasonic(1);
 			 osDelay(100);	//HAL_Delay(350);
 
-            if(gpro_t.stopTwoHours_flag==0){
+         
                 ultrasonic_open_flag=1;//gctl_t.gUlransonic=1;
-
-              }
+                gctl_t.gTimer_senddata_panel=8;
+        
 		
 			SendWifiData_To_Cmd(0x04,0x01);
 			HAL_Delay(5);

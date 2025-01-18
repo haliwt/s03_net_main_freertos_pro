@@ -88,10 +88,10 @@ void works_run_two_hours_state(void)
     }
 
   
-    
-    if(gpro_t.stopTwoHours_flag ==1){
+    switch(gpro_t.stopTwoHours_flag){
 
-	  #if TEST_UNIT 
+    case 1: //don't run main board any action.
+     #if TEST_UNIT 
 	 if(check_time  > 2){ //10
            
              check_time=0;
@@ -111,7 +111,8 @@ void works_run_two_hours_state(void)
          gpro_t.stopTwoHours_flag=0;
          ActionEvent_Handler();
                 
-        }
+      }
+
 
       #endif 
 
@@ -143,9 +144,11 @@ void works_run_two_hours_state(void)
 	 
       }
    
-     }
-     else{
+   
 
+    break;
+
+    case 0:
         if(gctl_t.gTimer_senddata_panel >5 ){ //300ms
              gctl_t.gTimer_senddata_panel=0;
              times_flag ++;
@@ -156,9 +159,8 @@ void works_run_two_hours_state(void)
                   Update_DHT11_Value();
               }
          }
-    
-
-    }
+      break;
+   }
 }
 
 /********************************************************************************
