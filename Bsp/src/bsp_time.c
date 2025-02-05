@@ -143,9 +143,6 @@ void works_run_two_hours_state(void)
            }
 	 
       }
-   
-   
-
     break;
 
     case 0:

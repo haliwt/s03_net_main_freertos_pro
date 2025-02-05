@@ -38,10 +38,6 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 		UART_Start_Receive_IT(&huart1,inputBuf,1);
 	
 		}
-
-
-
-
 }
 /********************************************************************************
 	**

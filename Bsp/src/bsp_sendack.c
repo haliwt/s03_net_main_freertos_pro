@@ -207,9 +207,10 @@ void receive_data_fromm_display(uint8_t *pdata)
         if(pdata[3] == 0x0F){ //数据
 
            gctl_t.set_temperature_value = pdata[5] ;
-
-          MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
-		  osDelay(20);//HAL_Delay(350);
+           if(wifi_link_net_state()==1){
+             MqttData_Publis_SetTemp(gctl_t.set_temperature_value);
+		     osDelay(20);//HAL_Delay(350);
+            }
 
         }
       break;
@@ -280,9 +281,10 @@ void receive_data_fromm_display(uint8_t *pdata)
        
          gctl_t.gModel=2;
          //SendWifiData_Answer_Cmd(0x27,0x02); //don't AI mode,   WT.EDIT 2025.01.06
-         MqttData_Publish_SetState(2);
-	     osDelay(100);//HAL_Delay(350);
-        
+          if(wifi_link_net_state()==1){
+            MqttData_Publish_SetState(2);
+	        osDelay(100);//HAL_Delay(350);
+           }
         
           
        }
@@ -290,8 +292,10 @@ void receive_data_fromm_display(uint8_t *pdata)
        
          gctl_t.gModel=1;
         // SendWifiData_Answer_Cmd(0x27,0x01); //AI mode,WT.EDIT 2025.01.06
-         MqttData_Publish_SetState(1);
-	     osDelay(100);//HAL_Delay(350);
+         if(wifi_link_net_state()==1){
+             MqttData_Publish_SetState(1);
+    	     osDelay(100);//HAL_Delay(350);
+         }
        }
 
 
