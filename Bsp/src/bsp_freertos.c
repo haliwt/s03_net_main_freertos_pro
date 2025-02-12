@@ -134,7 +134,7 @@ static void vTaskStart(void *pvParameters)
 						           0xFFFFFFFF,      
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
 						          xMaxBlockTime);  /* 最大允许延迟时间,等待时间-block portMAX_DELAY */
-         if(xResult == pdPASS){
+        if(xResult == pdPASS){
              if((ulValue & DECODER_BIT_0 ) != 0)
              {
                 gpro_t.disp_rx_cmd_done_flag = 0;
@@ -256,17 +256,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				gpro_t.wifi_rx_data_counter=0;
 			}
 
-	      } 
-		  else{
+	 } 
+     else{
 
 		    if(wifi_t.get_rx_beijing_time_enable==1){
 					gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] = wifi_rx_inputBuf[0];
 					gpro_t.wifi_rx_data_counter++;
 					
-				}
-				else
-				Subscribe_Rx_Interrupt_Handler();
-	      }
+			}
+			else
+			    Subscribe_Rx_Interrupt_Handler();
+	 }
      //  ENABLE_INT();
 	  __HAL_UART_CLEAR_OREFLAG(&huart2);
       HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
