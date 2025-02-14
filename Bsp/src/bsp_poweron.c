@@ -57,7 +57,9 @@ void power_on_handler(void)
           osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
         }
 
-      
+        
+        fan_run_fun(); //WT.EDIT .2025.02.14
+       
         gpro_t.process_run_step= 1;
 	break;
         

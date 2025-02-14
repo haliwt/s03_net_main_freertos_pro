@@ -162,8 +162,7 @@ static void vTaskStart(void *pvParameters)
               Update_Dht11_Totencent_Value();
               osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
              }
-             
-               fan_run_fun();
+            
             break;
 
             case power_off:
@@ -188,7 +187,7 @@ static void vTaskStart(void *pvParameters)
             buzzer_sound();
 
             }
-          test_n++;
+        //  test_n++;
         }
        
     }
