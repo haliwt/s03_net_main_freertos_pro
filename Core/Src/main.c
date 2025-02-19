@@ -8,7 +8,7 @@
   *
   *  hardware : normal hardware 
   *  software : version 1.0 DATA.2024.11.24.
-  *
+  *  software : version  2.0 DATA.2024.02.18
   * 
   * 
   * 
