@@ -38,7 +38,7 @@ uint8_t detect_error_times,recoder_error_times;
 *****************************************************************/
 static uint16_t Get_Fan_Adc_Channel_0(uint32_t ch)   
 {
-    HAL_StatusTypeDef status;
+   // HAL_StatusTypeDef status;
 
     ADC_ChannelConfTypeDef ADC1_ChanConf;
 
@@ -51,7 +51,7 @@ static uint16_t Get_Fan_Adc_Channel_0(uint32_t ch)
 	
     HAL_ADC_Start(&hadc1);                               //start ADC transmit
 	
-    status =  HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
+     HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
 
     
  
@@ -281,12 +281,20 @@ void Get_Ptc_ADC_Fun(uint8_t channel,uint8_t times)
 *****************************************************************/
 static void Judge_PTC_Temperature_Value(void)
 {
+    #if FAN_OLDER_VERSION
+
     if(ptc_detect_voltage < 331 || ptc_detect_voltage ==331){ //95 degree
+
+    #else 
+
+       if(ptc_detect_voltage < 307 || ptc_detect_voltage ==307){ //98 degree WT.NEW FAN REF
+
+
+    #endif 
 
         dry_open_flag=0;//gctl_t.gDry = 0;
      
         PTC_SetLow(); //ptc turn off
-        gctl_t.ptc_warning =1;
 
         buzzer_sound();//Buzzer_KeySound();
         osDelay(50);

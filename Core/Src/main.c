@@ -8,8 +8,9 @@
   *
   *  hardware : normal hardware 
   *  software : version 1.0 DATA.2024.11.24.
-  *  software : version  2.0 DATA.2024.02.18
-  * 
+  *  software : version  2.0 DATA.2025.02.18
+  *             version  2.1 DATA.2025.02.20 --modify compare fan of reference 
+  *             temperature value over limit take out "high temperature warning"
   * 
   * 
   *

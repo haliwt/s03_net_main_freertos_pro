@@ -5,6 +5,10 @@
 
 #define ADC_CHANNEL_NUMBER    2
 
+
+#define  FAN_OLDER_VERSION     0 //WT.EDIT 2025.02.20 fan works current is 500mA.
+
+
 extern uint8_t fan_warning_flag ;
 
 typedef enum{
