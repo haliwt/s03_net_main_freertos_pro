@@ -287,7 +287,7 @@ static void Judge_PTC_Temperature_Value(void)
 
     #else 
 
-       if(ptc_detect_voltage < 307 || ptc_detect_voltage ==307){ //98 degree WT.NEW FAN REF
+       if(ptc_detect_voltage <  261 ){ //105 degree WT.NEW FAN REF
 
 
     #endif 

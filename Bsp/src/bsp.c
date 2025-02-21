@@ -130,9 +130,21 @@ void wifi_communication_tnecent_handler(void)
 **********************************************************************/
 void adc_detected_hundler(void)
 {
-   
+   static uint8_t power_the_first_flag;
 
-   if(gctl_t.gTimer_ptc_adc_times > 10 && gpro_t.stopTwoHours_flag==0){ //65s//3 minutes 120s
+   if(power_the_first_flag==0){ //WT.EDIT 2025.02.22
+
+     if(gctl_t.gTimer_ptc_adc_times > 240){
+        gctl_t.gTimer_ptc_adc_times=0;
+
+        power_the_first_flag++;
+
+
+     }
+
+
+   }
+   else if(gctl_t.gTimer_ptc_adc_times > 10 && gpro_t.stopTwoHours_flag==0){ //65s//3 minutes 120s
         gctl_t.gTimer_ptc_adc_times=0;
         
        Get_Ptc_ADC_Fun(ADC_CHANNEL_1,20);
