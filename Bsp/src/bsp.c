@@ -12,8 +12,8 @@ uint8_t power_on_login_tencent_cloud_flag  ;
 
 void bsp_init(void)
 {
-   delay_init(24);
-   sensor_dht11_init();//Update_DHT11_Value();//dht11_init();
+   delay_init(64);
+   dht11_init();//sensor_dht11_init();//Update_DHT11_Value();//dht11_init();
    buzzer_init();
    wifi_init();
 
@@ -130,8 +130,9 @@ void wifi_communication_tnecent_handler(void)
 **********************************************************************/
 void adc_detected_hundler(void)
 {
-   static uint8_t power_the_first_flag;
+  // static uint8_t power_the_first_flag;
 
+   #if 0
    if(power_the_first_flag==0){ //WT.EDIT 2025.02.22
 
      if(gctl_t.gTimer_ptc_adc_times > 240){
@@ -152,6 +153,7 @@ void adc_detected_hundler(void)
         
 
     }
+    #endif 
     if(gctl_t.gTimer_fan_adc_times > 19 && gpro_t.stopTwoHours_flag ==0 && fan_warning_flag  == 0){ //detected 3 times is 60s 
         gctl_t.gTimer_fan_adc_times =0;
         Get_Fan_ADC_Fun(ADC_CHANNEL_0,20);

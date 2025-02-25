@@ -352,13 +352,13 @@ ARM Macro Assembler    Page 6
               00000200 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
-work --depend=.\s04w_wifi_mainboard_hex\startup_stm32g030xx.d -o.\s04w_wifi_mai
-nboard_hex\startup_stm32g030xx.o -I../Core/Inc -I.\RTE\_s04w_net_freertos_mainb
-oard_codes -IC:\Users\Administrator\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMS
-IS\Core\Include -IC:\Users\Administrator\AppData\Local\Arm\Packs\Keil\STM32G0xx
-_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include --predefine="__UVISION_VER
-SION SETA 535" --predefine="_RTE_ SETA 1" --predefine="STM32G030xx SETA 1" --pr
-edefine="_RTE_ SETA 1" --list=startup_stm32g030xx.lst startup_stm32g030xx.s
+work --depend=.\s0403w_fanspeed_main_hex\startup_stm32g030xx.d -o.\s0403w_fansp
+eed_main_hex\startup_stm32g030xx.o -I../Core/Inc -I.\RTE\_s04w_net_freertos_mai
+nboard_codes -IC:\Users\Administrator\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\C
+MSIS\Core\Include -IC:\Users\Administrator\AppData\Local\Arm\Packs\Keil\STM32G0
+xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include --predefine="__UVISION_V
+ERSION SETA 535" --predefine="_RTE_ SETA 1" --predefine="STM32G030xx SETA 1" --
+predefine="_RTE_ SETA 1" --list=startup_stm32g030xx.lst startup_stm32g030xx.s
 
 
 

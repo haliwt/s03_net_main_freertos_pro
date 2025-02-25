@@ -11,7 +11,8 @@
   *  software : version  2.0 DATA.2025.02.18
   *             version  2.1 DATA.2025.02.20 --modify compare fan of reference 
   *             temperature value over limit take out "high temperature warning"
-  * 
+  *  sofware Version: mainboard add fan be ajust speed be used to 3PIN 
+  *                   connector . Version: 3.0 .DATA:2025.02.25
   * 
   *
   ******************************************************************************
@@ -94,6 +95,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_TIM3_Init();
+  MX_TIM16_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
    bsp_init();
@@ -132,7 +134,7 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
@@ -149,9 +151,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-  RCC_OscInitStruct.PLL.PLLN = 9;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;  //F = 9x16/2 = 
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV6;  // F = 9X16/6=24MHZ
+  RCC_OscInitStruct.PLL.PLLN = 8;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2; //Fm = 8x16/2=64MHz
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -165,7 +167,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }

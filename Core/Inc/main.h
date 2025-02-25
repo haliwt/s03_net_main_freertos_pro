@@ -71,14 +71,26 @@ void Error_Handler(void);
 
 
 //main boadr function GPIO
-#define PLASMA_Pin              GPIO_PIN_5
+
+//PLASMA GPIO
+
+#define PLASMA_Pin              GPIO_PIN_4
 #define PLASMA_GPIO_Port        GPIOA
+//RELAY GPIO 
+#define RELAY_Pin                   GPIO_PIN_0
+#define RELAY_GPIO_Port             GPIOB
+
+
+//FAN GPIO
+
+#define FAN_CW_Pin              GPIO_PIN_5
+#define FAN_GPIO_Port           GPIOA
+
 
 #define FAN_CCW_Pin               GPIO_PIN_7
 #define FAN_CCW_GPIO_Port         GPIOA
 
-#define RELAY_Pin GPIO_PIN_0
-#define RELAY_GPIO_Port GPIOB
+
 
 //Buzzer GPIO 
 #define BEEP_Pin GPIO_PIN_1

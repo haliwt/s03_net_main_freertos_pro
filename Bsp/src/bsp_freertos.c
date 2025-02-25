@@ -52,7 +52,9 @@ uint8_t check_code;
 
 uint8_t bcc_check_code;
 
-uint16_t test_n;
+
+
+
 
 /**********************************************************************************************************
 *
@@ -162,8 +164,8 @@ static void vTaskStart(void *pvParameters)
               Update_Dht11_Totencent_Value();
               osDelay(20);//HAL_Delay(200) //WT.EDIT 2024.08.10
              }
-            
-            break;
+
+           break;
 
             case power_off:
       
@@ -191,7 +193,8 @@ static void vTaskStart(void *pvParameters)
         }
        
     }
-}
+  }
+ 
 /*
 *********************************************************************************************************
 *	凄1�7 敄1�7 各1�7: AppTaskCreate

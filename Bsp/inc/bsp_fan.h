@@ -3,7 +3,7 @@
 #include "main.h"
 
 
-#define FAN_CCW       GPIO_PIN_6
+#define FAN_CCW       GPIO_PIN_5
 #define FAN_CW        GPIO_PIN_7
 #define FAN_GPIO      GPIOA
 
