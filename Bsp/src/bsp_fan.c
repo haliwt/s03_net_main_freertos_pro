@@ -46,8 +46,8 @@ void Fan_One_Speed(void)
 	 FAN_COM_SetLow();
      FAN_RUN_SetHigh();
      if(one_speed != fan_switch_gears_flag){
-
-        one_speed = fan_switch_gears_flag ;
+        fan_switch_gears_flag++;
+        one_speed = fan_switch_gears_flag ;  //one_speed =2,5,8
 	    SetLevel_Fan_PWMA(FAN_PWM_80);
 
      }
@@ -61,7 +61,8 @@ void Fan_Two_Speed(void)
       FAN_COM_SetLow();
      FAN_RUN_SetHigh();
       if(two_speed != fan_switch_gears_flag){
-         two_speed = fan_switch_gears_flag;
+         fan_switch_gears_flag++;
+         two_speed = fan_switch_gears_flag;  //two_speed = 3;6,9
 	     SetLevel_Fan_PWMA(FAN_PWM_90);
        }
 
@@ -73,7 +74,8 @@ void Fan_Two_Speed(void)
      FAN_COM_SetLow();
      FAN_RUN_SetHigh();
     if(full_speed != fan_switch_gears_flag){
-         full_speed = fan_switch_gears_flag;
+        fan_switch_gears_flag++;
+         full_speed = fan_switch_gears_flag;  //full_speed =1,4,7,10
          SetLevel_Fan_PWMA(FAN_PWM_100);
     }
 
