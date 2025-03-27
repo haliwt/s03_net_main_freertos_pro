@@ -20,14 +20,17 @@ void fan_run_fun(void)
 {
     FAN_COM_SetLow();
 	FAN_RUN_SetHigh();
-	SetLevel_Fan_PWMA(FAN_PWM_100);
+//	#if !OLDER_FAN
+//	  SetLevel_Fan_PWMA(FAN_PWM_100);
+//	#endif 
+	
 
 }
 void FAN_Stop(void)
 {
    FAN_COM_SetLow(); //brake
    FAN_RUN_SetLow();//SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
-   SetLevel_Fan_PWMA(0);
+  
 }
 
 void Fan_One_Power_Off_Speed(void)
@@ -45,7 +48,9 @@ void Fan_One_Speed(void)
      if(one_speed != fan_switch_gears_flag){
         fan_switch_gears_flag++;
         one_speed = fan_switch_gears_flag ;  //one_speed =2,5,8
-	    SetLevel_Fan_PWMA(FAN_PWM_80);
+        #if !OLDER_FAN
+	   // SetLevel_Fan_PWMA(FAN_PWM_80);
+		#endif 
 
      }
 
@@ -60,7 +65,9 @@ void Fan_Two_Speed(void)
       if(two_speed != fan_switch_gears_flag){
          fan_switch_gears_flag++;
          two_speed = fan_switch_gears_flag;  //two_speed = 3;6,9
-	     SetLevel_Fan_PWMA(FAN_PWM_90);
+         #if !OLDER_FAN
+	   //  SetLevel_Fan_PWMA(FAN_PWM_90);
+		 #endif 
        }
 
 }
@@ -73,13 +80,12 @@ void Fan_Two_Speed(void)
     if(full_speed != fan_switch_gears_flag){
         fan_switch_gears_flag++;
          full_speed = fan_switch_gears_flag;  //full_speed =1,4,7,10
-         SetLevel_Fan_PWMA(FAN_PWM_100);
+         #if !OLDER_FAN
+         //SetLevel_Fan_PWMA(FAN_PWM_100);
+		 #endif 
     }
 
 }
-
-
-
 
 void ShutDown_AllFunction(void)
 {
@@ -187,9 +193,9 @@ void Fan_RunSpeed_Fun(void)
 ********************************************************/
 static void SetLevel_Fan_PWMA(uint8_t levelval)
 {
-     gctl_t.gFan_pwm_duty_level = levelval;
-	 MX_TIM16_Init();
-	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+   gctl_t.gFan_pwm_duty_level = levelval;
+	// MX_TIM16_Init();
+	// HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 	
 }
 

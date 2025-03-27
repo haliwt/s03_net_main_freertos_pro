@@ -74,7 +74,7 @@ void Error_Handler(void);
 
 //PLASMA GPIO
 
-#define PLASMA_Pin              GPIO_PIN_4
+#define PLASMA_Pin              GPIO_PIN_5
 #define PLASMA_GPIO_Port        GPIOA
 //RELAY GPIO 
 #define RELAY_Pin                   GPIO_PIN_0
@@ -83,13 +83,10 @@ void Error_Handler(void);
 
 //FAN GPIO
 
-#if OLDER_FAN
+
 
 #define FAN_CCW_Pin                GPIO_PIN_6
 
-#else
-#define FAN_CCW_Pin              GPIO_PIN_5
-#endif 
 #define FAN_GPIO_Port           GPIOA
 
 

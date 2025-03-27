@@ -52,10 +52,6 @@ uint8_t check_code;
 
 uint8_t bcc_check_code;
 
-
-
-
-
 /**********************************************************************************************************
 *
 *	Function Name:void freeRTOS_Handler(void)

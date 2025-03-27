@@ -539,33 +539,35 @@ void Json_Parse_Command_Fun(void)
    switch(gctl_t.response_wifi_signal_label){
   
 	case OPEN_ON_ITEM:
-      
-		MqttData_Publish_SetOpen(1);  
-		HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
+        if(wifi_link_net_state()==1){ //WT.EDIT 2025.03.27
+			MqttData_Publish_SetOpen(1);  
+			HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
 
-        Publish_Data_ToTencent_Initial_Data();
-	    HAL_Delay(200);
+	        Publish_Data_ToTencent_Initial_Data();
+		    HAL_Delay(200);
 
-		gctl_t.ptc_warning =0;
-		
-        fan_warning_flag =0;
-        powerOffTunrOff_flag=1;
-        powerOffFanRun_flag = 1;
-		gctl_t.ptc_remove_warning_send_data =0;
-		gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
-		gpro_t.send_ack_cmd = ack_app_power_on;
-        gpro_t.gTimer_again_send_power_on_off=0;
-	    SendWifiData_To_Cmd(0x31,0x01); //smart phone is power on
-		osDelay(5);//HAL_Delay(5);
-       
-		buzzer_temp_on=0;
-		gctl_t.response_wifi_signal_label = 0xff;
+			gctl_t.ptc_warning =0;
+			
+	        fan_warning_flag =0;
+	        powerOffTunrOff_flag=1;
+	        powerOffFanRun_flag = 1;
+			gctl_t.ptc_remove_warning_send_data =0;
+			gpro_t.gpower_on = power_on;//gctl_t.rx_command_tag= POWER_ON;
+			gpro_t.send_ack_cmd = ack_app_power_on;
+	        gpro_t.gTimer_again_send_power_on_off=0;
+		    SendWifiData_To_Cmd(0x31,0x01); //smart phone is power on
+			osDelay(5);//HAL_Delay(5);
+	       
+			buzzer_temp_on=0;
+			
+			gctl_t.response_wifi_signal_label = 0xff;
+        }
 
 	  break;
 
        case OPEN_OFF_ITEM:
 
-      
+             if(wifi_link_net_state()==1){  //WT.EDIT 2025.03.27
 		 	MqttData_Publish_SetOpen(0);  
 			osDelay(100);
 
@@ -581,7 +583,8 @@ void Json_Parse_Command_Fun(void)
 			buzzer_temp_on=0;
 	
          
-        gctl_t.response_wifi_signal_label = 0xff;
+            gctl_t.response_wifi_signal_label = 0xff;
+             }
         
 	  break;
 
@@ -779,7 +782,7 @@ void Json_Parse_Command_Fun(void)
 
 	  case APP_TIMER_POWER_ON_REF :
 
-	  
+	    if(wifi_link_net_state()==1){  //WT.EDIT 2025.03.27
 		   wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 	  	
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
@@ -829,6 +832,7 @@ void Json_Parse_Command_Fun(void)
 			}
 
 	     gctl_t.response_wifi_signal_label=0xff;
+	       	}
 
 	  break;
 
