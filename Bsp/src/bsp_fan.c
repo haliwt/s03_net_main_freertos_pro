@@ -34,9 +34,6 @@ void Fan_One_Power_Off_Speed(void)
 {
 	
 	 fan_run_fun();//SetLevel_Fan_PWMA(10);
-	
-
-
 }
 
 

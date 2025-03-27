@@ -83,12 +83,18 @@ void Error_Handler(void);
 
 //FAN GPIO
 
-#define FAN_CW_Pin              GPIO_PIN_5
+#if OLDER_FAN
+
+#define FAN_CCW_Pin                GPIO_PIN_6
+
+#else
+#define FAN_CCW_Pin              GPIO_PIN_5
+#endif 
 #define FAN_GPIO_Port           GPIOA
 
 
-#define FAN_CCW_Pin               GPIO_PIN_7
-#define FAN_CCW_GPIO_Port         GPIOA
+#define FAN_CW_Pin               GPIO_PIN_7
+#define FAN_CW_GPIO_Port         GPIOA
 
 
 

@@ -2,8 +2,17 @@
 #define __BSP_FAN_H__
 #include "main.h"
 
+#define OLDER_FAN      1
 
+
+#if OLDER_FAN
+
+#define FAN_CCW       GPIO_PIN_6
+
+#else
 #define FAN_CCW       GPIO_PIN_5
+
+#endif 
 #define FAN_CW        GPIO_PIN_7
 #define FAN_GPIO      GPIOA
 
