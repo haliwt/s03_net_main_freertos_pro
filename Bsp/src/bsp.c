@@ -7,7 +7,7 @@ static void Auto_InitWifiModule_Hardware(void);
 static void Auto_SmartPhone_TryToLink_TencentCloud(void);
 
 uint8_t power_on_login_tencent_cloud_flag  ;
-
+uint8_t link_counter_times;
  
 
 void bsp_init(void)
@@ -176,18 +176,20 @@ void adc_detected_hundler(void)
 void wifi_auto_detected_link_state(void)
 {
     static uint8_t dc_power_on;
-	if(power_on_login_tencent_cloud_flag     <  5 && wifi_link_net_state()==0){
+	if(power_on_login_tencent_cloud_flag  < 5 && wifi_link_net_state()==0 && link_counter_times < 3){
 		
-      net_t.linking_tencent_cloud_doing = 1;
+      
+	  net_t.linking_tencent_cloud_doing = 1;
       gpro_t.gTimer_dc_power_on_auto_link_net = 0;
 
       Auto_InitWifiModule_Hardware();//InitWifiModule();
       Auto_SmartPhone_TryToLink_TencentCloud();
 	 
     }
-    if(wifi_link_net_state()==1    && gpro_t.gTimer_dc_power_on_auto_link_net > 1 && dc_power_on ==0 ){
+    if(wifi_link_net_state()==1 && gpro_t.gTimer_dc_power_on_auto_link_net > 1 && dc_power_on ==0 ){
               
              dc_power_on ++ ;
+			 link_counter_times =5;
            //wifi_t.linking_tencent_cloud_doing = 0;
            net_t.linking_tencent_cloud_doing  =0;
            gpro_t.process_run_step=0;
@@ -205,7 +207,12 @@ void wifi_auto_detected_link_state(void)
           SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
    }
    
+   if(gpro_t.gTimer_power_on_auto_link  > 6 && link_counter_times < 3){
+	  gpro_t.gTimer_power_on_auto_link =0;
 
+      link_counter_times =5;
+
+   }
    
    
 }

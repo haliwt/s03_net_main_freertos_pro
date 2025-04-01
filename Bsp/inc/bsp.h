@@ -118,6 +118,7 @@ typedef struct PROCESS_T{
    uint8_t gTimer_publis_dht11_data;
    uint8_t gTimer_detect_fan_error;
    uint8_t gTimer_again_send_power_on_off;
+   uint8_t  gTimer_power_on_auto_link;
 
 
 

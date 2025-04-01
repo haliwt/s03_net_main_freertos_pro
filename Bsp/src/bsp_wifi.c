@@ -123,7 +123,7 @@ void link_wifi_net_handler(void)
 
             case 4:
                  if(gpro_t.gTimer_link_net_timer_time  > 7){
-                               gpro_t.gTimer_link_net_timer_time = 0;
+                  gpro_t.gTimer_link_net_timer_time = 0;
 
                    net_t.linking_tencent_cloud_doing =1;
                   wifi_t.soft_ap_config_flag =1; //WE.EIDT 

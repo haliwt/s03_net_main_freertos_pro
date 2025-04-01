@@ -128,6 +128,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        gpro_t.gTimer_publis_dht11_data++ ;
        gpro_t.gTimer_detect_fan_error++;
        gpro_t.gTimer_again_send_power_on_off++;
+	   gpro_t.gTimer_power_on_auto_link++;
        
 
 
