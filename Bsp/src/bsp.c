@@ -186,7 +186,7 @@ void wifi_auto_detected_link_state(void)
       Auto_SmartPhone_TryToLink_TencentCloud();
 	 
     }
-    if(wifi_link_net_state()==1 && gpro_t.gTimer_dc_power_on_auto_link_net > 1 && dc_power_on ==0 ){
+    if(net_t.wifi_link_net_success==1 && gpro_t.gTimer_dc_power_on_auto_link_net > 1 && dc_power_on ==0 ){
               
              dc_power_on ++ ;
 			 link_counter_times =5;
@@ -211,6 +211,10 @@ void wifi_auto_detected_link_state(void)
 	  gpro_t.gTimer_power_on_auto_link =0;
 
       link_counter_times =5;
+      if(net_t.wifi_link_net_success==0){
+         SendWifiData_To_Data(0x1F,0x0); //WT.EDIT 2025.04.02 0x1F: wifi link net is succes 
+
+	  }
 
    }
    

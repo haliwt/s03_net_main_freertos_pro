@@ -175,7 +175,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
      case 0: //WT.EDIT .2024.08.10
 
-      if(wifi_link_net_state()==1 && gpro_t.gTimer_get_data_from_tencent_data > 9){ ////9
+      if(net_t.wifi_link_net_success ==1 && gpro_t.gTimer_get_data_from_tencent_data > 9){ ////9
        
           gpro_t.gTimer_get_data_from_tencent_data =0;
            flag_switch++;
@@ -211,8 +211,13 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
          }
        
     }
-    else
+    else{
+	 if(net_t.wifi_link_net_success ==0){
+	    SendWifiData_To_Data(0x1F,0x0); //WT.EDIT 2025.04.02 0x1F: wifi link net is succes 
+	 }
      gpro_t.get_beijing_flag = 1;
+
+    }
 
    break;
 
@@ -386,11 +391,11 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
     
 
-         if(wifi_link_net_state()==0){
+         if(net_t.wifi_link_net_success ==0){
             gpro_t.get_beijing_flag = 11;
             net_t.linking_tencent_cloud_doing  =1; //receive from tencent command state .
             gpro_t.wifi_rx_data_counter=0;
-           
+            SendWifiData_To_Data(0x1F,0x0); //WT.EDIT 2025.04.02 0x1F: wifi link net is succes 
       
            
           }
@@ -398,6 +403,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
              wifi_t.soft_ap_config_flag =1; //WE.EIDT 
              net_t.linking_tencent_cloud_doing  =0; //receive from tencent command state .
              gpro_t.get_beijing_flag = 0;
+		     SendWifiData_To_Data(0x1F,0x01); //WT.EDIT 2025.04.02 0x1F: wifi link net is succes 
 
           }
         
@@ -407,7 +413,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
      if(wifi_link_net_state()==1){
           gpro_t.get_beijing_flag = 0;
 
-       }
+     }
        
      break;
 
@@ -499,6 +505,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 		
          }
          else{
+			 SendWifiData_To_Data(0x1F,0x0); //WT.EDIT 2025.04.02 0x1F: wifi link net is succes 
 
              gpro_t.get_beijing_flag = 10;
          }
